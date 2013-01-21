@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "request": "~2.12.0",
-    "querystring": "~0.1.0",
+    "querystring": "~0.1.1",
     "date-utils": "~1.2.12"
   },
   "devDependencies": {
