@@ -1,0 +1,172 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Simple-oauth2 by andreareginato</title>
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="javascripts/respond.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <!--[if lt IE 8]>
+    <link rel="stylesheet" href="stylesheets/ie.css">
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  </head>
+  <body>
+      <div id="header">
+        <nav>
+          <li class="fork"><a href="https://github.com/andreareginato/simple-oauth2">View On GitHub</a></li>
+          <li class="downloads"><a href="https://github.com/andreareginato/simple-oauth2/zipball/master">ZIP</a></li>
+          <li class="downloads"><a href="https://github.com/andreareginato/simple-oauth2/tarball/master">TAR</a></li>
+          <li class="title">DOWNLOADS</li>
+        </nav>
+      </div><!-- end header -->
+
+    <div class="wrapper">
+
+      <section>
+        <div id="title">
+          <h1>Simple-oauth2</h1>
+          <p>A simple Node.js client library for Oauth2</p>
+          <hr>
+          <span class="credits left">Project maintained by <a href="https://github.com/andreareginato">andreareginato</a></span>
+          <span class="credits right">Hosted on GitHub Pages &mdash; Theme by <a href="http://twitter.com/#!/michigangraham">mattgraham</a></span>
+        </div>
+
+        <h1>Simple OAuth2</h1>
+
+<p>Node.js client library for <a href="http://oauth.net/2/">Oauth2</a></p>
+
+<h2>Requirements</h2>
+
+<p>Node client library is tested against Node ~0.8.x</p>
+
+<h2>Installation</h2>
+
+<p>Install the client library using <a href="http://npmjs.org/">npm</a>:</p>
+
+<pre><code>$ npm install simple-oath2
+</code></pre>
+
+<p>Install the client library using git:</p>
+
+<pre><code>$ git clone git://github.com/andrearegianto/simple-oauth2.git
+$ cd simple-oauth2
+$ npm install
+</code></pre>
+
+<h2>Documentation</h2>
+
+<ul>
+<li><a>Simple Oauth2 Docs</a></li>
+</ul><h2>Getting started</h2>
+
+<h3>Get the Access Token</h3>
+
+<div class="highlight"><pre><span class="kd">var</span> <span class="nx">credentials</span> <span class="o">=</span> <span class="p">{</span> <span class="nx">client</span><span class="o">:</span> <span class="p">{</span> <span class="nx">id</span><span class="o">:</span> <span class="s1">'client-id'</span><span class="p">,</span> <span class="nx">secret</span><span class="o">:</span> <span class="s1">'client-secret'</span><span class="p">,</span> <span class="nx">site</span><span class="o">:</span> <span class="s1">'https://example.org'</span> <span class="p">}</span><span class="err"> </span><span class="p">};</span>
+<span class="kd">var</span> <span class="nx">OAuth2</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'simple-oauth2'</span><span class="p">)(</span><span class="nx">credentials</span><span class="p">);</span>
+
+<span class="c1">// Returns the URI where to redirect your app</span>
+<span class="kd">var</span> <span class="nx">redirect</span> <span class="o">=</span> <span class="nx">Oauth2</span><span class="p">.</span><span class="nx">AuthCode</span><span class="p">.</span><span class="nx">authorizeURL</span><span class="p">({</span> <span class="nx">redirectURI</span><span class="o">:</span> <span class="s1">'http://localhost:3000/callback'</span><span class="p">,</span> <span class="nx">scope</span><span class="o">:</span> <span class="s1">'user'</span><span class="p">,</span> <span class="nx">state</span><span class="o">:</span> <span class="s1">'02afe928b'</span><span class="p">);</span>
+<span class="c1">// =&gt; "https://example.org/oauth/authorization?response_type=code&amp;client_id=client_id&amp;redirect_uri=http://localhost:3000/callback&amp;scope=user&amp;state=02afe928b"</span>
+
+<span class="c1">// Get the access token object</span>
+<span class="nx">vat</span> <span class="nx">params</span> <span class="o">=</span> <span class="p">{</span> <span class="nx">code</span><span class="o">:</span> <span class="s1">'authorization-code'</span><span class="p">,</span> <span class="nx">redirectURI</span><span class="o">:</span> <span class="s1">'http://localhost:3000/callback'</span> <span class="p">}</span>
+<span class="nx">OAuth2</span><span class="p">.</span><span class="nx">AuthCode</span><span class="p">.</span><span class="nx">getToken</span><span class="p">(</span><span class="nx">params</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">error</span><span class="p">,</span> <span class="nx">result</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// save the token</span>
+<span class="p">})</span>
+</pre></div>
+
+<h3>Refresh the Access Token</h3>
+
+<div class="highlight"><pre>
+<span class="nx">token</span> <span class="o">=</span> <span class="nx">OAuth2</span><span class="p">.</span><span class="nx">AccessToken</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="nx">json_token</span><span class="p">);</span>
+<span class="k">if</span> <span class="p">(</span><span class="nx">token</span><span class="p">.</span><span class="nx">expired</span><span class="p">())</span> <span class="p">{</span>
+  <span class="nx">token</span><span class="p">.</span><span class="nx">refresh</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">error</span><span class="p">,</span> <span class="nx">refreshedToken</span><span class="p">)</span> <span class="p">{</span> <span class="nx">token</span> <span class="o">=</span> <span class="nx">refreshedToken</span><span class="p">;</span> <span class="p">})</span>
+<span class="p">}</span>
+</pre></div>
+
+<h3>Authorization Grants</h3>
+
+<p>Currently the Authorization Code and Resource Owner Password Credentials grant types
+have helper strategy classes that simplify client use. They are available via the #authCode
+and #password methods respectively.</p>
+
+<p>// Authorization code flow
+var uri   = OAuth2.AuthCode.authorizeURL({ redirect_uri: 'http://localhost:3000/callback');
+var token = OAuth2.AuthCode.getToken({ code: 'authorization-code', redirectURI: 'http://localhost:3000/callback' }, callback);</p>
+
+<p>// Password credentials flow
+var token = OAuth2.Password.getToken({ username: 'username', 'password': 'password' }, callback);</p>
+
+<p>If the functions fails an error object is passed as first argument to the callback.
+The body response object is always the last argument.</p>
+
+<h2>Errors</h2>
+
+<p>Exceptions are raised when a 4xx or 5xx status code is returned.</p>
+
+<div class="highlight"><pre><span class="nx">OAtuh2</span><span class="p">.</span><span class="nx">HTTPError</span>
+</pre></div>
+
+<p>Through the error message attribute you can access the JSON representation.</p>
+
+<div class="highlight"><pre><span class="nx">OAuth2</span><span class="p">.</span><span class="nx">AuthCode</span><span class="p">.</span><span class="nx">getToken</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">error</span><span class="p">,</span> <span class="nx">token</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">error</span><span class="p">.</span><span class="nx">message</span><span class="p">);</span> <span class="p">}</span>
+<span class="p">});</span>
+</pre></div>
+
+<h2>Contributing</h2>
+
+<p>Fork the repo on github and send a pull requests with topic branches. Do not forget to
+provide specs to your contribution.</p>
+
+<h3>Running specs</h3>
+
+<ul>
+<li>Fork and clone the repository (<code>dev</code> branch).</li>
+<li>Run <code>npm install</code> for dependencies.</li>
+<li>Run <code>make test</code> to execute all specs.</li>
+<li>Run <code>make test-watch</code> to auto execute all specs when a file change.</li>
+</ul><h2>Coding guidelines</h2>
+
+<p>Follow <a href="https://github.com/styleguide/">github</a> guidelines.</p>
+
+<h2>Feedback</h2>
+
+<p>Use the <a href="http://github.com/andreareginato/simple-oauth2/issues">issue tracker</a> for bugs.
+<a href="mailto:andrea.reginato@.gmail.com">Mail</a> or <a href="http://twitter.com/andreareginato">Tweet</a> us
+for any idea that can improve the project.</p>
+
+<h2>Links</h2>
+
+<ul>
+<li><a href="http://github.com/andreareginato/simple-oauth2">GIT Repository</a></li>
+<li><a href="http://andreareginato.github.com/simple-oauth2">Documentation</a></li>
+</ul><h2>Authors</h2>
+
+<p><a href="http://twitter.com/andreareginato">Andrea Reginato</a></p>
+
+<h2>Contributors</h2>
+
+<p>Special thanks to the following people for submitting patches.</p>
+
+<h2>Changelog</h2>
+
+<p>See <a href="simple-oauth2/blob/master/CHANGELOG.md">CHANGELOG</a></p>
+
+<h2>Copyright</h2>
+
+<p>Copyright (c) 2013 <a href="http://lelylan.com">Lelylan</a>. See <a href="simple-oauth2/blob/master/LICENSE.md">LICENSE</a> for details.</p>
+      </section>
+
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+    
+  </body>
+</html>
