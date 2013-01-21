@@ -1,96 +1,58 @@
-//var Lelylan = require('./../lib/lelylan-node.js')({ 'token': '5f7fb8f11b8499b' });
-//var nock    = require('nock');
-//var request, response, error;
+var credentials = { client: { id: 'client-id', secret: 'client-secret', site: 'https://example.org' } },
+    OAuth2 = require('./../lib/simple-oauth2.js')(credentials),
+    nock = require('nock');
 
-//describe('Lelylan Error',function() {
+var request, result, error;
 
-  //describe('with status code 500',function() {
+describe('Simple OAuth2 Error',function() {
 
-    //beforeEach(function(done) {
-      //request = nock('http://api.lelylan.com').get('/devices/1').reply(500, 'Internal Server Error');
-      //done();
-    //})
+	describe('with status code 401',function() {
 
-    //beforeEach(function(done) {
-      //Lelylan.Device.find('1', function(e, r) {
-        //error = e; response = r; done();
-      //})
-    //})
+		beforeEach(function(done) {
+			var params = { 'code': 'code', 'redirect_uri': 'http://callback.com', 'grant_type': 'authorization_code' };
+			request = nock('https://example.org:443').post('/oauth/token', params).reply(401, 'Unauthorized');
+			done();
+		});
 
-    //it('makes the HTTP request', function() {
-      //request.isDone();
-    //});
+		beforeEach(function(done) {
+			var params = { 'code': 'code', 'redirect_uri': 'http://callback.com' }
+			OAuth2.AuthCode.getToken(params, function(e, r) {
+				error = e; result = r; done();
+			});
+		});
 
-    //it('return a json array',function() {
-      //error.should.be.a('object');
-    //});
-  //});
+		it('makes the HTTP request', function() {
+			request.isDone();
+		});
 
-  //describe('with status code 401',function() {
+		it('returns an access token',function() {
+			error.message.message.should.eql('Unauthorized');
+		});
+	});
 
-    //beforeEach(function(done) {
-      //request = nock('http://api.lelylan.com').get('/devices/1').replyWithFile(401, __dirname + '/fixtures/errors/401.json');
-      //done();
-    //})
+	describe('with status code 500',function() {
 
-    //beforeEach(function(done) {
-      //Lelylan.Device.find('1', function(e, r) {
-        //error = e; response = r; done();
-      //})
-    //})
+		beforeEach(function(done) {
+			var params = { 'code': 'code', 'redirect_uri': 'http://callback.com', 'grant_type': 'authorization_code' };
+			request = nock('https://example.org:443').post('/oauth/token', params).reply(500, 'Server Error');
+			done();
+		});
 
-    //it('makes the HTTP request', function() {
-      //request.isDone();
-    //});
+		beforeEach(function(done) {
+			var params = { 'code': 'code', 'redirect_uri': 'http://callback.com' }
+			OAuth2.AuthCode.getToken(params, function(e, r) {
+				error = e; result = r; done();
+			});
+		});
 
-    //it('return a json array',function() {
-      //error.should.be.a('object');
-    //});
-  //});
+		it('makes the HTTP request', function() {
+			request.isDone();
+		});
 
-  //describe('with status code 404',function() {
-
-    //beforeEach(function(done) {
-      //request = nock('http://api.lelylan.com').get('/devices/1').replyWithFile(404, __dirname + '/fixtures/errors/404.json');
-      //done();
-    //})
-
-    //beforeEach(function(done) {
-      //Lelylan.Device.find('1', function(e, r) {
-        //error = e; response = r; done();
-      //})
-    //})
-
-    //it('makes the HTTP request', function() {
-      //request.isDone();
-    //});
-
-    //it('return a json array',function() {
-      //error.should.be.a('object');
-    //});
-  //});
-
-  //describe('with status code 422',function() {
-
-    //beforeEach(function(done) {
-      //request = nock('http://api.lelylan.com').get('/devices/1').replyWithFile(422, __dirname + '/fixtures/errors/422.json');
-      //done();
-    //})
-
-    //beforeEach(function(done) {
-      //Lelylan.Device.find('1', function(e, r) {
-        //error = e; response = r; done();
-      //})
-    //})
-
-    //it('makes the HTTP request', function() {
-      //request.isDone();
-    //});
-
-    //it('return a json array',function() {
-      //error.should.be.a('object');
-    //});
-  //});
-//})
+		it('returns an access token',function() {
+			error.message.message.should.eql('Internal Server Error');
+		});
+	});
+})
 
 

@@ -6,7 +6,7 @@ var credentials = { client: { id: 'client-id', secret: 'client-secret', site: 'h
 var request, result, token, error;
 
 
-describe.only('OAuth2.AccessToken',function() {
+describe('OAuth2.AccessToken',function() {
 
 	beforeEach(function(done) {
 		var params = { 'code': 'code', 'redirect_uri': 'http://callback.com', 'grant_type': 'authorization_code' };

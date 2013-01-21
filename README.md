@@ -61,15 +61,18 @@ Currently the Authorization Code and Resource Owner Password Credentials grant t
 have helper strategy classes that simplify client use. They are available via the #authCode
 and #password methods respectively.
 
+```javascript
 // Authorization code flow
 var uri   = OAuth2.AuthCode.authorizeURL({ redirect_uri: 'http://localhost:3000/callback');
 var token = OAuth2.AuthCode.getToken({ code: 'authorization-code', redirectURI: 'http://localhost:3000/callback' }, callback);
 
 // Password credentials flow
 var token = OAuth2.Password.getToken({ username: 'username', 'password': 'password' }, callback);
+```
 
 If the functions fails an error object is passed as first argument to the callback.
 The body response object is always the last argument.
+
 
 ## Errors
 

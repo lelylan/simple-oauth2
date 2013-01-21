@@ -1,6 +1,5 @@
 var credentials = { client: { id: 'client-id', secret: 'client-secret', site: 'https://example.org' } },
     OAuth2 = require('./../lib/simple-oauth2.js')(credentials),
-		qs = require('querystring'),
     nock = require('nock');
 
 var request, result, error;
