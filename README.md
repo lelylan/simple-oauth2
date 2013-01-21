@@ -40,8 +40,8 @@ var redirect = Oauth2.AuthCode.authorizeURL({ redirectURI: 'http://localhost:300
 
 // Get the access token object
 vat params = { code: 'authorization-code', redirectURI: 'http://localhost:3000/callback' }
-client.authCode.getToken(params, function(error, token){
-  // save the token object
+client.authCode.getToken(params, function(error, result){
+  // save the token
 })
 ```
 
@@ -49,8 +49,9 @@ client.authCode.getToken(params, function(error, token){
 
 ```javascript
 
+token = OAuth2.AccessToken.create(json_token);
 if (token.expired()) {
-  token.refresh(function(error, newToken) { token = newToken; })
+  token.refresh(function(error, refreshedToken) { token = refreshedToken; })
 }
 ```
 

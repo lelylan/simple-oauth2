@@ -5,7 +5,7 @@ var credentials = { client: { id: 'client-id', secret: 'client-secret', site: 'h
 
 var request, result, error;
 
-describe.only('OAuth2.AuthCode',function() {
+describe('OAuth2.AuthCode',function() {
 
 	describe('#authorizeURL', function(){
 
@@ -21,25 +21,27 @@ describe.only('OAuth2.AuthCode',function() {
 		})
 	});
 
-	//describe('#getToken',function() {
+	describe('#getToken',function() {
 
-		//beforeEach(function(done) {
-			//request = nock('http://api.lelylan.com').get('/devices/1').replyWithFile(200, __dirname + '/fixtures/device.json');
-			//done();
-		//})
+		beforeEach(function(done) {
+			var params = { 'code': 'code', 'redirect_uri': 'http://callback.com', 'grant_type': 'authorization_code' };
+			request = nock('https://example.org:443').post('/oauth/token', params).replyWithFile(200, __dirname + '/fixtures/access_token.json');
+			done();
+		})
 
-		//beforeEach(function(done) {
-			//Lelylan.Device.find('1', function(e, r) {
-				//error = e; response = r; done();
-			//})
-		//})
+		beforeEach(function(done) {
+			var params = { 'code': 'code', 'redirect_uri': 'http://callback.com' }
+			OAuth2.AuthCode.getToken(params, function(e, r) {
+				error = e; result = r; done();
+			})
+		})
 
-		//it('makes the HTTP request', function() {
-			//request.isDone();
-		//});
+		it('makes the HTTP request', function() {
+			request.isDone();
+		});
 
-		//it('return a json array',function() {
-			//response.should.be.a('object');
-		//});
-	//});
+		it('returns an access token',function() {
+			result.should.have.property('access_token');
+		});
+	});
 });
