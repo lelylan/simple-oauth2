@@ -82,7 +82,8 @@ Exceptions are raised when a 4xx or 5xx status code is returned.
 OAtuh2.HTTPError
 ```
 
-Through the error message attribute you can access the JSON representation.
+Through the error message attribute you can access the JSON representation
+based on HTTP `status` and error `message`.
 
 ```javascript
 OAuth2.AuthCode.getToken(function(error, token) {
