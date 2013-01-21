@@ -1,6 +1,6 @@
 {
   "name": "simple-oauth2",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Node.js client for OAuth2",
   "author": "Andrea Reginato <andrea.reginato@gmail.com>",
   "homepage": "http://github.com/andreareginato/simple-oauth2",
@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "request": "~2.12.0",
-    "querystring": "~0.1.1",
+    "querystring": "~0.1.0",
     "date-utils": "~1.2.12"
   },
   "devDependencies": {
