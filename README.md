@@ -1,4 +1,4 @@
-# Lelylan API for Node.js
+# Simple OAuth2
 
 Node.js client library for [Oauth2](http://oauth.net/2/)
 
@@ -40,7 +40,7 @@ var redirect = Oauth2.AuthCode.authorizeURL({ redirectURI: 'http://localhost:300
 
 // Get the access token object
 vat params = { code: 'authorization-code', redirectURI: 'http://localhost:3000/callback' }
-client.authCode.getToken(params, function(error, result){
+OAuth2.AuthCode.getToken(params, function(error, result) {
   // save the token
 })
 ```
@@ -62,11 +62,11 @@ have helper strategy classes that simplify client use. They are available via th
 and #password methods respectively.
 
 // Authorization code flow
-var authURL = client.authCode.authorizeURL({ redirect_uri: 'http://localhost:3000/callback');
-var token   = client.authCode.getToken({ code: 'authorization-code', redirectURI: 'http://localhost:3000/callback' }, callback);
+var uri   = OAuth2.AuthCode.authorizeURL({ redirect_uri: 'http://localhost:3000/callback');
+var token = OAuth2.AuthCode.getToken({ code: 'authorization-code', redirectURI: 'http://localhost:3000/callback' }, callback);
 
 // Password credentials flow
-var token = client.password.getToken({ username: 'username', 'password': 'password' }, callback);
+var token = OAuth2.Password.getToken({ username: 'username', 'password': 'password' }, callback);
 
 If the functions fails an error object is passed as first argument to the callback.
 The body response object is always the last argument.
@@ -76,13 +76,13 @@ The body response object is always the last argument.
 Exceptions are raised when a 4xx or 5xx status code is returned.
 
 ```javascript
-SimpleOAtuh2.Error
+OAtuh2.HTTPError
 ```
 
 Through the error message attribute you can access the JSON representation.
 
 ```javascript
-client.authCode.getToken(function(error, token) {
+OAuth2.AuthCode.getToken(function(error, token) {
   if (error) { console.log(error.message); }
 });
 ```
@@ -108,8 +108,9 @@ Follow [github](https://github.com/styleguide/) guidelines.
 
 ## Feedback
 
-Use the [issue tracker](http://github.com/lelylan/lelylan-node/issues) for bugs.
-[Mail](mailto:touch@lelylan.com) or [Tweet](http://twitter.com/lelylan) us for any idea that can improve the project.
+Use the [issue tracker](http://github.com/andreareginato/simple-oauth2/issues) for bugs.
+[Mail](mailto:andrea.reginato@.gmail.com) or [Tweet](http://twitter.com/andreareginato) us
+for any idea that can improve the project.
 
 
 ## Links

@@ -33,49 +33,46 @@ describe.only('OAuth2.AccessToken',function() {
 	});
 
 
-	describe('#expired',function() {
+	describe('when not expired', function() {
 
-		describe('when not expired', function() {
+		it('returns false',function() {
+			token.expired().should.be.true
+		});
+	});
 
-			it('returns false',function() {
-				token.expired().should.be.true
-			});
+	describe('when expired', function() {
+
+		beforeEach(function(done) {
+			token.token.expires_at = Date.yesterday();
+			done();
 		});
 
-		describe('when expired', function() {
+		it('returns false',function() {
+			token.expired().should.be.false
+		});
+
+		describe('when refreses token', function() {
 
 			beforeEach(function(done) {
-				token.token.expires_at = Date.yesterday();
+				var params = { 'grant_type': 'refresh_token', refresh_token: 'ec1a59d298' };
+				request = nock('https://example.org:443').post('/oauth/token', params).replyWithFile(200, __dirname + '/fixtures/access_token.json');
 				done();
 			});
 
-			it('returns false',function() {
-				token.expired().should.be.false
+			beforeEach(function(done) {
+				result = null;
+				token.refresh(function(e, r) {
+					error = e; result = r; done();
+				});
 			});
 
-			describe('when refreses token', function() {
+			it('makes the HTTP request', function() {
+				request.isDone();
+			});
 
-				beforeEach(function(done) {
-					var params = { 'grant_type': 'refresh_token', refresh_token: 'ec1a59d298' };
-					request = nock('https://example.org:443').post('/oauth/token', params).replyWithFile(200, __dirname + '/fixtures/access_token.json');
-					done();
-				});
-
-				beforeEach(function(done) {
-					result = null;
-					token.refresh(function(e, r) {
-						error = e; result = r; done();
-					});
-				});
-
-				it('makes the HTTP request', function() {
-					request.isDone();
-				});
-
-				it('returns an access token',function() {
-					result.should.have.property('access_token');
-				});
-			})
-		});
+			it('returns a new access token',function() {
+				result.should.have.property('access_token');
+			});
+		})
 	});
 });
