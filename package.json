@@ -1,0 +1,30 @@
+{
+  "name": "simple-oauth2",
+  "version": "0.1.0",
+  "description": "Node.js client for OAuth2",
+  "author": "Andrea Reginato <andrea.reginato@gmail.com>",
+  "homepage": "http://github.com/andreareginato/simple-oauth2",
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/andreareginato/simple-oauth2"
+  },
+  "engine": {
+    "node": "~0.8.x"
+  },
+  "dependencies": {
+    "request": "~2.12.0",
+    "querystring": "~0.1.0"
+  },
+  "devDependencies": {
+    "should": "~1.2.1",
+    "mocha": "~1.8.1",
+    "nock": "~0.14.3",
+    "docco": "~0.4.0"
+  },
+  "main": ".",
+  "licenses": [
+    {
+      "type": "Copyright (c) 2013 Lelylan"
+    }
+  ]
+}

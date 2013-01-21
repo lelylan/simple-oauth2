@@ -1,0 +1,5 @@
+--require should
+--reporter dot
+--ui bdd
+--slow 20
+--growl

@@ -1,0 +1,9 @@
+{
+  "status": 401,
+  "method": "POST",
+  "request": "http://api.lelylan.com/devices/4f4bb686d033a957c1000251",
+  "error": {
+    "code": "notifications.access.not_authorized",
+    "description": "Token not valid"
+  }
+}

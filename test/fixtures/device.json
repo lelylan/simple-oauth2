@@ -1,0 +1,24 @@
+{
+  "uri": "http://api.lelylan.com/devices/5042344b95fc441000000001",
+  "id": "5042344b95fc441000000001",
+  "name": "Closet dimmer",
+  "type": { "uri": "http://api.lelylan.com/types/5042310470eda60a0000000d" },
+  "physical": { "uri": "http://arduino.house.com/5042205c70eda61" },
+  "properties": [{
+    "uri": "http://api.lelylan.com/properties/50420c7e267ff51000000001",
+    "id": "50420c7e267ff51000000001",
+    "value": "on",
+    "expected": "on",
+    "pending": false,
+    "suggested": {"on": "On", "off": "Off"}
+  }, {
+    "uri": "http://api.lelylan.com/properties/50420c3a267ff51300000001",
+    "id": "50420c3a267ff51300000001",
+    "value": "100",
+    "expected": "100",
+    "pending": false,
+    "suggested": {"0": "Min", "25": "Low", "50": "Half", "75": "High", "100": "Max"}
+  }],
+  "created_at": "2012-09-01T16:00:32Z",
+  "updated_at": "2012-09-01T16:00:32Z"
+}

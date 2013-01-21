@@ -1,0 +1,10 @@
+{
+  "status": 404,
+  "method": "GET",
+  "request": "http://api.lelylan.com/devices/4f4ba959d033a95549000261",
+  "error": {
+    "code": "notifications.resource.not_found",
+    "description": "Resource not found",
+    "uri": "http://api.lelylan.com/devices/4f4ba959d033a95549000261"
+  }
+}

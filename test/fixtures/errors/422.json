@@ -1,0 +1,10 @@
+{
+  "status": 422,
+  "method": "POST",
+  "request": "http://api.lelylan.com/devices",
+  "error": {
+    "code": "notifications.resource.not_valid",
+    "description": "Name can't be blank.",
+    "body": { "name": "" },
+  }
+}
