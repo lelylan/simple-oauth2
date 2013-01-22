@@ -41,7 +41,7 @@ OAuth2.AuthCode.getToken(params, function(error, result) {
 
 ## Documentation
 
-Check out the complete [Simple Oauth2 Documentation](git://andreareginato.github.com/simple-oauth2)
+Check out the complete [Simple Oauth2 Documentation](http://andreareginato.github.com/simple-oauth2)
 
 
 ## Contributing
