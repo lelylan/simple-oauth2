@@ -8,24 +8,28 @@
 </ul>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="kd">function</span> <span class="nx">create</span><span class="p">(</span><span class="nx">token</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">token</span> <span class="o">=</span> <span class="nx">token</span><span class="p">;</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">token</span><span class="p">.</span><span class="nx">expires_at</span> <span class="o">=</span> <span class="p">(</span><span class="k">new</span> <span class="nb">Date</span><span class="p">).</span><span class="nx">addSeconds</span><span class="p">(</span><span class="mi">7200</span><span class="p">);</span>
-    <span class="k">return</span> <span class="k">this</span>
+    <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
   <span class="p">}</span></pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <h3>Check if the access token is expired or not.</h3>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="kd">function</span> <span class="nx">expired</span><span class="p">()</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="p">(</span><span class="nb">Date</span><span class="p">.</span><span class="nx">compare</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">token</span><span class="p">.</span><span class="nx">expires_at</span><span class="p">,</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">)</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">?</span> <span class="kc">false</span> <span class="o">:</span> <span class="kc">true</span>
+    <span class="k">return</span> <span class="p">(</span><span class="nb">Date</span><span class="p">.</span><span class="nx">compare</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">token</span><span class="p">.</span><span class="nx">expires_at</span><span class="p">,</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">)</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">?</span> <span class="kc">true</span> <span class="o">:</span> <span class="kc">false</span>
   <span class="p">}</span></pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <h3>Refresh the access token</h3>
 
 <ul>
 <li><code>callback</code> - The callback function returning the results.
-An error object is passed as first argument and the new access
-token as last.</li>
+An error object is passed as first argument and the new OAuth2.AccessToken
+as last.</li>
 </ul>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="kd">function</span> <span class="nx">refresh</span><span class="p">(</span><span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
     <span class="kd">var</span> <span class="nx">params</span> <span class="o">=</span> <span class="p">{</span> <span class="nx">grant_type</span><span class="o">:</span> <span class="s1">&#39;refresh_token&#39;</span><span class="p">,</span> <span class="nx">refresh_token</span><span class="o">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">token</span><span class="p">.</span><span class="nx">refresh_token</span> <span class="p">};</span>
-    <span class="nx">core</span><span class="p">.</span><span class="nx">api</span><span class="p">(</span><span class="s1">&#39;POST&#39;</span><span class="p">,</span> <span class="nx">config</span><span class="p">.</span><span class="nx">tokenPath</span><span class="p">,</span> <span class="nx">params</span><span class="p">,</span> <span class="nx">callback</span><span class="p">);</span>
+    <span class="kd">var</span> <span class="nx">that</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
+    <span class="nx">core</span><span class="p">.</span><span class="nx">api</span><span class="p">(</span><span class="s1">&#39;POST&#39;</span><span class="p">,</span> <span class="nx">config</span><span class="p">.</span><span class="nx">tokenPath</span><span class="p">,</span> <span class="nx">params</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">error</span><span class="p">,</span> <span class="nx">result</span><span class="p">){</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">result</span><span class="p">)</span> <span class="p">{</span> <span class="nx">result</span> <span class="o">=</span> <span class="nx">that</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="nx">result</span><span class="p">);</span> <span class="p">}</span>
+      <span class="nx">callback</span><span class="p">(</span><span class="nx">error</span><span class="p">,</span> <span class="nx">result</span><span class="p">);</span>
+    <span class="p">});</span>
   <span class="p">}</span>
 
 
   <span class="k">return</span> <span class="p">{</span>
     <span class="s1">&#39;create&#39;</span> <span class="o">:</span> <span class="nx">create</span><span class="p">,</span>
-    <span class="s1">&#39;token&#39;</span><span class="o">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">token</span><span class="p">,</span>
+    <span class="s1">&#39;token&#39;</span>  <span class="o">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">token</span><span class="p">,</span>
     <span class="s1">&#39;expired&#39;</span><span class="o">:</span> <span class="nx">expired</span><span class="p">,</span>
     <span class="s1">&#39;refresh&#39;</span><span class="o">:</span> <span class="nx">refresh</span>
   <span class="p">}</span>
