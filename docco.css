@@ -32,7 +32,7 @@ hr {
 }
 #background {
   position: fixed;
-  top: 0; left: 525px; right: 0; bottom: 0;
+  top: 0; left: 675px; right: 0; bottom: 0;
   background: #f5f5ff;
   border-left: 1px solid #e5e5ee;
   z-index: -1;
@@ -78,8 +78,8 @@ table td {
   outline: 0;
 }
   td.docs, th.docs {
-    max-width: 450px;
-    min-width: 450px;
+    max-width: 600px;
+    min-width: 600px;
     min-height: 5px;
     padding: 10px 25px 1px 50px;
     overflow-x: hidden;
