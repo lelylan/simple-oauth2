@@ -21,14 +21,7 @@ Install the client library using git:
     $ npm install
 
 
-## Documentation
-
-* [Simple Oauth2 Docs](git://andreareginato.github.com/simple-oauth2)
-
-
 ## Getting started
-
-### Get the Access Token
 
 ```javascript
 var credentials = { client: { id: 'client-id', secret: 'client-secret', site: 'https://example.org' } };
@@ -45,51 +38,14 @@ OAuth2.AuthCode.getToken(params, function(error, result) {
 })
 ```
 
-### Refresh the Access Token
+## Documentation
 
-```javascript
-
-token = OAuth2.AccessToken.create(json_token);
-if (token.expired()) {
-  token.refresh(function(error, refreshedToken) { token = refreshedToken; })
-}
-```
-
-### Authorization Grants
 
 Currently the Authorization Code and Resource Owner Password Credentials grant types
-have helper strategy classes that simplify client use. They are available via the #authCode
-and #password methods respectively.
+have helper strategy classes that simplify client use. They are available respectively
+via #AuthCode and #Password.
+Check out the complete [Simple Oauth2 Documentation](git://andreareginato.github.com/simple-oauth2)
 
-```javascript
-// Authorization code flow
-var uri   = OAuth2.AuthCode.authorizeURL({ redirect_uri: 'http://localhost:3000/callback');
-var token = OAuth2.AuthCode.getToken({ code: 'authorization-code', redirectURI: 'http://localhost:3000/callback' }, callback);
-
-// Password credentials flow
-var token = OAuth2.Password.getToken({ username: 'username', 'password': 'password' }, callback);
-```
-
-If the functions fails an error object is passed as first argument to the callback.
-The body response object is always the last argument.
-
-
-## Errors
-
-Exceptions are raised when a 4xx or 5xx status code is returned.
-
-```javascript
-OAtuh2.HTTPError
-```
-
-Through the error message attribute you can access the JSON representation
-based on HTTP `status` and error `message`.
-
-```javascript
-OAuth2.AuthCode.getToken(function(error, token) {
-  if (error) { console.log(error.message); }
-});
-```
 
 ## Contributing
 
