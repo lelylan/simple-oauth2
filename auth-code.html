@@ -1,0 +1,36 @@
+<!DOCTYPE html>  <html> <head>   <title>auth-code.js</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>            <div id="jump_to">         Jump To &hellip;         <div id="jump_wrapper">           <div id="jump_page">                                           <a class="source" href="access-token.html">                 access-token.js               </a>                                           <a class="source" href="auth-code.html">                 auth-code.js               </a>                                           <a class="source" href="password.html">                 password.js               </a>                        </div>         </div>       </div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               auth-code.js             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>               <h3>Authorization Code flow implementation</h3>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">config</span><span class="p">)</span> <span class="p">{</span>
+
+  <span class="kd">var</span> <span class="nx">core</span>   <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;./../core&#39;</span><span class="p">)(</span><span class="nx">config</span><span class="p">),</span>
+      <span class="nx">qs</span>     <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;querystring&#39;</span><span class="p">);</span></pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>               <h3>Redirect the user to the authorization page</h3>
+
+<ul>
+<li><code>params.redirectURI</code> - A String that represents the registered application URI where the
+user is redirected after authorization.</li>
+<li><code>params.scope</code> - A String that represents the application privileges.</li>
+<li><code>params.state</code> - A String that represents an optional opaque value used by the client to
+maintain state between the request and the callback.</li>
+</ul>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="kd">function</span> <span class="nx">authorizeURL</span><span class="p">(</span><span class="nx">params</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">params</span><span class="p">.</span><span class="nx">response_type</span> <span class="o">=</span> <span class="s1">&#39;code&#39;</span><span class="p">;</span>
+    <span class="nx">params</span><span class="p">.</span><span class="nx">client_id</span> <span class="o">=</span> <span class="nx">config</span><span class="p">.</span><span class="nx">client</span><span class="p">.</span><span class="nx">id</span><span class="p">;</span>
+
+    <span class="k">return</span> <span class="nx">config</span><span class="p">.</span><span class="nx">client</span><span class="p">.</span><span class="nx">site</span> <span class="o">+</span> <span class="nx">config</span><span class="p">.</span><span class="nx">authorizationPath</span> <span class="o">+</span> <span class="s1">&#39;?&#39;</span> <span class="o">+</span> <span class="nx">qs</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">params</span><span class="p">);</span>
+  <span class="p">}</span></pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <h3>Returns the Access Token object.</h3>
+
+<ul>
+<li><code>params.code</code> - Authorization code (from previous step).</li>
+<li><code>params.redirectURI</code> - A String that represents the callback uri.</li>
+<li><code>callback</code> - The callback function returning the results.
+An error object is passed as first argument and the result as last.</li>
+</ul>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="kd">function</span> <span class="nx">getToken</span><span class="p">(</span><span class="nx">params</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">params</span><span class="p">.</span><span class="nx">grant_type</span> <span class="o">=</span> <span class="s1">&#39;authorization_code&#39;</span><span class="p">;</span>
+    <span class="nx">core</span><span class="p">.</span><span class="nx">api</span><span class="p">(</span><span class="s1">&#39;POST&#39;</span><span class="p">,</span> <span class="nx">config</span><span class="p">.</span><span class="nx">tokenPath</span><span class="p">,</span> <span class="nx">params</span><span class="p">,</span> <span class="nx">callback</span><span class="p">);</span>
+  <span class="p">}</span>
+
+
+  <span class="k">return</span> <span class="p">{</span>
+    <span class="s1">&#39;authorizeURL&#39;</span> <span class="o">:</span> <span class="nx">authorizeURL</span><span class="p">,</span>
+    <span class="s1">&#39;getToken&#39;</span> <span class="o">:</span> <span class="nx">getToken</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+
+</pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 

@@ -1,0 +1,34 @@
+<!DOCTYPE html>  <html> <head>   <title>access-token.js</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>            <div id="jump_to">         Jump To &hellip;         <div id="jump_wrapper">           <div id="jump_page">                                           <a class="source" href="access-token.html">                 access-token.js               </a>                                           <a class="source" href="auth-code.html">                 auth-code.js               </a>                                           <a class="source" href="password.html">                 password.js               </a>                        </div>         </div>       </div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               access-token.js             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>               <h3>Wrapper for the Access Token object</h3>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">config</span><span class="p">)</span> <span class="p">{</span>
+
+  <span class="kd">var</span> <span class="nx">core</span>  <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;./../core&#39;</span><span class="p">)(</span><span class="nx">config</span><span class="p">);</span>
+  <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;date-utils&#39;</span><span class="p">);</span></pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>               <h3>Creates an OAuth2.AccessToken instance.</h3>
+
+<ul>
+<li><code>token</code> - An object containing the token object returned from the OAuth2 server.</li>
+</ul>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="kd">function</span> <span class="nx">create</span><span class="p">(</span><span class="nx">token</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">token</span> <span class="o">=</span> <span class="nx">token</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">token</span><span class="p">.</span><span class="nx">expires_at</span> <span class="o">=</span> <span class="p">(</span><span class="k">new</span> <span class="nb">Date</span><span class="p">).</span><span class="nx">addSeconds</span><span class="p">(</span><span class="mi">7200</span><span class="p">);</span>
+    <span class="k">return</span> <span class="k">this</span>
+  <span class="p">}</span></pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <h3>Check if the access token is expired or not.</h3>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="kd">function</span> <span class="nx">expired</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">(</span><span class="nb">Date</span><span class="p">.</span><span class="nx">compare</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">token</span><span class="p">.</span><span class="nx">expires_at</span><span class="p">,</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">)</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">?</span> <span class="kc">false</span> <span class="o">:</span> <span class="kc">true</span>
+  <span class="p">}</span></pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <h3>Refresh the access token</h3>
+
+<ul>
+<li><code>callback</code> - The callback function returning the results.
+An error object is passed as first argument and the new access
+token as last.</li>
+</ul>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="kd">function</span> <span class="nx">refresh</span><span class="p">(</span><span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">params</span> <span class="o">=</span> <span class="p">{</span> <span class="nx">grant_type</span><span class="o">:</span> <span class="s1">&#39;refresh_token&#39;</span><span class="p">,</span> <span class="nx">refresh_token</span><span class="o">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">token</span><span class="p">.</span><span class="nx">refresh_token</span> <span class="p">};</span>
+    <span class="nx">core</span><span class="p">.</span><span class="nx">api</span><span class="p">(</span><span class="s1">&#39;POST&#39;</span><span class="p">,</span> <span class="nx">config</span><span class="p">.</span><span class="nx">tokenPath</span><span class="p">,</span> <span class="nx">params</span><span class="p">,</span> <span class="nx">callback</span><span class="p">);</span>
+  <span class="p">}</span>
+
+
+  <span class="k">return</span> <span class="p">{</span>
+    <span class="s1">&#39;create&#39;</span> <span class="o">:</span> <span class="nx">create</span><span class="p">,</span>
+    <span class="s1">&#39;token&#39;</span><span class="o">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">token</span><span class="p">,</span>
+    <span class="s1">&#39;expired&#39;</span><span class="o">:</span> <span class="nx">expired</span><span class="p">,</span>
+    <span class="s1">&#39;refresh&#39;</span><span class="o">:</span> <span class="nx">refresh</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+
+</pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 
