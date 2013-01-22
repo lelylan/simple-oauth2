@@ -36,7 +36,7 @@ describe('OAuth2.AccessToken',function() {
 	describe('when not expired', function() {
 
 		it('returns false',function() {
-			token.expired().should.be.true
+			token.expired().should.be.false
 		});
 	});
 
@@ -48,31 +48,31 @@ describe('OAuth2.AccessToken',function() {
 		});
 
 		it('returns false',function() {
-			token.expired().should.be.false
+			token.expired().should.be.true
 		});
 
-		describe('when refreses token', function() {
+    describe('when refreses token', function() {
 
-			beforeEach(function(done) {
-				var params = { 'grant_type': 'refresh_token', refresh_token: 'ec1a59d298' };
-				request = nock('https://example.org:443').post('/oauth/token', params).replyWithFile(200, __dirname + '/fixtures/access_token.json');
-				done();
-			});
+      beforeEach(function(done) {
+        var params = { 'grant_type': 'refresh_token', refresh_token: 'ec1a59d298' };
+        request = nock('https://example.org:443').post('/oauth/token', params).replyWithFile(200, __dirname + '/fixtures/access_token.json');
+        done();
+      });
 
-			beforeEach(function(done) {
-				result = null;
-				token.refresh(function(e, r) {
-					error = e; result = r; done();
-				});
-			});
+      beforeEach(function(done) {
+        result = null;
+        token.refresh(function(e, r) {
+          error = e; result = r; done();
+        });
+      });
 
-			it('makes the HTTP request', function() {
-				request.isDone();
-			});
+      it('makes the HTTP request', function() {
+        request.isDone();
+      });
 
-			it('returns a new access token',function() {
-				result.should.have.property('access_token');
-			});
-		})
+      it('returns a new OAuth2.AccessToken',function() {
+        result.token.should.have.property('access_token');
+      });
+    })
 	});
 });
