@@ -1,6 +1,7 @@
 # Simple OAuth2
 
-Node.js client library for [Oauth2](http://oauth.net/2/)
+Node.js client library for [Oauth2](http://oauth.net/2/).
+Currently it supports Authorization Code and Resource Owner Password Credentials grant types.
 
 
 ## Requirements
@@ -40,10 +41,6 @@ OAuth2.AuthCode.getToken(params, function(error, result) {
 
 ## Documentation
 
-
-Currently the Authorization Code and Resource Owner Password Credentials grant types
-have helper strategy classes that simplify client use. They are available respectively
-via #AuthCode and #Password.
 Check out the complete [Simple Oauth2 Documentation](git://andreareginato.github.com/simple-oauth2)
 
 
