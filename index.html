@@ -29,7 +29,7 @@ along with its client secret to the Lelylan in order to get the access token.
 var credentials = { client: {
   id: '&lt;client-id&gt;',
   secret: '&lt;client-secret&gt;',
-  site: 'https://example.org'
+  site: 'https://api.oauth2.com'
 }};
 
 // Initialize the OAuth2 Library
@@ -37,7 +37,9 @@ var OAuth2 = require('simple-oauth2')(credentials);
 
 // Authorization OAuth2 URI
 var authorization_uri = OAuth2.AuthCode.authorizeURL({
-  redirect_uri: 'http://localhost:3000/callback'
+  redirect_uri: 'http://localhost:3000/callback',
+  scope: scope,
+  state: state
 });
 
 // Redirect example using Express
@@ -49,7 +51,7 @@ res.redirect(authorization_uri);
 var token;
 OAuth2.AuthCode.getToken({
   code: 'authorization-code',
-  redirectURI: 'http://localhost:3000/callback'
+  redirect_uri: 'http://localhost:3000/callback'
 }, function(error, result) { token = result });
 
 // Create the access token wrapper
@@ -156,4 +158,4 @@ Simple Oauth2 uses <code>/oauth/token</code> as default.</li>
   <span class="p">}</span>
 <span class="p">};</span>
 
-</pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html>
+</pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 
