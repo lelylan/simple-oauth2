@@ -25,23 +25,38 @@ Install the client library using git:
 ## Getting started
 
 ```javascript
-var credentials = { client: { id: 'client-id', secret: 'client-secret', site: 'https://oauth2.com' } };
+// Set the client credentials
+var credentials = { client: {
+  id: '<client-id>',
+  secret: '<client-secret>',
+  site: 'https://auth.service.com'
+}};
+
+// Initialize the OAuth2 Library
 var OAuth2 = require('simple-oauth2')(credentials);
 
-// Returns the URI where to redirect your app
-var redirect = Oauth2.AuthCode.authorizeURL({ redirectURI: 'http://localhost:3000/callback', scope: 'user', state: '02afe928b');
-// => "https://example.org/oauth/authorization?response_type=code&client_id=client_id&redirect_uri=http://localhost:3000/callback&scope=user&state=02afe928b"
+// Authorization OAuth2 URI
+var authorization_uri = OAuth2.AuthCode.authorizeURL({
+  redirect_uri: 'http://localhost:3000/callback'
+});
 
-// Get the access token object
-vat params = { code: 'authorization-code', redirectURI: 'http://localhost:3000/callback' }
-OAuth2.AuthCode.getToken(params, function(error, result) {
-  // save the token
-})
+// Redirect example using Express (see http://expressjs.com/api.html#res.redirect)
+res.redirect(authorization_uri);
+
+// Get the access token object (authorization code is given from previous step)
+var token;
+OAuth2.AuthCode.getToken({
+  code: code,
+  redirect_uri: 'http://localhost:3000/callback'
+}, function(error, result) { token = result });
+
+// Create the access token wrapper
+var token = OAuth2.AccessToken.create(json_token);
 ```
 
 ## Documentation
 
-Check out the complete [Simple Oauth2 Documentation](http://andreareginato.github.com/simple-oauth2)
+Check out the complete [Simple OAuth2 website](http://andreareginato.github.com/simple-oauth2)
 
 
 ## Contributing

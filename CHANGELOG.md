@@ -1,6 +1,10 @@
 # Changelog
 
 
+## v0.1.4 (22 Jan 2013)
+
+* Fixed missing Basic Auth that somehow is not created from the request library
+
 ## v0.1.3 (22 Jan 2013)
 
 * Fixed bug on AccessToken#expired() as it had the inverse logic
