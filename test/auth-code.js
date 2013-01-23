@@ -1,5 +1,6 @@
 var credentials = { client: { id: 'client-id', secret: 'client-secret', site: 'https://example.org' } },
     OAuth2 = require('./../lib/simple-oauth2.js')(credentials),
+		qs = require('querystring'),
     nock = require('nock');
 
 var request, result, error;
@@ -15,7 +16,7 @@ describe('OAuth2.AuthCode',function() {
 		})
 
 		it('returns the authorization URI', function() {
-			var expected = 'https://example.org/oauth/authorization?redirect_uri=' + encodeURIComponent('http://localhost:3000/callback') + '&scope=user&state=02afe928b&response_type=code&client_id=client-id';
+			var expected = 'https://example.org/oauth/authorize?redirect_uri=' + encodeURIComponent('http://localhost:3000/callback') + '&scope=user&state=02afe928b&response_type=code&client_id=client-id';
 			result.should.eql(expected);
 		})
 	});
@@ -24,7 +25,7 @@ describe('OAuth2.AuthCode',function() {
 
 		beforeEach(function(done) {
 			var params = { 'code': 'code', 'redirect_uri': 'http://callback.com', 'grant_type': 'authorization_code' };
-			request = nock('https://example.org:443').post('/oauth/token', params).replyWithFile(200, __dirname + '/fixtures/access_token.json');
+			request = nock('https://example.org:443').post('/oauth/token', qs.stringify(params)).replyWithFile(200, __dirname + '/fixtures/access_token.json');
 			done();
 		})
 

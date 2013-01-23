@@ -25,7 +25,7 @@ Install the client library using git:
 ## Getting started
 
 ```javascript
-var credentials = { client: { id: 'client-id', secret: 'client-secret', site: 'https://example.org' } };
+var credentials = { client: { id: 'client-id', secret: 'client-secret', site: 'https://oauth2.com' } };
 var OAuth2 = require('simple-oauth2')(credentials);
 
 // Returns the URI where to redirect your app

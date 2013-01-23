@@ -10,7 +10,7 @@ describe('OAuth2.AccessToken',function() {
 
 	beforeEach(function(done) {
 		var params = { 'code': 'code', 'redirect_uri': 'http://callback.com', 'grant_type': 'authorization_code' };
-		request = nock('https://example.org:443').post('/oauth/token', params).replyWithFile(200, __dirname + '/fixtures/access_token.json');
+		request = nock('https://example.org:443').post('/oauth/token', qs.stringify(params)).replyWithFile(200, __dirname + '/fixtures/access_token.json');
 		done();
 	})
 
@@ -27,6 +27,7 @@ describe('OAuth2.AccessToken',function() {
 	});
 
 	describe('#create',function() {
+
 		it('creates an access token',function() {
 			token.should.have.property('token');
 		});
@@ -55,7 +56,7 @@ describe('OAuth2.AccessToken',function() {
 
       beforeEach(function(done) {
         var params = { 'grant_type': 'refresh_token', refresh_token: 'ec1a59d298' };
-        request = nock('https://example.org:443').post('/oauth/token', params).replyWithFile(200, __dirname + '/fixtures/access_token.json');
+        request = nock('https://example.org:443').post('/oauth/token', qs.stringify(params)).replyWithFile(200, __dirname + '/fixtures/access_token.json');
         done();
       });
 
