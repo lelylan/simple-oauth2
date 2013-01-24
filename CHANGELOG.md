@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.1.4 (24 Jan 2013)
+
+* Token expiration is now dinamically defined through the expires_in
+  field returned with the access token from the OAuth2 server
+
 
 ## v0.1.4 (22 Jan 2013)
 
