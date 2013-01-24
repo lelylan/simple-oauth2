@@ -1,6 +1,10 @@
 # Changelog
 
-## v0.1.4 (24 Jan 2013)
+## v0.1.6 (24 Jan 2013)
+
+* Updated name convention on using simple oauth2 configuration block.
+
+## v0.1.5 (24 Jan 2013)
 
 * Token expiration is now dinamically defined through the expires_in
   field returned with the access token from the OAuth2 server
