@@ -209,9 +209,10 @@ Special thanks to the following people for submitting patches.
 
 ## Changelog
 
-See [CHANGELOG](simple-oauth2/blob/master/CHANGELOG.md)
+See [CHANGELOG](https://github.com/andreareginato/simple-oauth2/blob/master/CHANGELOG.md)
 
 
 ## Copyright
 
-Copyright (c) 2013 [Lelylan](http://lelylan.com). See [LICENSE](simple-oauth2/blob/master/LICENSE.md) for details.
+Copyright (c) 2013 [Lelylan](http://lelylan.com).
+See [LICENSE](https://github.com/andreareginato/simple-oauth2/blob/master/LICENSE.md) for details.
