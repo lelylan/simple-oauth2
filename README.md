@@ -118,6 +118,7 @@ if (token.expired()) {
     token = result;
   })
 }
+```
 
 
 ### Errors
