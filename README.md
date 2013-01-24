@@ -39,11 +39,11 @@ along with its client secret to the Lelylan in order to get the access token.
 
 ```javascript
 // Set the client credentials and the OAuth2 server
-var credentials = { client: {
-  id:     '<client-id>',
-  secret: '<client-secret>',
-  site:   'https://api.oauth.com'
-}};
+var credentials = {
+  clientID: '<client-id>',
+  clientSecret: '<client-secret>',
+  site: 'https://api.oauth.com'
+};
 
 // Initialize the OAuth2 Library
 var OAuth2 = require('simple-oauth2')(credentials);
@@ -142,9 +142,9 @@ OAuth2.AuthCode.getToken(function(error, token) {
 
 Simple OAuth2 accepts an object with the following valid params.
 
-* `client.id` - Required registered Client ID.
-* `client.secret` - Required registered Client secret.
-* `client.site` - Required registered Client site.
+* `clientID` - Required registered Client ID.
+* `clientSecret` - Required registered Client secret.
+* `site` - Required OAuth2 server site.
 * `authorizationPath` - Authorization path for the OAuth2 server.
 Simple OAuth2 uses `/oauth/authorize` as default
 * `tokenPath` - Access token path for the OAuth2 server.
@@ -152,13 +152,13 @@ Simple OAuth2 uses `/oauth/token` as default.
 
 ```javascript
 // Set the configuration settings
-var credentials = { client: {
-  id: '<client-id>',
-  secret: '<client-secret>',
-  site: 'https://api.oauth.com',
+var credentials = {
+  clientID: '<client-id>',
+  clientSecret: '<client-secret>',
+  site: 'https://www.oauth2.com',
   authorizationPath: '/oauth2/authorization',
   tokenPath: '/oauth2/access_token'
-}};
+};
 
 // Initialize the OAuth2 Library
 var OAuth2 = require('simple-oauth2')(credentials);
