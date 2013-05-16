@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.1.7 (16 May 2013)
+
+* Now compatible with Github
+
 ## v0.1.6 (24 Jan 2013)
 
 * Updated name convention on using simple oauth2 configuration block.
