@@ -19,7 +19,7 @@ Node client library is tested against Node ~0.8.x
 
 Install the client library using [npm](http://npmjs.org/):
 
-    $ npm install simple-oath2
+    $ npm install simple-oauth2
 
 Install the client library using git:
 
