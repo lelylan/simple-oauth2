@@ -37,12 +37,11 @@ var express = require('express'),
     app = express();
     
 var OAuth2 = require('simple-oauth2')({
-      clientID: CLIENT_ID,
-      clientSecret: CLIENT_SECRET,
-      site: 'https://github.com/login',
-      tokenPath: '/oauth/access_token'
-    });
-
+  clientID: CLIENT_ID,
+  clientSecret: CLIENT_SECRET,
+  site: 'https://github.com/login',
+  tokenPath: '/oauth/access_token'
+});
 
 // Authorization uri definition
 var authorization_uri = OAuth2.AuthCode.authorizeURL({
@@ -64,20 +63,19 @@ app.get('/callback', function (req, res) {
     code: code,
     redirect_uri: 'http://localhost:3000/callback'
   }, saveToken);
- 
+
   function saveToken(error, result) {
     if (error) { console.log('Access Token Error', error.message); }
     token = OAuth2.AccessToken.create(result);
   }
 });
 
- 
 app.get('/', function (req, res) {
   res.send('Hello World');
 });
- 
+
 app.listen(3000);
- 
+
 console.log('Express server started on port 3000');
 ```
 
