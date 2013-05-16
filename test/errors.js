@@ -10,7 +10,7 @@ describe('Simple OAuth2 Error',function() {
 	describe('with status code 401',function() {
 
 		beforeEach(function(done) {
-			var params = { 'code': 'code', 'redirect_uri': 'http://callback.com', 'grant_type': 'authorization_code' };
+			var params = { 'code': 'code', 'redirect_uri': 'http://callback.com', 'grant_type': 'authorization_code', 'client_id': 'client-id', 'secret': 'client-secret' };
 			request = nock('https://example.org:443').post('/oauth/token', qs.stringify(params)).reply(401, 'Unauthorized');
 			done();
 		});
@@ -34,7 +34,7 @@ describe('Simple OAuth2 Error',function() {
 	describe('with status code 500',function() {
 
 		beforeEach(function(done) {
-			var params = { 'code': 'code', 'redirect_uri': 'http://callback.com', 'grant_type': 'authorization_code' };
+			var params = { 'code': 'code', 'redirect_uri': 'http://callback.com', 'grant_type': 'authorization_code', 'client_id': 'client-id', 'secret': 'client-secret' };
 			request = nock('https://example.org:443').post('/oauth/token', qs.stringify(params)).reply(500, 'Server Error');
 			done();
 		});
