@@ -9,6 +9,7 @@ Simple OAuth2 supports the following flows.
 
 * Authorization Code Flow (for apps with servers that can store persistent information).
 * Password Credentials (when previous flow can't be used or during development).
+* [Client Credentials Flow](http://tools.ietf.org/html/draft-ietf-oauth-v2-31#section-4.4) (the client can request an access token using only its client credentials)
 
 ## Requirements
 
@@ -138,6 +139,22 @@ OAuth2.Password.getToken({
   username: 'username',
   password: 'password' 
 }, saveToken);
+
+// Save the access token
+function saveToken(error, result) {
+  if (error) { console.log('Access Token Error', error.message); }
+  token = OAuth2.AccessToken.create(result);
+});
+```
+
+### Client Credentials Flow
+
+This flow is suitable when client is requesting access to the protected resources under its control.
+
+```javascript
+// Get the access token object.
+var token;
+OAuth2.Password.getToken(saveToken);
 
 // Save the access token
 function saveToken(error, result) {
