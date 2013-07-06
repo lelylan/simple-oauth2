@@ -154,7 +154,17 @@ This flow is suitable when client is requesting access to the protected resource
 ```javascript
 // Get the access token object.
 var token;
-OAuth2.Password.getToken(saveToken);
+var credentials = {
+  clientID: '<client-id>',
+  clientSecret: '<client-secret>',
+  site: 'https://api.oauth.com'
+};
+
+// Initialize the OAuth2 Library
+var OAuth2 = require('simple-oauth2')(credentials);
+
+// Get the access token object for the client
+OAuth2.Client.getToken(saveToken);
 
 // Save the access token
 function saveToken(error, result) {
