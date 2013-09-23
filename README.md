@@ -226,7 +226,7 @@ Simple OAuth2 accepts an object with the following valid params.
 * `authorizationPath` - Authorization path for the OAuth2 server. Defaults to `/oauth/authorize`.
 * `tokenPath` - Access token path for the OAuth2 server. Defaults to `/oauth/token`.
 * `useBasicAuthorizationHeader` - Whether or not the `Authorization: Basic ...` header is set on the request.
-Defaults to `false`.
+Defaults to `true`.
 * `clientSecretParameterName` - Parameter name for the client secret. Defaults to `client_secret`.
 
 ```javascript
