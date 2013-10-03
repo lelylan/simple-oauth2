@@ -294,4 +294,5 @@ See [CHANGELOG](https://github.com/andreareginato/simple-oauth2/blob/master/CHAN
 ## Copyright
 
 Copyright (c) 2013 [Lelylan](http://lelylan.com).
-See [LICENSE](https://github.com/andreareginato/simple-oauth2/blob/master/LICENSE.md) for details.
+
+This project is released under the [MIT License](http://opensource.org/licenses/MIT).
