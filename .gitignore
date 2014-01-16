@@ -20,3 +20,6 @@ node_modules
 
 # Docs
 docs/
+
+.idea/
+*.iml

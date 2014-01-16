@@ -9,6 +9,7 @@ Simple OAuth2 supports the following flows.
 
 * Authorization Code Flow (for apps with servers that can store persistent information).
 * Password Credentials (when previous flow can't be used or during development).
+* [Client Credentials Flow](http://tools.ietf.org/html/draft-ietf-oauth-v2-31#section-4.4) (the client can request an access token using only its client credentials)
 
 ## Requirements
 
@@ -29,6 +30,57 @@ Install the client library using git:
 
 
 ## Getting started
+
+### Express and Github example
+
+```javascript
+var express = require('express'),
+    app = express();
+    
+var OAuth2 = require('simple-oauth2')({
+  clientID: CLIENT_ID,
+  clientSecret: CLIENT_SECRET,
+  site: 'https://github.com/login',
+  tokenPath: '/oauth/access_token'
+});
+
+// Authorization uri definition
+var authorization_uri = OAuth2.AuthCode.authorizeURL({
+  redirect_uri: 'http://localhost:3000/callback',
+  scope: 'notifications',
+  state: '3(#0/!~'
+});
+
+// Initial page redirecting to Github
+app.get('/auth', function (req, res) {
+    res.redirect(authorization_uri);
+});
+
+// Callback service parsing the authorization token and asking for the access token
+app.get('/callback', function (req, res) {
+  var code = req.query.code; 
+  console.log('/callback');
+  OAuth2.AuthCode.getToken({
+    code: code,
+    redirect_uri: 'http://localhost:3000/callback'
+  }, saveToken);
+
+  function saveToken(error, result) {
+    if (error) { console.log('Access Token Error', error.message); }
+    token = OAuth2.AccessToken.create(result);
+  }
+});
+
+app.get('/', function (req, res) {
+  res.send('Hello World');
+});
+
+app.listen(3000);
+
+console.log('Express server started on port 3000');
+```
+
+Credits to [@lazybean](https://github.com/lazybean)
 
 ### Authorization Code flow
 
@@ -95,6 +147,32 @@ function saveToken(error, result) {
 });
 ```
 
+### Client Credentials Flow
+
+This flow is suitable when client is requesting access to the protected resources under its control.
+
+```javascript
+// Get the access token object.
+var token;
+var credentials = {
+  clientID: '<client-id>',
+  clientSecret: '<client-secret>',
+  site: 'https://api.oauth.com'
+};
+
+// Initialize the OAuth2 Library
+var OAuth2 = require('simple-oauth2')(credentials);
+
+// Get the access token object for the client
+OAuth2.Client.getToken(saveToken);
+
+// Save the access token
+function saveToken(error, result) {
+  if (error) { console.log('Access Token Error', error.message); }
+  token = OAuth2.AccessToken.create(result);
+});
+```
+
 ### Access Token object
 
 When a token expires we need to refresh it. Simple OAuth2 offers the
@@ -145,10 +223,11 @@ Simple OAuth2 accepts an object with the following valid params.
 * `clientID` - Required registered Client ID.
 * `clientSecret` - Required registered Client secret.
 * `site` - Required OAuth2 server site.
-* `authorizationPath` - Authorization path for the OAuth2 server.
-Simple OAuth2 uses `/oauth/authorize` as default
-* `tokenPath` - Access token path for the OAuth2 server.
-Simple OAuth2 uses `/oauth/token` as default.
+* `authorizationPath` - Authorization path for the OAuth2 server. Defaults to `/oauth/authorize`.
+* `tokenPath` - Access token path for the OAuth2 server. Defaults to `/oauth/token`.
+* `useBasicAuthorizationHeader` - Whether or not the `Authorization: Basic ...` header is set on the request.
+Defaults to `true`.
+* `clientSecretParameterName` - Parameter name for the client secret. Defaults to `client_secret`.
 
 ```javascript
 // Set the configuration settings
@@ -215,4 +294,5 @@ See [CHANGELOG](https://github.com/andreareginato/simple-oauth2/blob/master/CHAN
 ## Copyright
 
 Copyright (c) 2013 [Lelylan](http://lelylan.com).
-See [LICENSE](https://github.com/andreareginato/simple-oauth2/blob/master/LICENSE.md) for details.
+
+This project is released under the [MIT License](http://opensource.org/licenses/MIT).

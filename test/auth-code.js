@@ -24,7 +24,7 @@ describe('OAuth2.AuthCode',function() {
 	describe('#getToken',function() {
 
 		beforeEach(function(done) {
-			var params = { 'code': 'code', 'redirect_uri': 'http://callback.com', 'grant_type': 'authorization_code', 'client_id': 'client-id', 'secret': 'client-secret' };
+			var params = { 'code': 'code', 'redirect_uri': 'http://callback.com', 'grant_type': 'authorization_code', 'client_id': 'client-id', 'client_secret': 'client-secret' };
 			request = nock('https://example.org').post('/oauth/token', qs.stringify(params)).replyWithFile(200, __dirname + '/fixtures/access_token.json');
 			done();
 		})

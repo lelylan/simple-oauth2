@@ -9,7 +9,7 @@ var request, result, token, error;
 describe('OAuth2.AccessToken',function() {
 
 	beforeEach(function(done) {
-		var params = { 'code': 'code', 'redirect_uri': 'http://callback.com', 'grant_type': 'authorization_code', 'client_id': 'client-id', 'secret': 'client-secret' };
+		var params = { 'code': 'code', 'redirect_uri': 'http://callback.com', 'grant_type': 'authorization_code', 'client_id': 'client-id', 'client_secret': 'client-secret' };
 		request = nock('https://example.org:443').post('/oauth/token', qs.stringify(params)).replyWithFile(200, __dirname + '/fixtures/access_token.json');
 		done();
 	})
@@ -51,11 +51,11 @@ describe('OAuth2.AccessToken',function() {
 		it('returns false',function() {
 			token.expired().should.be.true
 		});
-
+    });
     describe('when refreses token', function() {
 
       beforeEach(function(done) {
-        var params = { 'grant_type': 'refresh_token', refresh_token: 'ec1a59d298', 'client_id': 'client-id', 'secret': 'client-secret' };
+        var params = { 'grant_type': 'refresh_token', refresh_token: 'ec1a59d298', 'client_id': 'client-id', 'client_secret': 'client-secret' };
         request = nock('https://example.org:443').post('/oauth/token', qs.stringify(params)).replyWithFile(200, __dirname + '/fixtures/access_token.json');
         done();
       });
@@ -75,5 +75,5 @@ describe('OAuth2.AccessToken',function() {
         result.token.should.have.property('access_token');
       });
     })
-	});
+
 });
