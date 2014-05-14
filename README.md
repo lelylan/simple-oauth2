@@ -24,7 +24,7 @@ Install the client library using [npm](http://npmjs.org/):
 
 Install the client library using git:
 
-    $ git clone git://github.com/andrearegianto/simple-oauth2.git
+    $ git clone git://github.com/andreareginato/simple-oauth2.git
     $ cd simple-oauth2
     $ npm install
 
