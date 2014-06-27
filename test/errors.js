@@ -11,7 +11,7 @@ describe('Simple OAuth2 Error',function() {
 
 		beforeEach(function(done) {
 			var params = { 'code': 'code', 'redirect_uri': 'http://callback.com', 'grant_type': 'authorization_code', 'client_id': 'client-id', 'client_secret': 'client-secret' };
-			request = nock('https://example.org:443').post('/oauth/token', qs.stringify(params)).reply(401, 'Unauthorized');
+			request = nock('https://example.org:443').post('/oauth/token', qs.stringify(params)).reply(401);
 			done();
 		});
 
@@ -27,7 +27,8 @@ describe('Simple OAuth2 Error',function() {
 		});
 
 		it('returns an access token',function() {
-			error.message.message.should.eql('Unauthorized');
+			error.message.should.eql('Unauthorized');
+			error.status.should.eql(401);
 		});
 	});
 
@@ -35,7 +36,7 @@ describe('Simple OAuth2 Error',function() {
 
 		beforeEach(function(done) {
 			var params = { 'code': 'code', 'redirect_uri': 'http://callback.com', 'grant_type': 'authorization_code', 'client_id': 'client-id', 'client_secret': 'client-secret' };
-			request = nock('https://example.org:443').post('/oauth/token', qs.stringify(params)).reply(500, 'Server Error');
+			request = nock('https://example.org:443').post('/oauth/token', qs.stringify(params)).reply(500);
 			done();
 		});
 
@@ -51,7 +52,8 @@ describe('Simple OAuth2 Error',function() {
 		});
 
 		it('returns an access token',function() {
-			error.message.message.should.eql('Internal Server Error');
+			error.message.should.eql('Internal Server Error');
+			error.status.should.eql(500);
 		});
 	});
 })
