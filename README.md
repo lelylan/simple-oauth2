@@ -36,7 +36,7 @@ Install the client library using git:
 ```javascript
 var express = require('express'),
     app = express();
-    
+
 var OAuth2 = require('simple-oauth2')({
   clientID: CLIENT_ID,
   clientSecret: CLIENT_SECRET,
@@ -58,7 +58,7 @@ app.get('/auth', function (req, res) {
 
 // Callback service parsing the authorization token and asking for the access token
 app.get('/callback', function (req, res) {
-  var code = req.query.code; 
+  var code = req.query.code;
   console.log('/callback');
   OAuth2.AuthCode.getToken({
     code: code,
@@ -144,6 +144,12 @@ OAuth2.Password.getToken({
 function saveToken(error, result) {
   if (error) { console.log('Access Token Error', error.message); }
   token = OAuth2.AccessToken.create(result);
+
+  OAuth2.api('GET', '/users', {
+    access_token: token.token.access_token
+  }, function (err, data) {
+    console.log(data);
+  });
 });
 ```
 
