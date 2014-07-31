@@ -1,12 +1,12 @@
 var credentials = { clientID: 'client-id', clientSecret: 'client-secret', site: 'https://example.org' },
-    OAuth2 = require('./../lib/simple-oauth2.js')(credentials),
+    oauth2 = require('./../lib/simple-oauth2.js')(credentials),
     qs = require('querystring'),
     nock = require('nock');
 
 var request, result, token, error;
 
 
-describe('OAuth2.AccessToken',function() {
+describe('oauth2.accessToken',function() {
 
   beforeEach(function(done) {
     var params = { 'code': 'code', 'redirect_uri': 'http://callback.com', 'grant_type': 'authorization_code', 'client_id': 'client-id', 'client_secret': 'client-secret' };
@@ -16,13 +16,13 @@ describe('OAuth2.AccessToken',function() {
 
   beforeEach(function(done) {
     var params = { 'code': 'code', 'redirect_uri': 'http://callback.com' }
-    OAuth2.AuthCode.getToken(params, function(e, r) {
+    oauth2.authCode.getToken(params, function(e, r) {
       error = e; result = r; done();
     })
   })
 
   beforeEach(function(done) {
-    token = OAuth2.AccessToken.create(result);
+    token = oauth2.accessToken.create(result);
     done();
   });
 
@@ -71,7 +71,7 @@ describe('OAuth2.AccessToken',function() {
         request.isDone();
       });
 
-      it('returns a new OAuth2.AccessToken',function() {
+      it('returns a new oauth2.accessToken',function() {
         result.token.should.have.property('access_token');
       });
     })
