@@ -1,11 +1,11 @@
 var credentials = { clientID: 'client-id', clientSecret: 'client-secret', site: 'https://example.org' },
-    OAuth2 = require('./../lib/simple-oauth2.js')(credentials),
+    oauth2 = require('./../lib/simple-oauth2.js')(credentials),
     qs = require('querystring'),
     nock = require('nock');
 
 var request, result, error;
 
-describe('Simple OAuth2 Error',function() {
+describe('Simple oauth2 Error',function() {
 
   describe('with status code 401',function() {
 
@@ -17,7 +17,7 @@ describe('Simple OAuth2 Error',function() {
 
     beforeEach(function(done) {
       var params = { 'code': 'code', 'redirect_uri': 'http://callback.com' }
-      OAuth2.AuthCode.getToken(params, function(e, r) {
+      oauth2.authCode.getToken(params, function(e, r) {
         error = e; result = r; done();
       });
     });
@@ -42,7 +42,7 @@ describe('Simple OAuth2 Error',function() {
 
     beforeEach(function(done) {
       var params = { 'code': 'code', 'redirect_uri': 'http://callback.com' }
-      OAuth2.AuthCode.getToken(params, function(e, r) {
+      oauth2.authCode.getToken(params, function(e, r) {
         error = e; result = r; done();
       });
     });

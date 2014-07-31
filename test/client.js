@@ -1,11 +1,11 @@
 var credentials = { clientID: 'client-id', clientSecret: 'client-secret', site: 'https://example.org', form: false },
-    OAuth2 = require('./../lib/simple-oauth2.js')(credentials),
+    oauth2 = require('./../lib/simple-oauth2.js')(credentials),
     qs = require('querystring'),
     nock = require('nock');
 
 var request, result, error;
 
-describe('OAuth2.Client',function() {
+describe('oauth2.Client',function() {
 
   describe('#getToken',function() {
 
@@ -17,7 +17,7 @@ describe('OAuth2.Client',function() {
 
     beforeEach(function(done) {
       var params = {};
-      OAuth2.Client.getToken(params, function(e, r) {
+      oauth2.client.getToken(params, function(e, r) {
         error = e; result = r; done();
       })
     })

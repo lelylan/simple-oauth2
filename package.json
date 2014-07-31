@@ -21,6 +21,10 @@
     "mocha": "~1.8.1",
     "nock": "~0.14.3"
   },
+  "scripts": {
+    "test": "mocha ",
+    "test-watch": "mocha --watch --growl"
+  },
   "main": ".",
   "licenses": [
     {

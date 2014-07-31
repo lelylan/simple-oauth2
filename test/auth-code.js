@@ -1,17 +1,17 @@
 var credentials = { clientID: 'client-id', clientSecret: 'client-secret', site: 'https://example.org' },
-    OAuth2 = require('./../lib/simple-oauth2.js')(credentials),
+    oauth2 = require('./../lib/simple-oauth2.js')(credentials),
     qs = require('querystring'),
     nock = require('nock');
 
 var request, result, error;
 
-describe('OAuth2.AuthCode',function() {
+describe('oauth2.authCode',function() {
 
   describe('#authorizeURL', function(){
 
     beforeEach(function(done) {
       var params = { 'redirect_uri': 'http://localhost:3000/callback', 'scope': 'user', 'state': '02afe928b' };
-      result = OAuth2.AuthCode.authorizeURL(params);
+      result = oauth2.authCode.authorizeURL(params);
       done();
     })
 
@@ -31,7 +31,7 @@ describe('OAuth2.AuthCode',function() {
 
     beforeEach(function(done) {
       var params = { 'code': 'code', 'redirect_uri': 'http://callback.com' }
-      OAuth2.AuthCode.getToken(params, function(e, r) {
+      oauth2.authCode.getToken(params, function(e, r) {
         error = e; result = r; done();
       })
     })
