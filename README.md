@@ -204,6 +204,21 @@ if (token.expired()) {
 }
 ```
 
+When you've done with the token or you want to log out, you can
+revoke the access token and refresh token.
+
+```javascript
+
+// Revoke only the access token
+token.revoke('access_token', function(error) {
+  // Session ended. But the refresh_token is still valid.
+
+  // Revoke the refresh_token
+  token.revoke('refresh_token', function(error) {
+    console.log('token revoked.');
+  });
+});
+```
 
 ### Errors
 
@@ -231,6 +246,7 @@ Simple OAuth2 accepts an object with the following valid params.
 * `site` - Required OAuth2 server site.
 * `authorizationPath` - Authorization path for the OAuth2 server. Defaults to `/oauth/authorize`.
 * `tokenPath` - Access token path for the OAuth2 server. Defaults to `/oauth/token`.
+* `revocationPath` - Revocation token path for the OAuth2 server. Defaults to `/oauth/revoke`.
 * `useBasicAuthorizationHeader` - Whether or not the `Authorization: Basic ...` header is set on the request.
 Defaults to `true`.
 * `clientSecretParameterName` - Parameter name for the client secret. Defaults to `client_secret`.
@@ -242,7 +258,8 @@ var credentials = {
   clientSecret: '<client-secret>',
   site: 'https://www.oauth2.com',
   authorizationPath: '/oauth2/authorization',
-  tokenPath: '/oauth2/access_token'
+  tokenPath: '/oauth2/access_token',
+  revocationPath: '/oauth2/revoke'
 };
 
 // Initialize the OAuth2 Library
