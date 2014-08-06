@@ -77,4 +77,23 @@ describe('oauth2.accessToken',function() {
     });
   })
 
+  describe('#revoke',function() {
+
+      beforeEach(function(done) {
+          var params = { 'token': 'ec1a59d298', 'token_type_hint': 'refresh_token', 'client_id': 'client-id', 'client_secret': 'client-secret' };
+          request = nock('https://example.org:443').post('/oauth/revoke', qs.stringify(params)).reply(200);
+          done();
+      });
+
+      beforeEach(function(done) {
+          result = null;
+          token.revoke('refresh_token', function(e) {
+              error = e; done();
+          });
+      });
+
+    it('make HTTP call', function() {
+        request.isDone();
+    });
+  });
 });
