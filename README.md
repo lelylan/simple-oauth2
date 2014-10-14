@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/andreareginato/simple-oauth2.svg?branch=master)](https://travis-ci.org/andreareginato/simple-oauth2)
+
 # Simple OAuth2
 
 Node.js client library for [Oauth2](http://oauth.net/2/).
