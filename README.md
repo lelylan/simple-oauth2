@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/andreareginato/simple-oauth2.svg?branch=master)](https://travis-ci.org/andreareginato/simple-oauth2)
+
 # Simple OAuth2
 
 Node.js client library for [Oauth2](http://oauth.net/2/).
@@ -37,7 +39,7 @@ Install the client library using git:
 var express = require('express'),
     app = express();
 
-var OAuth2 = require('simple-oauth2')({
+var oauth2 = require('simple-oauth2')({
   clientID: CLIENT_ID,
   clientSecret: CLIENT_SECRET,
   site: 'https://github.com/login',
@@ -45,7 +47,7 @@ var OAuth2 = require('simple-oauth2')({
 });
 
 // Authorization uri definition
-var authorization_uri = OAuth2.AuthCode.authorizeURL({
+var authorization_uri = oauth2.authCode.authorizeURL({
   redirect_uri: 'http://localhost:3000/callback',
   scope: 'notifications',
   state: '3(#0/!~'
@@ -60,14 +62,14 @@ app.get('/auth', function (req, res) {
 app.get('/callback', function (req, res) {
   var code = req.query.code;
   console.log('/callback');
-  OAuth2.AuthCode.getToken({
+  oauth2.authCode.getToken({
     code: code,
     redirect_uri: 'http://localhost:3000/callback'
   }, saveToken);
 
   function saveToken(error, result) {
     if (error) { console.log('Access Token Error', error.message); }
-    token = OAuth2.AccessToken.create(result);
+    token = oauth2.accessToken.create(result);
   }
 });
 
@@ -98,10 +100,10 @@ var credentials = {
 };
 
 // Initialize the OAuth2 Library
-var OAuth2 = require('simple-oauth2')(credentials);
+var oauth2 = require('simple-oauth2')(credentials);
 
-// Authorization OAuth2 URI
-var authorization_uri = OAuth2.AuthCode.authorizeURL({
+// Authorization oauth2 URI
+var authorization_uri = oauth2.authCode.authorizeURL({
   redirect_uri: 'http://localhost:3000/callback',
   scope: '<scope>',
   state: '<state>'
@@ -112,7 +114,7 @@ res.redirect(authorization_uri);
 
 // Get the access token object (the authorization code is given from the previous step).
 var token;
-OAuth2.AuthCode.getToken({
+oauth2.authCode.getToken({
   code: '<code>',
   redirect_uri: 'http://localhost:3000/callback'
 }, saveToken);
@@ -120,7 +122,7 @@ OAuth2.AuthCode.getToken({
 // Save the access token
 function saveToken(error, result) {
   if (error) { console.log('Access Token Error', error.message); }
-  token = OAuth2.AccessToken.create(result);
+  token = oauth2.accessToken.create(result);
 });
 ```
 
@@ -135,7 +137,7 @@ test your application.
 ```javascript
 // Get the access token object.
 var token;
-OAuth2.Password.getToken({
+oauth2.password.getToken({
   username: 'username',
   password: 'password' 
 }, saveToken);
@@ -143,9 +145,9 @@ OAuth2.Password.getToken({
 // Save the access token
 function saveToken(error, result) {
   if (error) { console.log('Access Token Error', error.message); }
-  token = OAuth2.AccessToken.create(result);
+  token = oauth2.accessToken.create(result);
 
-  OAuth2.api('GET', '/users', {
+  oauth2.api('GET', '/users', {
     access_token: token.token.access_token
   }, function (err, data) {
     console.log(data);
@@ -167,15 +169,15 @@ var credentials = {
 };
 
 // Initialize the OAuth2 Library
-var OAuth2 = require('simple-oauth2')(credentials);
+var oauth2 = require('simple-oauth2')(credentials);
 
 // Get the access token object for the client
-OAuth2.Client.getToken(saveToken);
+oauth2.Client.getToken(saveToken);
 
 // Save the access token
 function saveToken(error, result) {
   if (error) { console.log('Access Token Error', error.message); }
-  token = OAuth2.AccessToken.create(result);
+  token = oauth2.accessToken.create(result);
 });
 ```
 
@@ -194,7 +196,7 @@ var token = {
 };
 
 // Create the access token wrapper
-var token = OAuth2.AccessToken.create(token);
+var token = oauth2.accessToken.create(token);
 
 // Check if the token is expired. If expired it is refreshed.
 if (token.expired()) {
@@ -204,6 +206,21 @@ if (token.expired()) {
 }
 ```
 
+When you've done with the token or you want to log out, you can
+revoke the access token and refresh token.
+
+```javascript
+
+// Revoke only the access token
+token.revoke('access_token', function(error) {
+  // Session ended. But the refresh_token is still valid.
+
+  // Revoke the refresh_token
+  token.revoke('refresh_token', function(error) {
+    console.log('token revoked.');
+  });
+});
+```
 
 ### Errors
 
@@ -215,7 +232,7 @@ Through the error message attribute you can access the JSON representation
 based on HTTP `status` and error `message`.
 
 ```javascript
-OAuth2.AuthCode.getToken(function(error, token) {
+oauth2.authCode.getToken(function(error, token) {
   if (error) { console.log(error.message); }
 });
 // => { "status": "401", "message": "Unauthorized" }
@@ -231,6 +248,7 @@ Simple OAuth2 accepts an object with the following valid params.
 * `site` - Required OAuth2 server site.
 * `authorizationPath` - Authorization path for the OAuth2 server. Defaults to `/oauth/authorize`.
 * `tokenPath` - Access token path for the OAuth2 server. Defaults to `/oauth/token`.
+* `revocationPath` - Revocation token path for the OAuth2 server. Defaults to `/oauth/revoke`.
 * `useBasicAuthorizationHeader` - Whether or not the `Authorization: Basic ...` header is set on the request.
 Defaults to `true`.
 * `clientSecretParameterName` - Parameter name for the client secret. Defaults to `client_secret`.
@@ -242,11 +260,12 @@ var credentials = {
   clientSecret: '<client-secret>',
   site: 'https://www.oauth2.com',
   authorizationPath: '/oauth2/authorization',
-  tokenPath: '/oauth2/access_token'
+  tokenPath: '/oauth2/access_token',
+  revocationPath: '/oauth2/revoke'
 };
 
 // Initialize the OAuth2 Library
-var OAuth2 = require('simple-oauth2')(credentials);
+var oauth2 = require('simple-oauth2')(credentials);
 ```
 
 
