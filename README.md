@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/andreareginato/simple-oauth2.svg?branch=master)](https://travis-ci.org/andreareginato/simple-oauth2)
+[![Dependency Status](https://gemnasium.com/andreareginato/simple-oauth2.svg)](https://gemnasium.com/andreareginato/simple-oauth2)
 
 # Simple OAuth2
 
