@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.2.1 (17 October 2014)
+
+* Adds revocation token method
+* Not using headers if access_token is defined as a part of the URL.
+* Changes from Pascal Case to Camel Case in the API.
+* Adds Bearer Header for requests.
+
 ## v0.1.7 (16 May 2013)
 
 * Now compatible with Github
