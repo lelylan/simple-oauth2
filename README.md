@@ -75,7 +75,7 @@ app.get('/callback', function (req, res) {
 });
 
 app.get('/', function (req, res) {
-  res.send('Hello World');
+  res.send('Hello<br><a href="/auth">Log in with Github</a>');
 });
 
 app.listen(3000);
