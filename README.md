@@ -44,7 +44,8 @@ var oauth2 = require('simple-oauth2')({
   clientID: CLIENT_ID,
   clientSecret: CLIENT_SECRET,
   site: 'https://github.com/login',
-  tokenPath: '/oauth/access_token'
+  tokenPath: '/oauth/access_token',
+  authorizationPath: '/oauth/authorize'
 });
 
 // Authorization uri definition
