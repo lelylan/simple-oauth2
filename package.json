@@ -17,9 +17,10 @@
     "date-utils": "~1.2.12"
   },
   "devDependencies": {
-    "should": "~1.2.1",
+    "bluebird": "^2.10.1",
     "mocha": "~1.8.1",
-    "nock": "~0.14.3"
+    "nock": "~0.14.3",
+    "should": "~1.2.1"
   },
   "scripts": {
     "test": "mocha ",

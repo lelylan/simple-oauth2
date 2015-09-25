@@ -3,3 +3,4 @@
 --ui bdd
 --slow 20
 --growl
+--globals token
