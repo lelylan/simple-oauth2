@@ -1,18 +1,29 @@
-var credentials = { clientID: 'client-id', clientSecret: 'client-secret', site: 'https://example.org' },
+var credentials = { clientID: 'client-id', clientSecret: 'client-secret', site: 'https://example.org', mobileAuthorizationUri: 'example://app/authorize' },
     oauth2 = require('./../lib/simple-oauth2.js')(credentials),
     qs = require('querystring'),
     nock = require('nock');
 
-var request, result, error;
+var request, result, error, result_mobile;
 
 describe('oauth2.authCode',function() {
 
   describe('#authorizeURL', function(){
 
+    var params = { 'redirect_uri': 'http://localhost:3000/callback', 'scope': 'user', 'state': '02afe928b' };
+
     beforeEach(function(done) {
-      var params = { 'redirect_uri': 'http://localhost:3000/callback', 'scope': 'user', 'state': '02afe928b' };
       result = oauth2.authCode.authorizeURL(params);
       done();
+    })
+
+    beforeEach(function(done) {
+      result_mobile = oauth2.authCode.authorizeURL(params, true);
+      done();
+    })
+
+    it('returns the authorization URI for mobile apps', function() {
+      var expected = 'example://app/authorize?redirect_uri=' + encodeURIComponent('http://localhost:3000/callback') + '&scope=user&state=02afe928b&response_type=code&client_id=client-id';
+      result_mobile.should.eql(expected);
     })
 
     it('returns the authorization URI', function() {

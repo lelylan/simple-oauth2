@@ -254,6 +254,7 @@ Simple OAuth2 accepts an object with the following valid params.
 * `useBasicAuthorizationHeader` - Whether or not the `Authorization: Basic ...` header is set on the request.
 Defaults to `true`.
 * `clientSecretParameterName` - Parameter name for the client secret. Defaults to `client_secret`.
+* `mobileAuthorizationUri` - Authorization URI for the mobile app OAuth2 server. This authorization URI is used if the second argument of authorizeURL call is true.
 
 ```javascript
 // Set the configuration settings
