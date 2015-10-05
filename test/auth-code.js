@@ -3,15 +3,19 @@ var credentials = { clientID: 'client-id', clientSecret: 'client-secret', site: 
     qs = require('querystring'),
     nock = require('nock');
 
-var request, result, error;
+var request,
+    result, resultPromise,
+    error, errorPromise,
+    tokenConfig = { 'code': 'code', 'redirect_uri': 'http://callback.com' }
+    oauthConfig = { 'code': 'code', 'redirect_uri': 'http://callback.com', 'grant_type': 'authorization_code', 'client_id': 'client-id', 'client_secret': 'client-secret' },
+    authorizeConfig = { 'redirect_uri': 'http://localhost:3000/callback', 'scope': 'user', 'state': '02afe928b' };
 
 describe('oauth2.authCode',function() {
 
   describe('#authorizeURL', function(){
 
     beforeEach(function(done) {
-      var params = { 'redirect_uri': 'http://localhost:3000/callback', 'scope': 'user', 'state': '02afe928b' };
-      result = oauth2.authCode.authorizeURL(params);
+      result = oauth2.authCode.authorizeURL(authorizeConfig);
       done();
     })
 
@@ -24,24 +28,37 @@ describe('oauth2.authCode',function() {
   describe('#getToken',function() {
 
     beforeEach(function(done) {
-      var params = { 'code': 'code', 'redirect_uri': 'http://callback.com', 'grant_type': 'authorization_code', 'client_id': 'client-id', 'client_secret': 'client-secret' };
-      request = nock('https://example.org').post('/oauth/token', qs.stringify(params)).replyWithFile(200, __dirname + '/fixtures/access_token.json');
+      request = nock('https://example.org')
+        .post('/oauth/token', qs.stringify(oauthConfig))
+        .times(2)
+        .replyWithFile(200, __dirname + '/fixtures/access_token.json');
       done();
     })
 
     beforeEach(function(done) {
-      var params = { 'code': 'code', 'redirect_uri': 'http://callback.com' }
-      oauth2.authCode.getToken(params, function(e, r) {
+      oauth2.authCode.getToken(tokenConfig, function(e, r) {
         error = e; result = r; done();
       })
+    })
+
+    beforeEach(function(done) {
+      oauth2.authCode
+        .getToken(tokenConfig)
+        .then(function (r) { resultPromise = r; })
+        .catch(function (e) { errorPromise = e; })
+        .finally(done);
     })
 
     it('makes the HTTP request', function() {
       request.isDone();
     });
 
-    it('returns an access token',function() {
+    it('returns an access token as result of callback api',function() {
       result.should.have.property('access_token');
+    });
+
+    it('returns an access token as result of promise api', function() {
+      resultPromise.should.have.property('access_token');
     });
   });
 });

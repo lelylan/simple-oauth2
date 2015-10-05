@@ -3,31 +3,46 @@ var credentials = { clientID: 'client-id', clientSecret: 'client-secret', site: 
     qs = require('querystring'),
     nock = require('nock');
 
-var request, result, error;
+var request,
+    result, resultPromise,
+    error, errorPromise,
+    tokenParams = { 'username': 'alice', 'password': 'secret' },
+    oauthParams = { 'username': 'alice', 'password': 'secret', 'grant_type': 'password', 'client_id': 'client-id', 'client_secret': 'client-secret' };
 
 describe('oauth2.password',function() {
 
   describe('#getToken',function() {
-
     beforeEach(function(done) {
-      var params = { 'username': 'alice', 'password': 'secret', 'grant_type': 'password', 'client_id': 'client-id', 'client_secret': 'client-secret' };
-      request = nock('https://example.org:443').post('/oauth/token', qs.stringify(params)).replyWithFile(200, __dirname + '/fixtures/access_token.json');
+      request = nock('https://example.org:443')
+        .post('/oauth/token', qs.stringify(oauthParams))
+        .times(2)
+        .replyWithFile(200, __dirname + '/fixtures/access_token.json');
       done();
     })
 
     beforeEach(function(done) {
-      var params = { 'username': 'alice', 'password': 'secret' };
-      oauth2.password.getToken(params, function(e, r) {
+      oauth2.password.getToken(tokenParams, function(e, r) {
         error = e; result = r; done();
       })
+    })
+
+    beforeEach(function (done) {
+      return oauth2.password.getToken(tokenParams)
+      .then(function (r) { resultPromise = r; })
+      .catch(function (e) { errorPromise = e; })
+      .finally(done)
     })
 
     it('makes the HTTP request', function() {
       request.isDone();
     });
 
-    it('returns an access token',function() {
+    it('returns an access token as result of callback api',function() {
       result.should.have.property('access_token');
+    });
+
+    it('returns an access token as result of promises api', function() {
+      resultPromise.should.have.property('access_token');
     });
   });
 });

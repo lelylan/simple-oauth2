@@ -19,7 +19,7 @@
   "devDependencies": {
     "bluebird": "^2.10.1",
     "mocha": "~1.8.1",
-    "nock": "~0.14.3",
+    "nock": "^2.13.0",
     "should": "~1.2.1"
   },
   "scripts": {
