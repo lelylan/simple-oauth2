@@ -3,41 +3,63 @@ var credentials = { clientID: 'client-id', clientSecret: 'client-secret', site: 
     qs = require('querystring'),
     nock = require('nock');
 
-var request, result, token, error;
+var request,
+    result, resultPromise,
+    token, tokenPromise,
+    error, errorPromise,
+    tokenConfig = { 'code': 'code', 'redirect_uri': 'http://callback.com' },
+    refreshConfig = { 'grant_type': 'refresh_token', refresh_token: 'ec1a59d298', 'client_id': 'client-id', 'client_secret': 'client-secret' },
+    revokeConfig = { 'token': 'ec1a59d298', 'token_type_hint': 'refresh_token', 'client_id': 'client-id', 'client_secret': 'client-secret' },
+    oauthConfig = { 'code': 'code', 'redirect_uri': 'http://callback.com', 'grant_type': 'authorization_code', 'client_id': 'client-id', 'client_secret': 'client-secret' };
 
 
 describe('oauth2.accessToken',function() {
 
   beforeEach(function(done) {
-    var params = { 'code': 'code', 'redirect_uri': 'http://callback.com', 'grant_type': 'authorization_code', 'client_id': 'client-id', 'client_secret': 'client-secret' };
-    request = nock('https://example.org:443').post('/oauth/token', qs.stringify(params)).replyWithFile(200, __dirname + '/fixtures/access_token.json');
+    request = nock('https://example.org:443')
+      .post('/oauth/token', qs.stringify(oauthConfig))
+      .times(2)
+      .replyWithFile(200, __dirname + '/fixtures/access_token.json');
     done();
   })
 
   beforeEach(function(done) {
-    var params = { 'code': 'code', 'redirect_uri': 'http://callback.com' }
-    oauth2.authCode.getToken(params, function(e, r) {
+    oauth2.authCode.getToken(tokenConfig, function(e, r) {
       error = e; result = r; done();
     })
   })
 
   beforeEach(function(done) {
+    oauth2.authCode
+      .getToken(tokenConfig)
+      .then(function(r) { resultPromise = r; })
+      .catch(function(e) { errorPromise = e; })
+      .finally(done);
+  })
+
+  beforeEach(function(done) {
     token = oauth2.accessToken.create(result);
+    tokenPromise = oauth2.accessToken.create(resultPromise);
     done();
   });
 
   describe('#create',function() {
 
-    it('creates an access token',function() {
+    it('creates an access token as result of callback api',function() {
       token.should.have.property('token');
     });
+
+    it('created an access token as result of promise api', function() {
+      tokenPromise.should.have.property('token');
+    })
   });
 
 
   describe('when not expired', function() {
 
     it('returns false',function() {
-      token.expired().should.be.false
+      token.expired().should.be.false;
+      tokenPromise.expired().should.be.false;
     });
   });
 
@@ -45,19 +67,23 @@ describe('oauth2.accessToken',function() {
 
     beforeEach(function(done) {
       token.token.expires_at = Date.yesterday();
+      tokenPromise.token.expires_at = Date.yesterday();
       done();
     });
 
     it('returns false',function() {
-      token.expired().should.be.true
+      token.expired().should.be.true;
+      tokenPromise.expired().should.be.true;
     });
   });
 
   describe('when refreshes token', function() {
 
     beforeEach(function(done) {
-      var params = { 'grant_type': 'refresh_token', refresh_token: 'ec1a59d298', 'client_id': 'client-id', 'client_secret': 'client-secret' };
-      request = nock('https://example.org:443').post('/oauth/token', qs.stringify(params)).replyWithFile(200, __dirname + '/fixtures/access_token.json');
+      request = nock('https://example.org:443')
+        .post('/oauth/token', qs.stringify(refreshConfig))
+        .times(2)
+        .replyWithFile(200, __dirname + '/fixtures/access_token.json');
       done();
     });
 
@@ -68,20 +94,36 @@ describe('oauth2.accessToken',function() {
       });
     });
 
+    beforeEach(function(done) {
+      resultPromise = null;
+      errorPromise = null;
+
+      token.refresh()
+        .then(function (r) { resultPromise = r; })
+        .catch(function (e) { errorPromise = e; })
+        .finally(done);
+    });
+
     it('makes the HTTP request', function() {
       request.isDone();
     });
 
-    it('returns a new oauth2.accessToken',function() {
+    it('returns a new oauth2.accessToken as result of callback api',function() {
       result.token.should.have.property('access_token');
+    });
+
+    it('returns a new oauth2.accessToken as result of promise api', function() {
+      resultPromise.token.should.have.property('access_token');
     });
   })
 
   describe('#revoke',function() {
 
       beforeEach(function(done) {
-          var params = { 'token': 'ec1a59d298', 'token_type_hint': 'refresh_token', 'client_id': 'client-id', 'client_secret': 'client-secret' };
-          request = nock('https://example.org:443').post('/oauth/revoke', qs.stringify(params)).reply(200);
+          request = nock('https://example.org:443')
+            .post('/oauth/revoke', qs.stringify(revokeConfig))
+            .times(2)
+            .reply(200);
           done();
       });
 
@@ -90,6 +132,16 @@ describe('oauth2.accessToken',function() {
           token.revoke('refresh_token', function(e) {
               error = e; done();
           });
+      });
+
+      beforeEach(function(done) {
+        resultPromise = null;
+        errorPromise = null;
+
+        tokenPromise.revoke()
+          .then(function(r) { resultPromise = r; })
+          .catch(function (e) { errorPromise = e; })
+          .finally(done);
       });
 
     it('make HTTP call', function() {

@@ -3,7 +3,7 @@
 
 # Simple OAuth2
 
-Node.js client library for [Oauth2](http://oauth.net/2/).
+Node.js client library for [OAuth2](http://oauth.net/2/). This library supports both callbacks or promises for async flow.
 
 OAuth2 lets users grant the access to the desired resources to third party applications,
 giving them the possibility to enable and disable those accesses whenever they want.
@@ -116,18 +116,29 @@ res.redirect(authorization_uri);
 
 // Get the access token object (the authorization code is given from the previous step).
 var token;
-oauth2.authCode.getToken({
+var tokenConfig = {
   code: '<code>',
   redirect_uri: 'http://localhost:3000/callback'
-}, saveToken);
+};
 
+// Callbacks
 // Save the access token
-function saveToken(error, result) {
+oauth2.authCode.getToken(tokenConfig, function saveToken(error, result) {
   if (error) { console.log('Access Token Error', error.message); }
+
   token = oauth2.accessToken.create(result);
 });
-```
 
+// Promises
+// Save the access token
+oauth2.authCode.getToken(tokenConfig)
+.then(function saveToken(result) {
+  token = oauth2.accessToken.create(result);
+})
+.catch(function logError(error) {
+  console.log('Access Token Error', error.message);
+});
+```
 
 ### Password Credentials Flow
 
@@ -139,13 +150,14 @@ test your application.
 ```javascript
 // Get the access token object.
 var token;
-oauth2.password.getToken({
+var tokenConfig = {
   username: 'username',
   password: 'password' 
-}, saveToken);
+};
 
+// Callbacks
 // Save the access token
-function saveToken(error, result) {
+oauth2.password.getToken(tokenConfig, function saveToken(error, result) {
   if (error) { console.log('Access Token Error', error.message); }
   token = oauth2.accessToken.create(result);
 
@@ -155,6 +167,18 @@ function saveToken(error, result) {
     console.log(data);
   });
 });
+
+// Promises
+// Save the access token
+oauth2.password
+  .getToken(tokenConfig)
+  .then(function saveToken(result) {
+    token = oauth2.accessToken.create(result);
+    return oauth2.api('GET', '/users', { access_token: token.token.access_token });
+  })
+  .then(function evalResource(data) {
+    console.log(data);
+  });
 ```
 
 ### Client Credentials Flow
@@ -163,7 +187,6 @@ This flow is suitable when client is requesting access to the protected resource
 
 ```javascript
 // Get the access token object.
-var token;
 var credentials = {
   clientID: '<client-id>',
   clientSecret: '<client-secret>',
@@ -172,15 +195,27 @@ var credentials = {
 
 // Initialize the OAuth2 Library
 var oauth2 = require('simple-oauth2')(credentials);
+var token;
+var tokenConfig = {};
 
+// Callbacks
 // Get the access token object for the client
-oauth2.client.getToken({}, saveToken);
-
-// Save the access token
-function saveToken(error, result) {
+oauth2.client.getToken(tokenConfig, function saveToken(error, result) {
   if (error) { console.log('Access Token Error', error.message); }
   token = oauth2.accessToken.create(result);
 });
+
+
+// Promises
+// Get the access token object for the client
+oauth2.client
+  .getToken(tokenConfig)
+  .then(function saveToken(result) {
+    token = oauth2.accessToken.create(result);
+  })
+  .catch(function logError(error) {
+    console.log('Access Token error', error.message);
+  });
 ```
 
 ### Access Token object
@@ -202,9 +237,15 @@ var token = oauth2.accessToken.create(token);
 
 // Check if the token is expired. If expired it is refreshed.
 if (token.expired()) {
+  // Callbacks
   token.refresh(function(error, result) {
     token = result;
   })
+
+  // Promises
+  token.refresh().then(function saveToken(result) {
+    token = result;
+  });
 }
 ```
 
@@ -213,6 +254,7 @@ revoke the access token and refresh token.
 
 ```javascript
 
+// Callbacks
 // Revoke only the access token
 token.revoke('access_token', function(error) {
   // Session ended. But the refresh_token is still valid.
@@ -222,6 +264,20 @@ token.revoke('access_token', function(error) {
     console.log('token revoked.');
   });
 });
+
+// Promises
+// Revoke only the access token
+token.revoke('access_token')
+  .then(function revokeRefresh() {
+    // Revoke the refresh token
+    return token.revoke('refresh_token');
+  })
+  .then(function tokenRevoked() {
+    console.log('Token revoked');
+  })
+  .catch(function logError(error) {
+    console.log('Error revoking token.', error.message);
+  });
 ```
 
 ### Errors
@@ -234,9 +290,16 @@ Through the error message attribute you can access the JSON representation
 based on HTTP `status` and error `message`.
 
 ```javascript
+// Callbacks
 oauth2.authCode.getToken(function(error, token) {
   if (error) { console.log(error.message); }
 });
+
+// Promises
+oauth2.authCode.getToken().catch(function evalError(error) {
+  console.log(error.message);
+});
+
 // => { "status": "401", "message": "Unauthorized" }
 ```
 
