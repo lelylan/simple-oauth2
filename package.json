@@ -24,7 +24,8 @@
   },
   "scripts": {
     "test": "mocha ",
-    "test-watch": "mocha --watch --growl"
+    "test-watch": "mocha --watch --growl",
+    "docs-gen": "doctoc README.md --github --no-title"
   },
   "main": ".",
   "licenses": [
