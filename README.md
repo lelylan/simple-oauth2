@@ -388,7 +388,8 @@ for any idea that can improve the project.
 
 ### Contributors
 Special thanks to the following people for submitting patches.
-[Jonathan Samines](http://twitter.com/jonathansamines)
+
+* [Jonathan Samines](http://twitter.com/jonathansamines)
 
 
 ## Changelog
