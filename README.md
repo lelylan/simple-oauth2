@@ -14,13 +14,42 @@ Simple OAuth2 supports the following flows.
 * Password Credentials (when previous flow can't be used or during development).
 * [Client Credentials Flow](http://tools.ietf.org/html/draft-ietf-oauth-v2-31#section-4.4) (the client can request an access token using only its client credentials)
 
-## Requirements
+## Table of Contents
 
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+
+- [Requirements](#requirements)
+- [Installation](#installation)
+- [Getting started](#getting-started)
+  - [Express and Github example](#express-and-github-example)
+- [OAuth2 Supported flows](#oauth2-supported-flows)
+  - [Authorization Code flow](#authorization-code-flow)
+  - [Password Credentials Flow](#password-credentials-flow)
+  - [Client Credentials Flow](#client-credentials-flow)
+- [Helpers](#helpers)
+  - [Access Token object](#access-token-object)
+  - [Errors](#errors)
+- [Configuration](#configuration)
+- [Contributing](#contributing)
+  - [Releases](#releases)
+  - [Running specs](#running-specs)
+  - [Updating the docs](#updating-the-docs)
+  - [Coding guidelines](#coding-guidelines)
+  - [Feedback](#feedback)
+- [Authors](#authors)
+  - [Contributors](#contributors)
+- [Changelog](#changelog)
+- [Copyright](#copyright)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+## Requirements
 Node client library is tested against Node ~0.8.x
 
 
 ## Installation
-
 Install the client library using [npm](http://npmjs.org/):
 
     $ npm install simple-oauth2
@@ -33,7 +62,6 @@ Install the client library using git:
 
 
 ## Getting started
-
 ### Express and Github example
 
 ```javascript
@@ -86,6 +114,7 @@ console.log('Express server started on port 3000');
 
 Credits to [@lazybean](https://github.com/lazybean)
 
+## OAuth2 Supported flows
 ### Authorization Code flow
 
 The Authorization Code flow is made up from two parts. At first your application asks to
@@ -218,6 +247,7 @@ oauth2.client
   });
 ```
 
+## Helpers
 ### Access Token object
 
 When a token expires we need to refresh it. Simple OAuth2 offers the
@@ -304,8 +334,7 @@ oauth2.authCode.getToken().catch(function evalError(error) {
 ```
 
 
-### Configurations
-
+## Configuration
 Simple OAuth2 accepts an object with the following valid params.
 
 * `clientID` - Required registered Client ID.
@@ -333,56 +362,53 @@ var credentials = {
 var oauth2 = require('simple-oauth2')(credentials);
 ```
 
-
 ## Contributing
-
-Fork the repo on github and send a pull requests with topic branches. Do not forget to
+Fork the repo on github and send a pull requests with topic branches to the ```develop``` branch. Do not forget to
 provide specs to your contribution.
 
+### Repository
+  * The master branch will always point to the npm latest published version.
+  * Develop will contain the latest development/testing/new-features changes.
+  * Every npm release will have a corresponding git tag. The **CHANGELOG.md** will be updated on every release too.
 
 ### Running specs
-
-* Fork and clone the repository (`dev` branch).
+* Fork and clone the repository (`develop` branch).
 * Run `npm install` for dependencies.
 * Run `make test` to execute all specs.
 * Run `make test-watch` to auto execute all specs when a file change.
 
+### Updating the docs
+Currently, the project documentation it´s on README.md file, a table of contents is generated using a tool called [doctoc](https://github.com/thlorenz/doctoc). So if you updated this file (specially if headers are modified), please use:
 
-## Coding guidelines
+```bash
+  npm run docs-gen
+```
 
+### Coding guidelines
 Follow [github](https://github.com/styleguide/) guidelines.
 
 
-## Feedback
-
+### Feedback
 Use the [issue tracker](http://github.com/andreareginato/simple-oauth2/issues) for bugs.
 [Mail](mailto:andrea.reginato@.gmail.com) or [Tweet](http://twitter.com/andreareginato) us
 for any idea that can improve the project.
 
 
-## Links
-
-* [GIT Repository](http://github.com/andreareginato/simple-oauth2)
-* [Documentation](http://andreareginato.github.com/simple-oauth2)
-
-
 ## Authors
-
 [Andrea Reginato](http://twitter.com/andreareginato)
 
 
-## Contributors
-
+### Contributors
 Special thanks to the following people for submitting patches.
+
+* [Jonathan Samines](http://twitter.com/jonathansamines)
 
 
 ## Changelog
-
 See [CHANGELOG](https://github.com/andreareginato/simple-oauth2/blob/master/CHANGELOG.md)
 
 
 ## Copyright
-
 Copyright (c) 2013 [Lelylan](http://lelylan.com).
 
 This project is released under the [MIT License](http://opensource.org/licenses/MIT).
