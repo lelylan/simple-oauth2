@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.3.0 (29 November 2015)
+* Better documentation!
+* Added support for promise based API
+
 ## v0.2.1 (17 October 2014)
 
 * Adds revocation token method
