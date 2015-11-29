@@ -1,6 +1,6 @@
 {
   "name": "simple-oauth2",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "Node.js client for OAuth2",
   "author": "Andrea Reginato <andrea.reginato@gmail.com>",
   "homepage": "http://github.com/andreareginato/simple-oauth2",
@@ -18,13 +18,15 @@
     "bluebird": "^2.10.1"
   },
   "devDependencies": {
+    "doctoc": "^0.15.0",
     "mocha": "~1.8.1",
     "nock": "^2.13.0",
     "should": "~1.2.1"
   },
   "scripts": {
     "test": "mocha ",
-    "test-watch": "mocha --watch --growl"
+    "test-watch": "mocha --watch --growl",
+    "docs-gen": "doctoc README.md --github --no-title"
   },
   "main": ".",
   "licenses": [
