@@ -9,6 +9,7 @@ var request,
     error, errorPromise,
     tokenConfig = { 'code': 'code', 'redirect_uri': 'http://callback.com' },
     refreshConfig = { 'grant_type': 'refresh_token', refresh_token: 'ec1a59d298', 'client_id': 'client-id', 'client_secret': 'client-secret' },
+    refreshWithAdditionalParamsConfig = { 'scope': 'TESTING_EXAMPLE_SCOPES', 'grant_type': 'refresh_token', refresh_token: 'ec1a59d298', 'client_id': 'client-id', 'client_secret': 'client-secret' },
     revokeConfig = { 'token': 'ec1a59d298', 'token_type_hint': 'refresh_token', 'client_id': 'client-id', 'client_secret': 'client-secret' },
     oauthConfig = { 'code': 'code', 'redirect_uri': 'http://callback.com', 'grant_type': 'authorization_code', 'client_id': 'client-id', 'client_secret': 'client-secret' };
 
@@ -115,7 +116,47 @@ describe('oauth2.accessToken',function() {
     it('returns a new oauth2.accessToken as result of promise api', function() {
       resultPromise.token.should.have.property('access_token');
     });
-  })
+  });
+
+  describe('when refreshes token with additional params', function() {
+
+    beforeEach(function(done) {
+      request = nock('https://example.org:443')
+        .post('/oauth/token', qs.stringify(refreshWithAdditionalParamsConfig))
+        .times(2)
+        .replyWithFile(200, __dirname + '/fixtures/access_token.json');
+      done();
+    });
+
+    beforeEach(function(done) {
+      result = null;
+      token.refresh({scope: 'TESTING_EXAMPLE_SCOPES'}, function(e, r) {
+        error = e; result = r; done();
+      });
+    });
+
+    beforeEach(function(done) {
+      resultPromise = null;
+      errorPromise = null;
+
+      token.refresh({scope: 'TESTING_EXAMPLE_SCOPES'})
+        .then(function (r) { resultPromise = r; })
+        .catch(function (e) { errorPromise = e; })
+        .finally(done);
+    });
+
+    it('makes the HTTP request', function() {
+      request.isDone();
+    });
+
+    it('returns a new oauth2.accessToken as result of callback api',function() {
+      result.token.should.have.property('access_token');
+    });
+
+    it('returns a new oauth2.accessToken as result of promise api', function() {
+      resultPromise.token.should.have.property('access_token');
+    });
+  });
 
   describe('#revoke',function() {
 
