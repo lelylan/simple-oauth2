@@ -12,10 +12,9 @@
     "node": "~0.8.x"
   },
   "dependencies": {
-    "request": "~2.12.0",
-    "querystring": "~0.1.0",
+    "bluebird": "^2.10.1",
     "date-utils": "~1.2.12",
-    "bluebird": "^2.10.1"
+    "request": "~2.12.0"
   },
   "devDependencies": {
     "doctoc": "^0.15.0",
