@@ -13,9 +13,8 @@
   },
   "dependencies": {
     "request": "~2.67.0",
-    "querystring": "~0.1.0",
-    "date-utils": "~1.2.12",
-    "bluebird": "^2.10.1"
+    "bluebird": "^2.10.1",
+    "date-utils": "~1.2.12"
   },
   "devDependencies": {
     "doctoc": "^0.15.0",
