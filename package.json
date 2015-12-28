@@ -20,7 +20,7 @@
   "devDependencies": {
     "doctoc": "^0.15.0",
     "mocha": "~1.8.1",
-    "nock": "^2.13.0",
+    "nock": "^2.18.2",
     "should": "~1.2.1"
   },
   "scripts": {
