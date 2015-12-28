@@ -19,9 +19,9 @@
   },
   "devDependencies": {
     "doctoc": "^0.15.0",
-    "mocha": "~1.8.1",
-    "nock": "^2.18.2",
-    "should": "~1.2.1"
+    "mocha": "^2.3.4",
+    "nock": "^3.6.0",
+    "should": "^8.0.2"
   },
   "scripts": {
     "test": "mocha ",
