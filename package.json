@@ -19,13 +19,16 @@
   },
   "devDependencies": {
     "doctoc": "^0.15.0",
+    "eslint": "^1.10.3",
+    "eslint-config-airbnb": "^2.1.1",
     "mocha": "~1.8.1",
     "nock": "^2.13.0",
     "should": "~1.2.1"
   },
   "scripts": {
     "test": "mocha ",
-    "test-watch": "mocha --watch --growl",
+    "lint": "eslint lib/**",
+    "test-watch": "mocha --watch",
     "docs-gen": "doctoc README.md --github --no-title"
   },
   "main": ".",
