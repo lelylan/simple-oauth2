@@ -385,8 +385,13 @@ Currently, the project documentation it´s on README.md file, a table of content
 ```
 
 ### Coding guidelines
-Follow [github](https://github.com/styleguide/) guidelines.
+To contribute to this project, please follow the [airbnb](https://github.com/airbnb/javascript) guidelines.
 
+#### Running linter
+
+```bash
+  npm run lint
+```
 
 ### Feedback
 Use the [issue tracker](http://github.com/andreareginato/simple-oauth2/issues) for bugs.
