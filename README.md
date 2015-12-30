@@ -10,8 +10,8 @@ giving them the possibility to enable and disable those accesses whenever they w
 
 Simple OAuth2 supports the following flows.
 
-* Authorization Code Flow (for apps with servers that can store persistent information).
-* Password Credentials (when previous flow can't be used or during development).
+* [Authorization Code Flow](http://tools.ietf.org/html/draft-ietf-oauth-v2-31#section-4.1) (for apps with servers that can store persistent information).
+* [Password Credentials](http://tools.ietf.org/html/draft-ietf-oauth-v2-31#section-4.3) (when previous flow can't be used or during development).
 * [Client Credentials Flow](http://tools.ietf.org/html/draft-ietf-oauth-v2-31#section-4.4) (the client can request an access token using only its client credentials)
 
 ## Table of Contents
