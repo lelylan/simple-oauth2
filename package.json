@@ -28,7 +28,7 @@
   "scripts": {
     "test": "mocha ",
     "lint": "eslint lib/**",
-    "test-watch": "mocha --watch",
+    "test-watch": "DEBUG=true mocha --watch",
     "docs-gen": "doctoc README.md --github --no-title"
   },
   "main": ".",
