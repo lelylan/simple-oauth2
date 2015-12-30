@@ -31,7 +31,7 @@
     "test-watch": "DEBUG=true mocha --watch",
     "docs-gen": "doctoc README.md --github --no-title"
   },
-  "main": ".",
+  "main": "index.js",
   "licenses": [
     {
       "type": "Copyright (c) 2013 Lelylan"
