@@ -33,11 +33,6 @@ Simple OAuth2 supports the following flows.
   - [Errors](#errors)
 - [Configuration](#configuration)
 - [Contributing](#contributing)
-  - [Releases](#releases)
-  - [Running specs](#running-specs)
-  - [Updating the docs](#updating-the-docs)
-  - [Coding guidelines](#coding-guidelines)
-  - [Feedback](#feedback)
 - [Authors](#authors)
   - [Contributors](#contributors)
 - [Changelog](#changelog)
@@ -363,41 +358,7 @@ var oauth2 = require('simple-oauth2')(credentials);
 ```
 
 ## Contributing
-Fork the repo on github and send a pull requests with topic branches to the ```develop``` branch. Do not forget to
-provide specs to your contribution.
-
-### Repository
-  * The master branch will always point to the npm latest published version.
-  * Develop will contain the latest development/testing/new-features changes.
-  * Every npm release will have a corresponding git tag. The **CHANGELOG.md** will be updated on every release too.
-
-### Running specs
-* Fork and clone the repository (`develop` branch).
-* Run `npm install` for dependencies.
-* Run `make test` to execute all specs.
-* Run `make test-watch` to auto execute all specs when a file change.
-
-### Updating the docs
-Currently, the project documentation it´s on README.md file, a table of contents is generated using a tool called [doctoc](https://github.com/thlorenz/doctoc). So if you updated this file (specially if headers are modified), please use:
-
-```bash
-  npm run docs-gen
-```
-
-### Coding guidelines
-To contribute to this project, please follow the [airbnb](https://github.com/airbnb/javascript) guidelines.
-
-#### Running linter
-
-```bash
-  npm run lint
-```
-
-### Feedback
-Use the [issue tracker](http://github.com/andreareginato/simple-oauth2/issues) for bugs.
-[Mail](mailto:andrea.reginato@.gmail.com) or [Tweet](http://twitter.com/andreareginato) us
-for any idea that can improve the project.
-
+See [CONTRIBUTING](https://github.com/andreareginato/simple-oauth2/blob/master/CONTRIBUTING.md)
 
 ## Authors
 [Andrea Reginato](http://twitter.com/andreareginato)
