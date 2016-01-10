@@ -345,6 +345,7 @@ Simple OAuth2 accepts an object with the following valid params.
 * `tokenPath` - Access token path for the OAuth2 server. Defaults to `/oauth/token`.
 * `revocationPath` - Revocation token path for the OAuth2 server. Defaults to `/oauth/revoke`.
 * `useBasicAuthorizationHeader` - Whether or not the `Authorization: Basic ...` header is set on the request.
+* `useBasicAuthorizationHeaderWhenRefreshingToken` - Whether or not the `Authorization: Basic ...` header is set on the refresh token request.
 Defaults to `true`.
 * `clientSecretParameterName` - Parameter name for the client secret. Defaults to `client_secret`.
 
