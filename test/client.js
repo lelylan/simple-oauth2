@@ -24,12 +24,11 @@ describe('oauth2.Client', function () {
       });
     });
 
-    beforeEach(function (done) {
-      oauth2.client
+    beforeEach(function () {
+      return oauth2.client
         .getToken(tokenConfig)
         .then(function (r) { resultPromise = r; })
-        .catch(function (e) { errorPromise = e; })
-        .finally(done);
+        .catch(function (e) { errorPromise = e; });
     });
 
     it('makes the HTTP request', function () {

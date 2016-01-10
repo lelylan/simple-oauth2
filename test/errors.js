@@ -24,12 +24,11 @@ describe('Simple oauth2 Error', function () {
       });
     });
 
-    beforeEach(function (done) {
-      oauth2.authCode
+    beforeEach(function () {
+      return oauth2.authCode
         .getToken(tokenConfig)
         .then(function (r) { resultPromise = r; })
-        .catch(function (e) { errorPromise = e; })
-        .finally(done);
+        .catch(function (e) { errorPromise = e; });
     });
 
     it('makes the HTTP request', function () {
@@ -61,12 +60,11 @@ describe('Simple oauth2 Error', function () {
       });
     });
 
-    beforeEach(function (done) {
-      oauth2.authCode
+    beforeEach(function () {
+      return oauth2.authCode
         .getToken(tokenConfig)
         .then(function (r) { resultPromise = r; })
-        .catch(function (e) { errorPromise = e; })
-        .finally(done);
+        .catch(function (e) { errorPromise = e; });
     });
 
     it('makes the HTTP request', function () {

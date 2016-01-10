@@ -36,12 +36,11 @@ describe('oauth2.authCode', function () {
       });
     });
 
-    beforeEach(function (done) {
-      oauth2.authCode
+    beforeEach(function () {
+      return oauth2.authCode
         .getToken(tokenConfig)
         .then(function (r) { resultPromise = r; })
-        .catch(function (e) { errorPromise = e; })
-        .finally(done);
+        .catch(function (e) { errorPromise = e; });
     });
 
     it('makes the HTTP request', function () {

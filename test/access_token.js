@@ -27,12 +27,11 @@ describe('oauth2.accessToken', function () {
     });
   });
 
-  beforeEach(function (done) {
-    oauth2.authCode
+  beforeEach(function () {
+    return oauth2.authCode
       .getToken(tokenConfig)
       .then(function (r) { resultPromise = r; })
-      .catch(function (e) { errorPromise = e; })
-      .finally(done);
+      .catch(function (e) { errorPromise = e; });
   });
 
   beforeEach(function () {
@@ -84,14 +83,13 @@ describe('oauth2.accessToken', function () {
       });
     });
 
-    beforeEach(function (done) {
+    beforeEach(function () {
       resultPromise = null;
       errorPromise = null;
 
       return token.refresh()
         .then(function (r) { resultPromise = r; })
-        .catch(function (e) { errorPromise = e; })
-        .finally(done);
+        .catch(function (e) { errorPromise = e; });
     });
 
     it('makes the HTTP request', function () {
@@ -122,14 +120,13 @@ describe('oauth2.accessToken', function () {
       });
     });
 
-    beforeEach(function (done) {
+    beforeEach(function () {
       resultPromise = null;
       errorPromise = null;
 
-      token.refresh({ scope: 'TESTING_EXAMPLE_SCOPES' })
+      return token.refresh({ scope: 'TESTING_EXAMPLE_SCOPES' })
         .then(function (r) { resultPromise = r; })
-        .catch(function (e) { errorPromise = e; })
-        .finally(done);
+        .catch(function (e) { errorPromise = e; });
     });
 
     it('makes the HTTP request', function () {
@@ -160,14 +157,13 @@ describe('oauth2.accessToken', function () {
       });
     });
 
-    beforeEach(function (done) {
+    beforeEach(function () {
       resultPromise = null;
       errorPromise = null;
 
-      tokenPromise.revoke()
+      return tokenPromise.revoke()
         .then(function (r) { resultPromise = r; })
-        .catch(function (e) { errorPromise = e; })
-        .finally(done);
+        .catch(function (e) { errorPromise = e; });
     });
 
     it('make HTTP call', function () {

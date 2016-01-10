@@ -24,11 +24,10 @@ describe('oauth2.password', function () {
       });
     });
 
-    beforeEach(function (done) {
+    beforeEach(function () {
       return oauth2.password.getToken(tokenParams)
         .then(function (r) { resultPromise = r; })
-        .catch(function (e) { errorPromise = e; })
-        .finally(done);
+        .catch(function (e) { errorPromise = e; });
     });
 
     it('makes the HTTP request', function () {
