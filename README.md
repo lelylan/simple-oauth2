@@ -1,5 +1,6 @@
-[![Build Status](https://travis-ci.org/andreareginato/simple-oauth2.svg?branch=master)](https://travis-ci.org/andreareginato/simple-oauth2)
-[![Dependency Status](https://gemnasium.com/andreareginato/simple-oauth2.svg)](https://gemnasium.com/andreareginato/simple-oauth2)
+[![NPM Package Version](https://img.shields.io/npm/v/simple-oauth2.svg?style=flat-square)](https://www.npmjs.com/package/simple-oauth2)
+[![Build Status](https://img.shields.io/travis/andreareginato/simple-oauth2.svg?style=flat-square)](https://travis-ci.org/andreareginato/simple-oauth2)
+[![Dependency Status](https://img.shields.io/david/andreareginato/simple-oauth2.svg?style=flat-square)](https://david-dm.org/andreareginato/simple-oauth2)
 
 # Simple OAuth2
 
@@ -86,7 +87,7 @@ app.get('/auth', function (req, res) {
 // Callback service parsing the authorization token and asking for the access token
 app.get('/callback', function (req, res) {
   var code = req.query.code;
-  console.log('/callback');
+
   oauth2.authCode.getToken({
     code: code,
     redirect_uri: 'http://localhost:3000/callback'
@@ -359,6 +360,7 @@ var oauth2 = require('simple-oauth2')(credentials);
 
 ## Contributing
 See [CONTRIBUTING](https://github.com/andreareginato/simple-oauth2/blob/master/CONTRIBUTING.md)
+
 
 ## Authors
 [Andrea Reginato](http://twitter.com/andreareginato)
