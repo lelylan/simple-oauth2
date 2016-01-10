@@ -42,7 +42,7 @@ Simple OAuth2 supports the following flows.
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## Requirements
-Node client library is tested against Node ~0.8.x
+Node client library is tested against the latest minor Node versions: 0.10.x, 0.11.x, 0.12.x and 4.2.x.
 
 
 ## Installation
