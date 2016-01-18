@@ -1,6 +1,6 @@
 # Changelog
 
-## v0.4.0 (10 January 2016)
+## v0.4.0 (18 January 2016)
 * Updated project dependencies.
 * Added support for passing arguments to the refresh token action.
 * Added project badges.
