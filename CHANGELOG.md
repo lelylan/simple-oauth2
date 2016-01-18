@@ -6,6 +6,7 @@
 * Added project badges.
 * Code general cleanup and applied code styleguide.
 * Created CONTRIBUTING guides! (Separated from README)
+* Fixed bug, which resolved promises even if the token wasn´t retrieved. #64
 
 ## v0.3.0 (29 November 2015)
 * Better documentation!
