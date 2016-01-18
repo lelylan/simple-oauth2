@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.4.0 (18 January 2016)
+* Updated project dependencies.
+* Added support for passing arguments to the refresh token action.
+* Added project badges.
+* Code general cleanup and applied code styleguide.
+* Created CONTRIBUTING guides! (Separated from README)
+* Fixed bug, which resolved promises even if the token wasn´t retrieved. #64
+
 ## v0.3.0 (29 November 2015)
 * Better documentation!
 * Added support for promise based API
