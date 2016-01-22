@@ -1,5 +1,8 @@
 # Changelog
 
+## v0.5.0 (22 January 2016)
+* Now all error states returned from the server, are rejected as HTTPError instances. (This allow to know what httpStatusCode was returned)
+
 ## v0.4.0 (18 January 2016)
 * Updated project dependencies.
 * Added support for passing arguments to the refresh token action.
