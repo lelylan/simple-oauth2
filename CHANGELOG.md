@@ -1,5 +1,8 @@
 # Changelog
 
+## v0.5.1 (25 January 2016)
+* Fixed error class prototype inheritance. Now inherits correctly from Error.
+
 ## v0.5.0 (22 January 2016)
 * Now all error states returned from the server, are rejected as HTTPError instances. (This allow to know what httpStatusCode was returned)
 
