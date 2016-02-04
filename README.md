@@ -1,5 +1,5 @@
 [![NPM Package Version](https://img.shields.io/npm/v/simple-oauth2.svg?style=flat-square)](https://www.npmjs.com/package/simple-oauth2)
-[![Build Status](https://img.shields.io/travis/lelylan/simple-oauth2.svg?style=flat-square)](https://travis-ci.org/andreareginato/simple-oauth2)
+[![Build Status](https://img.shields.io/travis/lelylan/simple-oauth2.svg?style=flat-square)](https://travis-ci.org/lelylan/simple-oauth2)
 [![Dependency Status](https://img.shields.io/david/lelylan/simple-oauth2.svg?style=flat-square)](https://david-dm.org/lelylan/simple-oauth2)
 
 # Simple OAuth2
@@ -17,7 +17,10 @@ Simple OAuth2 supports the following flows.
 
 #### Thanks to Open Source
 
-Simple OAuth 2.0 came to life to to solve a problem I had in Lelylan (open source microservices architecture for the Internet of Things). If this project helped you in any way, think about giving us a <a href="https://github.com/lelylan/lelylan">star on Github</a> (it will help us to reach more developers and spread open source).
+Simple OAuth 2.0 come to life thanks to the work I've made in Lelylan, an open source microservices architecture for the Internet of Things. If this project helped you in any way, think about giving us a <a href="https://github.com/lelylan/lelylan">star on Github</a> (it will help us to reach more developers).
+
+<a href="https://github.com/lelylan/lelylan">
+<img src="https://raw.githubusercontent.com/lelylan/lelylan/master/public/logo-lelylan.png" data-canonical-src="https://raw.githubusercontent.com/lelylan/lelylan/master/public/logo-lelylan.png" width="300"/></a>
 
 
 ## Table of Contents
