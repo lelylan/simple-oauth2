@@ -1,10 +1,10 @@
 [![NPM Package Version](https://img.shields.io/npm/v/simple-oauth2.svg?style=flat-square)](https://www.npmjs.com/package/simple-oauth2)
 [![Build Status](https://img.shields.io/travis/lelylan/simple-oauth2.svg?style=flat-square)](https://travis-ci.org/andreareginato/simple-oauth2)
-[![Dependency Status](https://img.shields.io/david/lelylan/simple-oauth2.svg?style=flat-square)](https://david-dm.org/andreareginato/simple-oauth2)
+[![Dependency Status](https://img.shields.io/david/lelylan/simple-oauth2.svg?style=flat-square)](https://david-dm.org/lelylan/simple-oauth2)
 
 # Simple OAuth2
 
-Node.js client library for [OAuth2](http://oauth.net/2/). This library supports both callbacks or promises for async flow.
+Node.js client library for [OAuth2](http://oauth.net/2/) (this library supports both callbacks or promises for async flow).
 
 OAuth2 lets users grant the access to the desired resources to third party applications,
 giving them the possibility to enable and disable those accesses whenever they want.
@@ -14,6 +14,11 @@ Simple OAuth2 supports the following flows.
 * [Authorization Code Flow](http://tools.ietf.org/html/draft-ietf-oauth-v2-31#section-4.1) (for apps with servers that can store persistent information).
 * [Password Credentials](http://tools.ietf.org/html/draft-ietf-oauth-v2-31#section-4.3) (when previous flow can't be used or during development).
 * [Client Credentials Flow](http://tools.ietf.org/html/draft-ietf-oauth-v2-31#section-4.4) (the client can request an access token using only its client credentials)
+
+#### Thanks to Open Source
+
+Simple OAuth 2.0 came to life to to solve a problem I had in Lelylan (open source microservices architecture for the Internet of Things). If this project helped you in any way, think about giving us a <a href="https://github.com/lelylan/lelylan">star on Github</a> (it will help us to reach more developers and spread open source).
+
 
 ## Table of Contents
 
