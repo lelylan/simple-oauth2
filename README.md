@@ -1,6 +1,6 @@
 [![NPM Package Version](https://img.shields.io/npm/v/simple-oauth2.svg?style=flat-square)](https://www.npmjs.com/package/simple-oauth2)
-[![Build Status](https://img.shields.io/travis/andreareginato/simple-oauth2.svg?style=flat-square)](https://travis-ci.org/andreareginato/simple-oauth2)
-[![Dependency Status](https://img.shields.io/david/andreareginato/simple-oauth2.svg?style=flat-square)](https://david-dm.org/andreareginato/simple-oauth2)
+[![Build Status](https://img.shields.io/travis/lelylan/simple-oauth2.svg?style=flat-square)](https://travis-ci.org/andreareginato/simple-oauth2)
+[![Dependency Status](https://img.shields.io/david/lelylan/simple-oauth2.svg?style=flat-square)](https://david-dm.org/andreareginato/simple-oauth2)
 
 # Simple OAuth2
 
@@ -52,7 +52,7 @@ Install the client library using [npm](http://npmjs.org/):
 
 Install the client library using git:
 
-    $ git clone git://github.com/andreareginato/simple-oauth2.git
+    $ git clone git://github.com/lelylan/simple-oauth2.git
     $ cd simple-oauth2
     $ npm install
 
@@ -359,11 +359,11 @@ var oauth2 = require('simple-oauth2')(credentials);
 ```
 
 ## Contributing
-See [CONTRIBUTING](https://github.com/andreareginato/simple-oauth2/blob/master/CONTRIBUTING.md)
+See [CONTRIBUTING](https://github.com/lelylan/simple-oauth2/blob/master/CONTRIBUTING.md)
 
 
 ## Authors
-[Andrea Reginato](http://twitter.com/andreareginato)
+[Andrea Reginato](http://twitter.com/lelylan)
 
 
 ### Contributors
@@ -373,10 +373,9 @@ Special thanks to the following people for submitting patches.
 
 
 ## Changelog
-See [CHANGELOG](https://github.com/andreareginato/simple-oauth2/blob/master/CHANGELOG.md)
+See [CHANGELOG](https://github.com/lelylan/simple-oauth2/blob/master/CHANGELOG.md)
 
 
-## Copyright
-Copyright (c) 2013 [Lelylan](http://lelylan.com).
+## License
 
-This project is released under the [MIT License](http://opensource.org/licenses/MIT).
+Simple OAuth 2.0 is licensed under the [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0)
