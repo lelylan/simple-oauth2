@@ -9,6 +9,7 @@ module.exports = function (config) {
     password: require('./lib/client/password')(config),
     client: require('./lib/client/client')(config),
     accessToken: require('./lib/client/access-token')(config),
-    api: require('./lib/core')(config).api
+    api: require('./lib/core')(config).api,
+    apiJson: require('./lib/core')(config).apiJson
   };
 };
