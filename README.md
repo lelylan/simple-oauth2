@@ -1,10 +1,10 @@
 [![NPM Package Version](https://img.shields.io/npm/v/simple-oauth2.svg?style=flat-square)](https://www.npmjs.com/package/simple-oauth2)
-[![Build Status](https://img.shields.io/travis/andreareginato/simple-oauth2.svg?style=flat-square)](https://travis-ci.org/andreareginato/simple-oauth2)
-[![Dependency Status](https://img.shields.io/david/andreareginato/simple-oauth2.svg?style=flat-square)](https://david-dm.org/andreareginato/simple-oauth2)
+[![Build Status](https://img.shields.io/travis/lelylan/simple-oauth2.svg?style=flat-square)](https://travis-ci.org/lelylan/simple-oauth2)
+[![Dependency Status](https://img.shields.io/david/lelylan/simple-oauth2.svg?style=flat-square)](https://david-dm.org/lelylan/simple-oauth2)
 
 # Simple OAuth2
 
-Node.js client library for [OAuth2](http://oauth.net/2/). This library supports both callbacks or promises for async flow.
+Node.js client library for [OAuth2](http://oauth.net/2/) (this library supports both callbacks or promises for async flow).
 
 OAuth2 lets users grant the access to the desired resources to third party applications,
 giving them the possibility to enable and disable those accesses whenever they want.
@@ -14,6 +14,14 @@ Simple OAuth2 supports the following flows.
 * [Authorization Code Flow](http://tools.ietf.org/html/draft-ietf-oauth-v2-31#section-4.1) (for apps with servers that can store persistent information).
 * [Password Credentials](http://tools.ietf.org/html/draft-ietf-oauth-v2-31#section-4.3) (when previous flow can't be used or during development).
 * [Client Credentials Flow](http://tools.ietf.org/html/draft-ietf-oauth-v2-31#section-4.4) (the client can request an access token using only its client credentials)
+
+#### Thanks to Open Source
+
+Simple OAuth 2.0 come to life thanks to the work I've made in Lelylan, an open source microservices architecture for the Internet of Things. If this project helped you in any way, think about giving us a <a href="https://github.com/lelylan/lelylan">star on Github</a>.
+
+<a href="https://github.com/lelylan/lelylan">
+<img src="https://raw.githubusercontent.com/lelylan/lelylan/master/public/logo-lelylan.png" data-canonical-src="https://raw.githubusercontent.com/lelylan/lelylan/master/public/logo-lelylan.png" width="300"/></a>
+
 
 ## Table of Contents
 
@@ -37,7 +45,7 @@ Simple OAuth2 supports the following flows.
 - [Authors](#authors)
   - [Contributors](#contributors)
 - [Changelog](#changelog)
-- [Copyright](#copyright)
+- [License](#license)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -52,7 +60,7 @@ Install the client library using [npm](http://npmjs.org/):
 
 Install the client library using git:
 
-    $ git clone git://github.com/andreareginato/simple-oauth2.git
+    $ git clone git://github.com/lelylan/simple-oauth2.git
     $ cd simple-oauth2
     $ npm install
 
@@ -359,11 +367,11 @@ var oauth2 = require('simple-oauth2')(credentials);
 ```
 
 ## Contributing
-See [CONTRIBUTING](https://github.com/andreareginato/simple-oauth2/blob/master/CONTRIBUTING.md)
+See [CONTRIBUTING](https://github.com/lelylan/simple-oauth2/blob/master/CONTRIBUTING.md)
 
 
 ## Authors
-[Andrea Reginato](http://twitter.com/andreareginato)
+[Andrea Reginato](http://twitter.com/lelylan)
 
 
 ### Contributors
@@ -373,10 +381,9 @@ Special thanks to the following people for submitting patches.
 
 
 ## Changelog
-See [CHANGELOG](https://github.com/andreareginato/simple-oauth2/blob/master/CHANGELOG.md)
+See [CHANGELOG](https://github.com/lelylan/simple-oauth2/blob/master/CHANGELOG.md)
 
 
-## Copyright
-Copyright (c) 2013 [Lelylan](http://lelylan.com).
+## License
 
-This project is released under the [MIT License](http://opensource.org/licenses/MIT).
+Simple OAuth 2.0 is licensed under the [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0)

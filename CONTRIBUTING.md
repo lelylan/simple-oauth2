@@ -1,6 +1,5 @@
 # Contributing
-Fork the repo on github and send a pull requests with topic branches to the ```develop``` branch. Do not forget to
-provide specs to your contribution.
+Fork the repo on github and send a pull requests with topic branches to the ```develop``` branch. Do not forget to provide specs to your contribution.
 
 ## Repository
   * The master branch will always point to the npm latest published version.
