@@ -45,7 +45,7 @@ Simple OAuth 2.0 come to life thanks to the work I've made in Lelylan, an open s
 - [Authors](#authors)
   - [Contributors](#contributors)
 - [Changelog](#changelog)
-- [Copyright](#copyright)
+- [License](#license)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
