@@ -3,6 +3,7 @@
 ## Next
 * Updated license information.
 * Updated main dependencies version.
+* Fixed leaked token when a refresh token was used.
 
 ## v0.5.1 (25 January 2016)
 * Fixed error class prototype inheritance. Now inherits correctly from Error.
