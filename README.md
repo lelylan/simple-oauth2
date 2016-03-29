@@ -11,8 +11,8 @@ giving them the possibility to enable and disable those accesses whenever they w
 
 Simple OAuth2 supports the following flows.
 
-* Authorization Code Flow (for apps with servers that can store persistent information).
-* Password Credentials (when previous flow can't be used or during development).
+* [Authorization Code Flow](http://tools.ietf.org/html/draft-ietf-oauth-v2-31#section-4.1) (for apps with servers that can store persistent information).
+* [Password Credentials](http://tools.ietf.org/html/draft-ietf-oauth-v2-31#section-4.3) (when previous flow can't be used or during development).
 * [Client Credentials Flow](http://tools.ietf.org/html/draft-ietf-oauth-v2-31#section-4.4) (the client can request an access token using only its client credentials)
 
 ## Table of Contents
@@ -34,11 +34,6 @@ Simple OAuth2 supports the following flows.
   - [Errors](#errors)
 - [Configuration](#configuration)
 - [Contributing](#contributing)
-  - [Releases](#releases)
-  - [Running specs](#running-specs)
-  - [Updating the docs](#updating-the-docs)
-  - [Coding guidelines](#coding-guidelines)
-  - [Feedback](#feedback)
 - [Authors](#authors)
   - [Contributors](#contributors)
 - [Changelog](#changelog)
@@ -47,13 +42,13 @@ Simple OAuth2 supports the following flows.
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## Requirements
-Node client library is tested against Node ~0.8.x
+Node client library is tested against the latest minor Node versions: 0.10.x, 0.11.x, 0.12.x and 4.2.x.
 
 
 ## Installation
 Install the client library using [npm](http://npmjs.org/):
 
-    $ npm install simple-oauth2
+    $ npm install --save simple-oauth2
 
 Install the client library using git:
 
@@ -92,7 +87,7 @@ app.get('/auth', function (req, res) {
 // Callback service parsing the authorization token and asking for the access token
 app.get('/callback', function (req, res) {
   var code = req.query.code;
-  console.log('/callback');
+
   oauth2.authCode.getToken({
     code: code,
     redirect_uri: 'http://localhost:3000/callback'
@@ -364,35 +359,7 @@ var oauth2 = require('simple-oauth2')(credentials);
 ```
 
 ## Contributing
-Fork the repo on github and send a pull requests with topic branches to the ```develop``` branch. Do not forget to
-provide specs to your contribution.
-
-### Repository
-  * The master branch will always point to the npm latest published version.
-  * Develop will contain the latest development/testing/new-features changes.
-  * Every npm release will have a corresponding git tag. The **CHANGELOG.md** will be updated on every release too.
-
-### Running specs
-* Fork and clone the repository (`develop` branch).
-* Run `npm install` for dependencies.
-* Run `make test` to execute all specs.
-* Run `make test-watch` to auto execute all specs when a file change.
-
-### Updating the docs
-Currently, the project documentation it´s on README.md file, a table of contents is generated using a tool called [doctoc](https://github.com/thlorenz/doctoc). So if you updated this file (specially if headers are modified), please use:
-
-```bash
-  npm run docs-gen
-```
-
-### Coding guidelines
-Follow [github](https://github.com/styleguide/) guidelines.
-
-
-### Feedback
-Use the [issue tracker](http://github.com/andreareginato/simple-oauth2/issues) for bugs.
-[Mail](mailto:andrea.reginato@.gmail.com) or [Tweet](http://twitter.com/andreareginato) us
-for any idea that can improve the project.
+See [CONTRIBUTING](https://github.com/andreareginato/simple-oauth2/blob/master/CONTRIBUTING.md)
 
 
 ## Authors

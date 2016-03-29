@@ -1,9 +1,10 @@
 {
   "name": "simple-oauth2",
-  "version": "0.3.0",
+  "version": "0.5.1",
   "description": "Node.js client for OAuth2",
   "author": "Andrea Reginato <andrea.reginato@gmail.com>",
   "homepage": "http://github.com/andreareginato/simple-oauth2",
+  "main": "index.js",
   "repository": {
     "type": "git",
     "url": "http://github.com/andreareginato/simple-oauth2"
@@ -18,16 +19,18 @@
   },
   "devDependencies": {
     "doctoc": "^0.15.0",
+    "eslint": "^1.10.3",
+    "eslint-config-airbnb": "^2.1.1",
     "mocha": "^2.3.4",
     "nock": "^3.6.0",
     "should": "^8.0.2"
   },
   "scripts": {
     "test": "mocha ",
-    "test-watch": "mocha --watch --growl",
+    "lint": "eslint lib/**",
+    "test-watch": "mocha --watch --reporter=spec",
     "docs-gen": "doctoc README.md --github --no-title"
   },
-  "main": ".",
   "licenses": [
     {
       "type": "Copyright (c) 2013 Lelylan"
