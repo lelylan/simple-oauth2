@@ -12,12 +12,24 @@ var request,
 
 describe('oauth2.authCode', function () {
   describe('#authorizeURL', function () {
-    beforeEach(function () {
-      result = oauth2.authCode.authorizeURL(authorizeConfig);
-    });
 
     it('returns the authorization URI', function () {
+      result = oauth2.authCode.authorizeURL(authorizeConfig);
+
       var expected = 'https://example.org/oauth/authorize?redirect_uri=' + encodeURIComponent('http://localhost:3000/callback') + '&scope=user&state=02afe928b&response_type=code&client_id=client-id';
+      result.should.eql(expected);
+    });
+
+    it('should allow absolute URI for authorizationPath', function () {
+      var oauth2 = require('./../index')({
+        clientID: 'client-id',
+        clientSecret: 'client-secret',
+        site: 'https://example.org',
+        authorizationPath: 'https://othersite.com/oauth/authorize'
+      });
+      result = oauth2.authCode.authorizeURL(authorizeConfig);
+
+      var expected = 'https://othersite.com/oauth/authorize?redirect_uri=' + encodeURIComponent('http://localhost:3000/callback') + '&scope=user&state=02afe928b&response_type=code&client_id=client-id';
       result.should.eql(expected);
     });
   });
