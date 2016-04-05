@@ -3,11 +3,11 @@
   "version": "0.6.0",
   "description": "Node.js client for OAuth2",
   "author": "Andrea Reginato <andrea.reginato@gmail.com>",
-  "homepage": "http://github.com/andreareginato/simple-oauth2",
+  "homepage": "https://github.com/lelylan/simple-oauth2",
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "http://github.com/andreareginato/simple-oauth2"
+    "url": "https://github.com/lelylan/simple-oauth2"
   },
   "engine": {
     "node": "~0.8.x"
