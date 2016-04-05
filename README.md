@@ -45,7 +45,7 @@ Simple OAuth 2.0 come to life thanks to the work I've made in Lelylan, an open s
 - [Authors](#authors)
   - [Contributors](#contributors)
 - [Changelog](#changelog)
-- [Copyright](#copyright)
+- [License](#license)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -350,6 +350,7 @@ Simple OAuth2 accepts an object with the following valid params.
 * `useBasicAuthorizationHeader` - Whether or not the `Authorization: Basic ...` header is set on the request.
 Defaults to `true`.
 * `clientSecretParameterName` - Parameter name for the client secret. Defaults to `client_secret`.
+* `useBodyAuth` - Wheather or not the clientID/clientSecret params are sent in the request body. Defaults to `true`.
 
 ```javascript
 // Set the configuration settings
