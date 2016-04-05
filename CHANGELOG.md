@@ -1,6 +1,7 @@
 # Changelog
 
 ## Next
+* Added optional sending support to the body auth params.
 * Updated license information.
 * Updated main dependencies version.
 * Fixed leaked token when a refresh token was used.
