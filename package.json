@@ -6,11 +6,11 @@
   "contributors": [
     "Jonathan Samines <jn.samines@gmail.com>"
   ],
-  "homepage": "http://github.com/andreareginato/simple-oauth2",
+  "homepage": "https://github.com/lelylan/simple-oauth2",
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "http://github.com/andreareginato/simple-oauth2"
+    "url": "https://github.com/lelylan/simple-oauth2"
   },
   "engine": {
     "node": "~0.8.x"
