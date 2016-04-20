@@ -3,6 +3,9 @@
   "version": "0.6.0",
   "description": "Node.js client for OAuth2",
   "author": "Andrea Reginato <andrea.reginato@gmail.com>",
+  "contributors": [
+    "Jonathan Samines <jn.samines@gmail.com>"
+  ],
   "homepage": "https://github.com/lelylan/simple-oauth2",
   "main": "index.js",
   "repository": {
@@ -13,9 +16,10 @@
     "node": "~0.8.x"
   },
   "dependencies": {
-    "request": "^2.67.0",
     "bluebird": "^2.10.1",
-    "date-utils": "^1.2.12"
+    "date-utils": "^1.2.12",
+    "debug": "^2.2.0",
+    "request": "^2.67.0"
   },
   "devDependencies": {
     "doctoc": "^1.0.0",

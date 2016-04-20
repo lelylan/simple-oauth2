@@ -1,5 +1,8 @@
 # Changelog
 
+## Version Next
+* Added standard debug logger.
+
 ## v0.6.0 (04 April 2016)
 * Added optional sending support to the body auth params.
 * Updated license information.
