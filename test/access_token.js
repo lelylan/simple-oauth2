@@ -98,12 +98,12 @@ describe('oauth2.accessToken', function () {
 
     it('returns a new oauth2.accessToken as result of callback api', function () {
       result.should.not.be.equal(global);
-      result.token.should.have.property('access_token');
+      result.should.have.property('access_token');
     });
 
     it('returns a new oauth2.accessToken as result of promise api', function () {
       result.should.not.be.equal(global);
-      resultPromise.token.should.have.property('access_token');
+      resultPromise.should.have.property('access_token');
     });
   });
 
@@ -136,11 +136,11 @@ describe('oauth2.accessToken', function () {
     });
 
     it('returns a new oauth2.accessToken as result of callback api', function () {
-      result.token.should.have.property('access_token');
+      result.should.have.property('access_token');
     });
 
     it('returns a new oauth2.accessToken as result of promise api', function () {
-      resultPromise.token.should.have.property('access_token');
+      resultPromise.should.have.property('access_token');
     });
   });
 
