@@ -1,6 +1,7 @@
 var credentials = { clientID: 'client-id', clientSecret: 'client-secret', site: 'https://example.org' },
   oauth2 = require('./../index.js')(credentials),
   qs = require('querystring'),
+  startOfYesterday = require('date-fns/start_of_yesterday'),
   nock = require('nock');
 
 var request,
@@ -58,8 +59,8 @@ describe('oauth2.accessToken', function () {
 
   describe('when expired', function () {
     beforeEach(function () {
-      token.token.expires_at = Date.yesterday();
-      tokenPromise.token.expires_at = Date.yesterday();
+      token.token.expires_at = startOfYesterday();
+      tokenPromise.token.expires_at = startOfYesterday();
     });
 
     it('returns false', function () {
