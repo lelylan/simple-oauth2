@@ -1,3 +1,5 @@
+'use strict';
+
 var appConfig = require('./lib/config');
 var utils = require('./lib/utils');
 
