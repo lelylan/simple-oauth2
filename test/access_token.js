@@ -6,6 +6,8 @@ const path = require('path');
 const expect = require('chai').expect;
 const startOfYesterday = require('date-fns/start_of_yesterday');
 const oauth2Module = require('./../index.js');
+const isValid = require('date-fns/is_valid');
+const isEqual = require('date-fns/is_equal');
 
 const oauth2 = oauth2Module
   .create(require('./fixtures/oauth-options'));
@@ -58,6 +60,29 @@ describe('oauth2.accessToken', function () {
     it('creates an access token wrapper object', function () {
       expect(token).to.have.property('token');
       expect(tokenPromise).to.have.property('token');
+    });
+  });
+
+  describe('#create with expires_at', function () {
+    it('uses the set expires_at property', function () {
+      token.token.expires_at = startOfYesterday();
+      const expiredToken = oauth2.accessToken.create(token.token);
+      expect(isValid(expiredToken.token.expires_at)).to.be.equal(true);
+      expect(isEqual(expiredToken.token.expires_at, token.token.expires_at))
+        .to.be.equal(true);
+    });
+
+    it('parses a set expires_at property', function () {
+      const yesterday = startOfYesterday();
+      token.token.expires_at = yesterday.toString();
+      const expiredToken = oauth2.accessToken.create(token.token);
+      expect(isValid(expiredToken.token.expires_at)).to.be.equal(true);
+      expect(isEqual(expiredToken.token.expires_at, token.token.expires_at))
+        .to.be.equal(true);
+    });
+
+    it('create its own date by default', function () {
+      expect(isValid(token.token.expires_at)).to.be.equal(true);
     });
   });
 
@@ -142,6 +167,10 @@ describe('oauth2.accessToken', function () {
 
     it('makes the HTTP request', function () {
       expect(request.isDone()).to.be.equal(true);
+    });
+
+    it('returns a new oauth2.accessToken as result of callback api', function () {
+      expect(result.token).to.have.property('access_token');
     });
 
     it('returns a new oauth2.accessToken as a result of the token refresh', function () {
