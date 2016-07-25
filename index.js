@@ -1,16 +1,21 @@
 'use strict';
 
-var appConfig = require('./lib/config');
-var utils = require('./lib/utils');
+const appConfig = require('./lib/config');
+const utils = require('./lib/utils');
+const authCodeModule = require('./lib/client/auth-code');
+const passwordModule = require('./lib/client/password');
+const clienteCredentialsModule = require('./lib/client/client');
+const accessTokenModule = require('./lib/client/access-token');
+const coreModule = require('./lib/core');
 
 module.exports = function (config) {
   config = utils.configure(config, appConfig);
 
   return {
-    authCode: require('./lib/client/auth-code')(config),
-    password: require('./lib/client/password')(config),
-    client: require('./lib/client/client')(config),
-    accessToken: require('./lib/client/access-token')(config),
-    api: require('./lib/core')(config).api
+    authCode: authCodeModule(config),
+    password: passwordModule(config),
+    client: clienteCredentialsModule(config),
+    accessToken: accessTokenModule(config),
+    api: coreModule(config).api,
   };
 };

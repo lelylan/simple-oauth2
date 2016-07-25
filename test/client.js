@@ -1,13 +1,27 @@
-var credentials = { clientID: 'client-id', clientSecret: 'client-secret', site: 'https://example.org', form: false },
-  oauth2 = require('./../index.js')(credentials),
-  qs = require('querystring'),
-  nock = require('nock');
+'use strict';
 
-var request,
-  result, resultPromise,
-  error, errorPromise,
-  tokenConfig = {},
-  oauthConfig = { 'grant_type': 'client_credentials', client_id: 'client-id', client_secret: 'client-secret' };
+const oauth2Module = require('./../index.js');
+const qs = require('querystring');
+const nock = require('nock');
+
+const oauth2 = oauth2Module({
+  clientID: 'client-id',
+  clientSecret: 'client-secret',
+  site: 'https://example.org',
+  form: false,
+});
+
+let request;
+let result;
+let resultPromise;
+let error;
+let errorPromise;
+const tokenConfig = {};
+const oauthConfig = {
+  grant_type: 'client_credentials',
+  client_id: 'client-id',
+  client_secret: 'client-secret',
+};
 
 describe('oauth2.Client', function () {
   describe('#getToken', function () {
