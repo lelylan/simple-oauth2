@@ -2,6 +2,7 @@
 
 const qs = require('querystring');
 const nock = require('nock');
+const path = require('path');
 const startOfYesterday = require('date-fns/start_of_yesterday');
 const oauth2Module = require('./../index.js');
 
@@ -54,7 +55,7 @@ describe('oauth2.accessToken', function () {
     request = nock('https://example.org:443')
       .post('/oauth/token', qs.stringify(oauthConfig))
       .times(2)
-      .replyWithFile(200, __dirname + '/fixtures/access_token.json');
+      .replyWithFile(200, path.join(__dirname, '/fixtures/access_token.json'));
   });
 
   beforeEach(function (done) {
@@ -109,7 +110,7 @@ describe('oauth2.accessToken', function () {
       request = nock('https://example.org:443')
         .post('/oauth/token', qs.stringify(refreshConfig))
         .times(2)
-        .replyWithFile(200, __dirname + '/fixtures/access_token.json');
+        .replyWithFile(200, path.join(__dirname, '/fixtures/access_token.json'));
     });
 
     beforeEach(function (done) {
@@ -148,7 +149,7 @@ describe('oauth2.accessToken', function () {
       request = nock('https://example.org:443')
         .post('/oauth/token', qs.stringify(refreshWithAdditionalParamsConfig))
         .times(2)
-        .replyWithFile(200, __dirname + '/fixtures/access_token.json');
+        .replyWithFile(200, path.join(__dirname, '/fixtures/access_token.json'));
     });
 
     beforeEach(function (done) {
