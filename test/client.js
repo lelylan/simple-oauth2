@@ -1,8 +1,10 @@
 'use strict';
 
-const oauth2Module = require('./../index.js');
+const path = require('path');
 const qs = require('querystring');
 const nock = require('nock');
+const expect = require('chai').expect;
+const oauth2Module = require('./../index.js');
 
 const oauth2 = oauth2Module({
   clientID: 'client-id',
@@ -46,15 +48,15 @@ describe('oauth2.Client', function () {
     });
 
     it('makes the HTTP request', function () {
-      request.isDone().should.be.true;
+      expect(request.isDone()).to.be.equal(true);
     });
 
     it('returns an access token as result of callback api', function () {
-      result.should.have.property('access_token');
+      expect(result).to.have.property('access_token');
     });
 
     it('returns an access token as result of promise api', function () {
-      resultPromise.should.have.property('access_token');
+      expect(resultPromise).to.have.property('access_token');
     });
   });
 });

@@ -2,6 +2,8 @@
 
 const qs = require('querystring');
 const nock = require('nock');
+const path = require('path');
+const expect = require('chai').expect;
 const startOfYesterday = require('date-fns/start_of_yesterday');
 const oauth2Module = require('./../index.js');
 
@@ -77,18 +79,18 @@ describe('oauth2.accessToken', function () {
 
   describe('#create', function () {
     it('creates an access token as result of callback api', function () {
-      token.should.have.property('token');
+      expect(token).to.have.property('token');
     });
 
     it('created an access token as result of promise api', function () {
-      tokenPromise.should.have.property('token');
+      expect(tokenPromise).to.have.property('token');
     });
   });
 
   describe('when not expired', function () {
     it('returns false', function () {
-      token.expired().should.be.false;
-      tokenPromise.expired().should.be.false;
+      expect(token.expired()).to.be.equal(false);
+      expect(tokenPromise.expired()).to.be.equal(false);
     });
   });
 
@@ -99,8 +101,8 @@ describe('oauth2.accessToken', function () {
     });
 
     it('returns false', function () {
-      token.expired().should.be.true;
-      tokenPromise.expired().should.be.true;
+      expect(token.expired()).to.be.equal(true);
+      expect(tokenPromise.expired()).to.be.equal(true);
     });
   });
 
@@ -129,17 +131,17 @@ describe('oauth2.accessToken', function () {
     });
 
     it('makes the HTTP request', function () {
-      request.isDone().should.be.true;
+      expect(request.isDone()).to.be.equal(true);
     });
 
     it('returns a new oauth2.accessToken as result of callback api', function () {
-      result.should.not.be.equal(global);
-      result.token.should.have.property('access_token');
+      expect(result).to.not.be.equal(global);
+      expect(result.token).to.have.property('access_token');
     });
 
     it('returns a new oauth2.accessToken as result of promise api', function () {
-      result.should.not.be.equal(global);
-      resultPromise.token.should.have.property('access_token');
+      expect(result).to.not.be.equal(global);
+      expect(resultPromise.token).to.have.property('access_token');
     });
   });
 
