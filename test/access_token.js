@@ -56,7 +56,7 @@ describe('oauth2.accessToken', function () {
     request = nock('https://example.org:443')
       .post('/oauth/token', qs.stringify(oauthConfig))
       .times(2)
-      .replyWithFile(200, __dirname + '/fixtures/access_token.json');
+      .replyWithFile(200, path.join(__dirname, '/fixtures/access_token.json'));
   });
 
   beforeEach(function (done) {
@@ -111,7 +111,7 @@ describe('oauth2.accessToken', function () {
       request = nock('https://example.org:443')
         .post('/oauth/token', qs.stringify(refreshConfig))
         .times(2)
-        .replyWithFile(200, __dirname + '/fixtures/access_token.json');
+        .replyWithFile(200, path.join(__dirname, '/fixtures/access_token.json'));
     });
 
     beforeEach(function (done) {
@@ -150,7 +150,7 @@ describe('oauth2.accessToken', function () {
       request = nock('https://example.org:443')
         .post('/oauth/token', qs.stringify(refreshWithAdditionalParamsConfig))
         .times(2)
-        .replyWithFile(200, __dirname + '/fixtures/access_token.json');
+        .replyWithFile(200, path.join(__dirname, '/fixtures/access_token.json'));
     });
 
     beforeEach(function (done) {
@@ -170,15 +170,15 @@ describe('oauth2.accessToken', function () {
     });
 
     it('makes the HTTP request', function () {
-      request.isDone().should.be.true;
+      expect(request.isDone()).to.be.equal(true);
     });
 
     it('returns a new oauth2.accessToken as result of callback api', function () {
-      result.token.should.have.property('access_token');
+      expect(result.token).to.have.property('access_token');
     });
 
     it('returns a new oauth2.accessToken as result of promise api', function () {
-      resultPromise.token.should.have.property('access_token');
+      expect(resultPromise.token).to.have.property('access_token');
     });
   });
 
@@ -201,13 +201,13 @@ describe('oauth2.accessToken', function () {
       resultPromise = null;
       errorPromise = null;
 
-      return tokenPromise.revoke()
+      return tokenPromise.revoke('refresh_token')
         .then(function (r) { resultPromise = r; })
         .catch(function (e) { errorPromise = e; });
     });
 
     it('make HTTP call', function () {
-      request.isDone().should.be.true;
+      expect(request.isDone()).to.be.equal(true);
     });
   });
 });

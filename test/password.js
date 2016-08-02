@@ -35,7 +35,7 @@ describe('oauth2.password', function () {
       request = nock('https://example.org:443')
         .post('/oauth/token', qs.stringify(oauthParams))
         .times(2)
-        .replyWithFile(200, __dirname + '/fixtures/access_token.json');
+        .replyWithFile(200, path.join(__dirname, '/fixtures/access_token.json'));
     });
 
     beforeEach(function (done) {
