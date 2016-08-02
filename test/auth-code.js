@@ -1,6 +1,7 @@
 'use strict';
 
 const oauth2Module = require('./../index.js');
+const path = require('path');
 const qs = require('querystring');
 const nock = require('nock');
 
@@ -60,7 +61,7 @@ describe('oauth2.authCode', function () {
       request = nock('https://example.org')
         .post('/oauth/token', qs.stringify(oauthConfig))
         .times(2)
-        .replyWithFile(200, __dirname + '/fixtures/access_token.json');
+        .replyWithFile(200, path.join(__dirname, '/fixtures/access_token.json'));
     });
 
     beforeEach(function (done) {
