@@ -1,35 +1,56 @@
-var credentials = { clientID: 'client-id', clientSecret: 'client-secret', site: 'https://example.org' },
-  oauth2 = require('./../index.js')(credentials),
-  qs = require('querystring'),
-  nock = require('nock');
+'use strict';
 
-var request,
-  result, resultPromise,
-  error, errorPromise,
-  tokenConfig = { 'code': 'code', 'redirect_uri': 'http://callback.com' },
-  oauthConfig = { 'code': 'code', 'redirect_uri': 'http://callback.com', 'grant_type': 'authorization_code', 'client_id': 'client-id', 'client_secret': 'client-secret' },
-  authorizeConfig = { 'redirect_uri': 'http://localhost:3000/callback', 'scope': 'user', 'state': '02afe928b' };
+const oauth2Module = require('./../index.js');
+const qs = require('querystring');
+const nock = require('nock');
+
+const oauth2 = oauth2Module({
+  clientID: 'client-id',
+  clientSecret: 'client-secret',
+  site: 'https://example.org',
+});
+
+let request;
+let result;
+let resultPromise;
+let error;
+let errorPromise;
+const tokenConfig = {
+  code: 'code',
+  redirect_uri: 'http://callback.com',
+};
+const oauthConfig = {
+  code: 'code',
+  redirect_uri: 'http://callback.com',
+  grant_type: 'authorization_code',
+  client_id: 'client-id',
+  client_secret: 'client-secret',
+};
+const authorizeConfig = {
+  redirect_uri: 'http://localhost:3000/callback',
+  scope: 'user',
+  state: '02afe928b',
+};
 
 describe('oauth2.authCode', function () {
   describe('#authorizeURL', function () {
-
     it('returns the authorization URI', function () {
       result = oauth2.authCode.authorizeURL(authorizeConfig);
 
-      var expected = 'https://example.org/oauth/authorize?redirect_uri=' + encodeURIComponent('http://localhost:3000/callback') + '&scope=user&state=02afe928b&response_type=code&client_id=client-id';
+      const expected = 'https://example.org/oauth/authorize?redirect_uri=' + encodeURIComponent('http://localhost:3000/callback') + '&scope=user&state=02afe928b&response_type=code&client_id=client-id';
       result.should.eql(expected);
     });
 
     it('should allow absolute URI for authorizationPath', function () {
-      var oauth2 = require('./../index')({
+      const oauth2Temp = oauth2Module({
         clientID: 'client-id',
         clientSecret: 'client-secret',
         site: 'https://example.org',
-        authorizationPath: 'https://othersite.com/oauth/authorize'
+        authorizationPath: 'https://othersite.com/oauth/authorize',
       });
-      result = oauth2.authCode.authorizeURL(authorizeConfig);
+      result = oauth2Temp.authCode.authorizeURL(authorizeConfig);
 
-      var expected = 'https://othersite.com/oauth/authorize?redirect_uri=' + encodeURIComponent('http://localhost:3000/callback') + '&scope=user&state=02afe928b&response_type=code&client_id=client-id';
+      const expected = 'https://othersite.com/oauth/authorize?redirect_uri=' + encodeURIComponent('http://localhost:3000/callback') + '&scope=user&state=02afe928b&response_type=code&client_id=client-id';
       result.should.eql(expected);
     });
   });
@@ -56,7 +77,7 @@ describe('oauth2.authCode', function () {
     });
 
     it('makes the HTTP request', function () {
-      request.isDone();
+      request.isDone().should.be.true;
     });
 
     it('returns an access token as result of callback api', function () {
