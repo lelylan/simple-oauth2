@@ -39,7 +39,7 @@ describe('oauth2.authCode', function () {
     it('returns the authorization URI', function () {
       result = oauth2.authCode.authorizeURL(authorizeConfig);
 
-      const expected = 'https://example.org/oauth/authorize?redirect_uri=' + encodeURIComponent('http://localhost:3000/callback') + '&scope=user&state=02afe928b&response_type=code&client_id=client-id';
+      const expected = `https://example.org/oauth/authorize?redirect_uri=${encodeURIComponent('http://localhost:3000/callback')}&scope=user&state=02afe928b&response_type=code&client_id=client-id`;
       expect(result).to.be.equal(expected);
     });
 
@@ -52,7 +52,7 @@ describe('oauth2.authCode', function () {
       });
       result = oauth2Temp.authCode.authorizeURL(authorizeConfig);
 
-      const expected = 'https://othersite.com/oauth/authorize?redirect_uri=' + encodeURIComponent('http://localhost:3000/callback') + '&scope=user&state=02afe928b&response_type=code&client_id=client-id';
+      const expected = `https://othersite.com/oauth/authorize?redirect_uri=${encodeURIComponent('http://localhost:3000/callback')}&scope=user&state=02afe928b&response_type=code&client_id=client-id`;
       expect(result).to.be.equal(expected);
     });
   });
