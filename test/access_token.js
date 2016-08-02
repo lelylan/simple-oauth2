@@ -1,17 +1,53 @@
-var credentials = { clientID: 'client-id', clientSecret: 'client-secret', site: 'https://example.org' },
-  oauth2 = require('./../index.js')(credentials),
-  qs = require('querystring'),
-  nock = require('nock');
+'use strict';
 
-var request,
-  result, resultPromise,
-  token, tokenPromise,
-  error, errorPromise,
-  tokenConfig = { 'code': 'code', 'redirect_uri': 'http://callback.com' },
-  refreshConfig = { 'grant_type': 'refresh_token', refresh_token: 'ec1a59d298', 'client_id': 'client-id', 'client_secret': 'client-secret' },
-  refreshWithAdditionalParamsConfig = { 'scope': 'TESTING_EXAMPLE_SCOPES', 'grant_type': 'refresh_token', refresh_token: 'ec1a59d298', 'client_id': 'client-id', 'client_secret': 'client-secret' },
-  revokeConfig = { 'token': 'ec1a59d298', 'token_type_hint': 'refresh_token', 'client_id': 'client-id', 'client_secret': 'client-secret' },
-  oauthConfig = { 'code': 'code', 'redirect_uri': 'http://callback.com', 'grant_type': 'authorization_code', 'client_id': 'client-id', 'client_secret': 'client-secret' };
+const qs = require('querystring');
+const nock = require('nock');
+const startOfYesterday = require('date-fns/start_of_yesterday');
+const oauth2Module = require('./../index.js');
+
+const oauth2 = oauth2Module({
+  clientID: 'client-id',
+  clientSecret: 'client-secret',
+  site: 'https://example.org',
+});
+
+let request;
+let result;
+let resultPromise;
+let token;
+let tokenPromise;
+let error;
+let errorPromise;
+const tokenConfig = {
+  code: 'code',
+  redirect_uri: 'http://callback.com',
+};
+const refreshConfig = {
+  grant_type: 'refresh_token',
+  refresh_token: 'ec1a59d298',
+  client_id: 'client-id',
+  client_secret: 'client-secret',
+};
+const refreshWithAdditionalParamsConfig = {
+  scope: 'TESTING_EXAMPLE_SCOPES',
+  grant_type: 'refresh_token',
+  refresh_token: 'ec1a59d298',
+  client_id: 'client-id',
+  client_secret: 'client-secret',
+};
+const revokeConfig = {
+  token: 'ec1a59d298',
+  token_type_hint: 'refresh_token',
+  client_id: 'client-id',
+  client_secret: 'client-secret',
+};
+const oauthConfig = {
+  code: 'code',
+  redirect_uri: 'http://callback.com',
+  grant_type: 'authorization_code',
+  client_id: 'client-id',
+  client_secret: 'client-secret',
+};
 
 describe('oauth2.accessToken', function () {
   beforeEach(function () {
@@ -58,8 +94,8 @@ describe('oauth2.accessToken', function () {
 
   describe('when expired', function () {
     beforeEach(function () {
-      token.token.expires_at = Date.yesterday();
-      tokenPromise.token.expires_at = Date.yesterday();
+      token.token.expires_at = startOfYesterday();
+      tokenPromise.token.expires_at = startOfYesterday();
     });
 
     it('returns false', function () {
@@ -93,7 +129,7 @@ describe('oauth2.accessToken', function () {
     });
 
     it('makes the HTTP request', function () {
-      request.isDone();
+      request.isDone().should.be.true;
     });
 
     it('returns a new oauth2.accessToken as result of callback api', function () {
@@ -132,7 +168,7 @@ describe('oauth2.accessToken', function () {
     });
 
     it('makes the HTTP request', function () {
-      request.isDone();
+      request.isDone().should.be.true;
     });
 
     it('returns a new oauth2.accessToken as result of callback api', function () {
@@ -169,7 +205,7 @@ describe('oauth2.accessToken', function () {
     });
 
     it('make HTTP call', function () {
-      request.isDone();
+      request.isDone().should.be.true;
     });
   });
 });

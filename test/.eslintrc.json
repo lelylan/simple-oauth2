@@ -4,6 +4,9 @@
   },
   "rules": {
     "one-var": 0,
-    "no-unused-expressions": 0
+    "no-unused-expressions": 0,
+    "prefer-arrow-callback": 0,
+    "prefer-template": 0,
+    "no-unused-vars": 0
   }
 }
