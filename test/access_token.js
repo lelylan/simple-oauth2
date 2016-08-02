@@ -78,11 +78,8 @@ describe('oauth2.accessToken', function () {
   });
 
   describe('#create', function () {
-    it('creates an access token as result of callback api', function () {
+    it('creates an access token wrapper object', function () {
       expect(token).to.have.property('token');
-    });
-
-    it('created an access token as result of promise api', function () {
       expect(tokenPromise).to.have.property('token');
     });
   });
@@ -134,13 +131,10 @@ describe('oauth2.accessToken', function () {
       expect(request.isDone()).to.be.equal(true);
     });
 
-    it('returns a new oauth2.accessToken as result of callback api', function () {
+    it('returns a new oauth2.accessToken as a result of the token refresh', function () {
       expect(result).to.not.be.equal(global);
       expect(result.token).to.have.property('access_token');
-    });
-
-    it('returns a new oauth2.accessToken as result of promise api', function () {
-      expect(result).to.not.be.equal(global);
+      expect(resultPromise).to.not.be.equal(global);
       expect(resultPromise.token).to.have.property('access_token');
     });
   });
@@ -173,11 +167,8 @@ describe('oauth2.accessToken', function () {
       expect(request.isDone()).to.be.equal(true);
     });
 
-    it('returns a new oauth2.accessToken as result of callback api', function () {
+    it('returns a new oauth2.accessToken as a result of the token refresh', function () {
       expect(result.token).to.have.property('access_token');
-    });
-
-    it('returns a new oauth2.accessToken as result of promise api', function () {
       expect(resultPromise.token).to.have.property('access_token');
     });
   });

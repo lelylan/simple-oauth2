@@ -54,11 +54,8 @@ describe('oauth2.password', function () {
       expect(request.isDone()).to.be.equal(true);
     });
 
-    it('returns an access token as result of callback api', function () {
+    it('returns an access token as result of the token request', function () {
       expect(result).to.have.property('access_token');
-    });
-
-    it('returns an access token as result of promises api', function () {
       expect(resultPromise).to.be.property('access_token');
     });
   });

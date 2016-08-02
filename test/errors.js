@@ -61,13 +61,11 @@ describe('Simple oauth2 Error', function () {
       expect(requestContent.isDone()).to.be.equal(true);
     });
 
-    it('returns an error object with the httpStatusCode and message as a result of callback api', function () { // eslint-disable-line
+    it('returns an error object with the httpStatusCode and message as a result of the token request', function () { // eslint-disable-line
       expect(error.message).to.be.equal('Unauthorized');
       expect(error.status).to.be.equal(401);
       expect(error.context).to.be.equal(null);
-    });
 
-    it('returns an error object with the httpStatusCode, context and message as a result of promise api', function () { // eslint-disable-line
       expect(errorPromise.message).to.be.equal('Unauthorized');
       expect(errorPromise.status).to.be.equal(401);
       expect(errorPromise.context).to.be.deep.equal({
@@ -107,13 +105,11 @@ describe('Simple oauth2 Error', function () {
       expect(requestContent.isDone()).to.be.equal(true);
     });
 
-    it('returns an error object with the httpStatusCode and message as a result of the callback api', function () { // eslint-disable-line
+    it('returns an error object with the httpStatusCode and message as a result of the token request', function () { // eslint-disable-line
       expect(error.message).to.be.equal('Internal Server Error');
       expect(error.status).to.be.equal(500);
       expect(error.context).to.be.equal(null);
-    });
 
-    it('returns an error object with the httpStatusCode, context and message as a result of promise api', function () { // eslint-disable-line
       expect(errorPromise.message).to.be.equal('Internal Server Error');
       expect(errorPromise.status).to.be.equal(500);
       expect(errorPromise.context).to.be.deep.equal({

@@ -82,11 +82,8 @@ describe('oauth2.authCode', function () {
       expect(request.isDone()).to.be.equal(true);
     });
 
-    it('returns an access token as result of callback api', function () {
+    it('returns an access token as result of the token request', function () {
       expect(result).to.have.property('access_token');
-    });
-
-    it('returns an access token as result of promise api', function () {
       expect(resultPromise).to.have.property('access_token');
     });
   });
