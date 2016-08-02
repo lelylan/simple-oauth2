@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.8.0 (1 August 2016)
+* Upgraded code to strict mode.
+* Upgraded all the code base to es6.
+* Updated linter settings to meet the new es6 code requirements.
+* Fixed shared value for access token, causing tokens to be overriding.
+
 ## v0.7.0 (22 April 2016)
 * Replaced internal logger by the debug module logger.
 * Fixed some project metadata.
