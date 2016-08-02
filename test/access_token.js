@@ -129,7 +129,7 @@ describe('oauth2.accessToken', function () {
     });
 
     it('makes the HTTP request', function () {
-      request.isDone();
+      request.isDone().should.be.true;
     });
 
     it('returns a new oauth2.accessToken as result of callback api', function () {
@@ -168,7 +168,7 @@ describe('oauth2.accessToken', function () {
     });
 
     it('makes the HTTP request', function () {
-      request.isDone();
+      request.isDone().should.be.true;
     });
 
     it('returns a new oauth2.accessToken as result of callback api', function () {
@@ -205,7 +205,7 @@ describe('oauth2.accessToken', function () {
     });
 
     it('make HTTP call', function () {
-      request.isDone();
+      request.isDone().should.be.true;
     });
   });
 });

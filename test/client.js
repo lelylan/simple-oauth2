@@ -46,7 +46,7 @@ describe('oauth2.Client', function () {
     });
 
     it('makes the HTTP request', function () {
-      request.isDone();
+      request.isDone().should.be.true;
     });
 
     it('returns an access token as result of callback api', function () {

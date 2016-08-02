@@ -57,8 +57,8 @@ describe('Simple oauth2 Error', function () {
     });
 
     it('makes the HTTP request', function () {
-      request.isDone();
-      requestContent.isDone();
+      request.isDone().should.be.true;
+      requestContent.should.be.true;
     });
 
     it('returns an error object with the httpStatusCode and message as a result of callback api', function () { // eslint-disable-line
@@ -104,8 +104,8 @@ describe('Simple oauth2 Error', function () {
     });
 
     it('makes the HTTP request', function () {
-      request.isDone();
-      requestContent.isDone();
+      request.isDone().should.be.true;
+      requestContent.should.be.true;
     });
 
     it('returns an error object with the httpStatusCode and message as a result of the callback api', function () { // eslint-disable-line
