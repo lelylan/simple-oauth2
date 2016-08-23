@@ -50,7 +50,7 @@ Simple OAuth 2.0 come to life thanks to the work I've made in Lelylan, an open s
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## Requirements
-Node client library is tested against the latest minor Node versions: 0.10.x, 0.11.x, 0.12.x and 4.2.x.
+Node client library is tested against the latest minor Node versions: 0.12.0, 4, 5 and 6.
 
 
 ## Installation

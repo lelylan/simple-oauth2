@@ -24,32 +24,11 @@ const tokenConfig = {
   code: 'code',
   redirect_uri: 'http://callback.com',
 };
-const refreshConfig = {
-  grant_type: 'refresh_token',
-  refresh_token: 'ec1a59d298',
-  client_id: 'client-id',
-  client_secret: 'client-secret',
-};
-const refreshWithAdditionalParamsConfig = {
-  scope: 'TESTING_EXAMPLE_SCOPES',
-  grant_type: 'refresh_token',
-  refresh_token: 'ec1a59d298',
-  client_id: 'client-id',
-  client_secret: 'client-secret',
-};
-const revokeConfig = {
-  token: 'ec1a59d298',
-  token_type_hint: 'refresh_token',
-  client_id: 'client-id',
-  client_secret: 'client-secret',
-};
-const oauthConfig = {
-  code: 'code',
-  redirect_uri: 'http://callback.com',
-  grant_type: 'authorization_code',
-  client_id: 'client-id',
-  client_secret: 'client-secret',
-};
+
+const refreshConfig = require('./fixtures/refresh-token.json');
+const refreshWithAdditionalParamsConfig = require('./fixtures/refresh-token-with-params.json');
+const oauthConfig = require('./fixtures/oauth-options.json');
+const revokeConfig = require('./fixtures/revoke-token-params.json');
 
 describe('oauth2.accessToken', function () {
   beforeEach(function () {

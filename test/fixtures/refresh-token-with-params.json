@@ -1,0 +1,7 @@
+{
+  "scope": "TESTING_EXAMPLE_SCOPES",
+  "grant_type": "refresh_token",
+  "refresh_token": "ec1a59d298",
+  "client_id": "client-id",
+  "client_secret": "client-secret"
+}
