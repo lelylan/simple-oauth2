@@ -3,54 +3,31 @@
 const qs = require('querystring');
 const nock = require('nock');
 const path = require('path');
+const expect = require('chai').expect;
 const startOfYesterday = require('date-fns/start_of_yesterday');
 const oauth2Module = require('./../index.js');
 
-const oauth2 = oauth2Module({
-  clientID: 'client-id',
-  clientSecret: 'client-secret',
-  site: 'https://example.org',
-});
+const oauth2 = oauth2Module(require('./fixtures/oauth-options'));
 
-let request;
-let result;
-let resultPromise;
-let token;
-let tokenPromise;
-let error;
-let errorPromise;
-const tokenConfig = {
+const tokenParams = {
   code: 'code',
   redirect_uri: 'http://callback.com',
 };
-const refreshConfig = {
-  grant_type: 'refresh_token',
-  refresh_token: 'ec1a59d298',
-  client_id: 'client-id',
-  client_secret: 'client-secret',
-};
-const refreshWithAdditionalParamsConfig = {
-  scope: 'TESTING_EXAMPLE_SCOPES',
-  grant_type: 'refresh_token',
-  refresh_token: 'ec1a59d298',
-  client_id: 'client-id',
-  client_secret: 'client-secret',
-};
-const revokeConfig = {
-  token: 'ec1a59d298',
-  token_type_hint: 'refresh_token',
-  client_id: 'client-id',
-  client_secret: 'client-secret',
-};
-const oauthConfig = {
-  code: 'code',
-  redirect_uri: 'http://callback.com',
-  grant_type: 'authorization_code',
-  client_id: 'client-id',
-  client_secret: 'client-secret',
-};
+
+const refreshConfig = require('./fixtures/refresh-token.json');
+const refreshWithAdditionalParamsConfig = require('./fixtures/refresh-token-with-params.json');
+const oauthConfig = require('./fixtures/oauth-options-code.json');
+const revokeConfig = require('./fixtures/revoke-token-params.json');
 
 describe('oauth2.accessToken', function () {
+  let request;
+  let result;
+  let resultPromise;
+  let token;
+  let tokenPromise;
+  let error;
+  let errorPromise;
+
   beforeEach(function () {
     request = nock('https://example.org:443')
       .post('/oauth/token', qs.stringify(oauthConfig))
@@ -59,14 +36,14 @@ describe('oauth2.accessToken', function () {
   });
 
   beforeEach(function (done) {
-    oauth2.authCode.getToken(tokenConfig, function (e, r) {
+    oauth2.authCode.getToken(tokenParams, function (e, r) {
       error = e; result = r; done();
     });
   });
 
   beforeEach(function () {
     return oauth2.authCode
-      .getToken(tokenConfig)
+      .getToken(tokenParams)
       .then(function (r) { resultPromise = r; })
       .catch(function (e) { errorPromise = e; });
   });
@@ -77,19 +54,16 @@ describe('oauth2.accessToken', function () {
   });
 
   describe('#create', function () {
-    it('creates an access token as result of callback api', function () {
-      token.should.have.property('token');
-    });
-
-    it('created an access token as result of promise api', function () {
-      tokenPromise.should.have.property('token');
+    it('creates an access token wrapper object', function () {
+      expect(token).to.have.property('token');
+      expect(tokenPromise).to.have.property('token');
     });
   });
 
   describe('when not expired', function () {
     it('returns false', function () {
-      token.expired().should.be.false;
-      tokenPromise.expired().should.be.false;
+      expect(token.expired()).to.be.equal(false);
+      expect(tokenPromise.expired()).to.be.equal(false);
     });
   });
 
@@ -100,8 +74,8 @@ describe('oauth2.accessToken', function () {
     });
 
     it('returns false', function () {
-      token.expired().should.be.true;
-      tokenPromise.expired().should.be.true;
+      expect(token.expired()).to.be.equal(true);
+      expect(tokenPromise.expired()).to.be.equal(true);
     });
   });
 
@@ -130,17 +104,14 @@ describe('oauth2.accessToken', function () {
     });
 
     it('makes the HTTP request', function () {
-      request.isDone().should.be.true;
+      expect(request.isDone()).to.be.equal(true);
     });
 
-    it('returns a new oauth2.accessToken as result of callback api', function () {
-      result.should.not.be.equal(global);
-      result.token.should.have.property('access_token');
-    });
-
-    it('returns a new oauth2.accessToken as result of promise api', function () {
-      result.should.not.be.equal(global);
-      resultPromise.token.should.have.property('access_token');
+    it('returns a new oauth2.accessToken as a result of the token refresh', function () {
+      expect(result).to.not.be.equal(global);
+      expect(result.token).to.have.property('access_token');
+      expect(resultPromise).to.not.be.equal(global);
+      expect(resultPromise.token).to.have.property('access_token');
     });
   });
 
@@ -169,15 +140,12 @@ describe('oauth2.accessToken', function () {
     });
 
     it('makes the HTTP request', function () {
-      request.isDone().should.be.true;
+      expect(request.isDone()).to.be.equal(true);
     });
 
-    it('returns a new oauth2.accessToken as result of callback api', function () {
-      result.token.should.have.property('access_token');
-    });
-
-    it('returns a new oauth2.accessToken as result of promise api', function () {
-      resultPromise.token.should.have.property('access_token');
+    it('returns a new oauth2.accessToken as a result of the token refresh', function () {
+      expect(result.token).to.have.property('access_token');
+      expect(resultPromise.token).to.have.property('access_token');
     });
   });
 
@@ -200,13 +168,13 @@ describe('oauth2.accessToken', function () {
       resultPromise = null;
       errorPromise = null;
 
-      return tokenPromise.revoke()
+      return tokenPromise.revoke('refresh_token')
         .then(function (r) { resultPromise = r; })
         .catch(function (e) { errorPromise = e; });
     });
 
     it('make HTTP call', function () {
-      request.isDone().should.be.true;
+      expect(request.isDone()).to.be.equal(true);
     });
   });
 });

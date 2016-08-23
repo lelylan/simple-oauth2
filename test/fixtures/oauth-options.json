@@ -1,0 +1,5 @@
+{
+  "clientID": "client-id",
+  "clientSecret": "client-secret",
+  "site": "https://example.org"
+}

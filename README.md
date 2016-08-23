@@ -50,7 +50,7 @@ Simple OAuth 2.0 come to life thanks to the work I've made in Lelylan, an open s
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## Requirements
-Node client library is tested against the latest minor Node versions: 0.10.x, 0.11.x, 0.12.x and 4.2.x.
+Node client library is tested against the latest minor Node versions: 0.12.0, 4, 5 and 6.
 
 
 ## Installation
@@ -102,7 +102,10 @@ app.get('/callback', function (req, res) {
   }, saveToken);
 
   function saveToken(error, result) {
-    if (error) { console.log('Access Token Error', error.message); }
+    if (error) {
+      return console.log('Access Token Error', error.message);
+    }
+
     token = oauth2.accessToken.create(result);
   }
 });
@@ -157,7 +160,9 @@ var tokenConfig = {
 // Callbacks
 // Save the access token
 oauth2.authCode.getToken(tokenConfig, function saveToken(error, result) {
-  if (error) { console.log('Access Token Error', error.message); }
+  if (error) {
+    return console.log('Access Token Error', error.message);
+  }
 
   token = oauth2.accessToken.create(result);
 });
@@ -191,7 +196,10 @@ var tokenConfig = {
 // Callbacks
 // Save the access token
 oauth2.password.getToken(tokenConfig, function saveToken(error, result) {
-  if (error) { console.log('Access Token Error', error.message); }
+  if (error) {
+    return console.log('Access Token Error', error.message);
+  }
+
   token = oauth2.accessToken.create(result);
 
   oauth2.api('GET', '/users', {
@@ -234,7 +242,10 @@ var tokenConfig = {};
 // Callbacks
 // Get the access token object for the client
 oauth2.client.getToken(tokenConfig, function saveToken(error, result) {
-  if (error) { console.log('Access Token Error', error.message); }
+  if (error) {
+    return console.log('Access Token Error', error.message);
+  }
+
   token = oauth2.accessToken.create(result);
 });
 
@@ -326,13 +337,17 @@ based on HTTP `status` and error `message`.
 ```javascript
 // Callbacks
 oauth2.authCode.getToken(function(error, token) {
-  if (error) { console.log(error.message); }
+  if (error) {
+    return console.log(error.message);
+  }
 });
 
 // Promises
-oauth2.authCode.getToken().catch(function evalError(error) {
-  console.log(error.message);
-});
+oauth2.authCode
+  .getToken()
+  .catch(function evalError(error) {
+    console.log(error.message);
+  });
 
 // => { "status": "401", "message": "Unauthorized" }
 ```
