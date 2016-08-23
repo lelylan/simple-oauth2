@@ -50,8 +50,9 @@ Simple OAuth 2.0 come to life thanks to the work I've made in Lelylan, an open s
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## Requirements
-Node client library is tested against the latest minor Node versions: 0.12.0, 4, 5 and 6.
+Node client library is tested against the latest minor Node versions: 4, 5 and 6.
 
+To use in older node version, please use [simple-oauth2@0.x](https://github.com/lelylan/simple-oauth2/tree/v0.8.0).
 
 ## Installation
 Install the client library using [npm](http://npmjs.org/):
