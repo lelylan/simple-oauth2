@@ -30,9 +30,9 @@ Simple OAuth 2.0 come to life thanks to the work I've made in Lelylan, an open s
 
 
 - [Requirements](#requirements)
-- [Installation](#installation)
 - [Getting started](#getting-started)
-  - [Express and Github example](#express-and-github-example)
+  - [Installation](#installation)
+  - [Example of Usage](#example-of-usage)
 - [OAuth2 Supported flows](#oauth2-supported-flows)
   - [Authorization Code flow](#authorization-code-flow)
   - [Password Credentials Flow](#password-credentials-flow)
@@ -54,7 +54,9 @@ Node client library is tested against the latest minor Node versions: 4, 5 and 6
 
 To use in older node version, please use [simple-oauth2@0.x](https://github.com/lelylan/simple-oauth2/tree/v0.8.0).
 
-## Installation
+## Getting started
+
+### Installation
 Install the client library using [npm](http://npmjs.org/):
 
     $ npm install --save simple-oauth2
@@ -65,62 +67,8 @@ Install the client library using git:
     $ cd simple-oauth2
     $ npm install
 
-
-## Getting started
-### Express and Github example
-
-```javascript
-const express = require('express');
-const app = express();
-
-const oauth2 = require('simple-oauth2')({
-  clientID: CLIENT_ID,
-  clientSecret: CLIENT_SECRET,
-  site: 'https://github.com/login',
-  tokenPath: '/oauth/access_token',
-  authorizationPath: '/oauth/authorize'
-});
-
-// Authorization uri definition
-const authorization_uri = oauth2.authCode.authorizeURL({
-  redirect_uri: 'http://localhost:3000/callback',
-  scope: 'notifications',
-  state: '3(#0/!~'
-});
-
-// Initial page redirecting to Github
-app.get('/auth', function (req, res) {
-    res.redirect(authorization_uri);
-});
-
-// Callback service parsing the authorization token and asking for the access token
-app.get('/callback', function (req, res) {
-  const code = req.query.code;
-
-  oauth2.authCode.getToken({
-    code,
-    redirect_uri: 'http://localhost:3000/callback'
-  }, saveToken);
-
-  function saveToken(error, result) {
-    if (error) {
-      return console.log('Access Token Error', error.message);
-    }
-
-    const token = oauth2.accessToken.create(result);
-  }
-});
-
-app.get('/', function (req, res) {
-  res.send('Hello<br><a href="/auth">Log in with Github</a>');
-});
-
-app.listen(3000);
-
-console.log('Express server started on port 3000');
-```
-
-Credits to [@lazybean](https://github.com/lazybean)
+### Example of Usage
+See: [example folder](./example)
 
 ## OAuth2 Supported flows
 ### Authorization Code flow
@@ -366,6 +314,7 @@ Simple OAuth2 accepts an object with the following valid params.
 Defaults to `true`.
 * `clientSecretParameterName` - Parameter name for the client secret. Defaults to `client_secret`.
 * `useBodyAuth` - Wheather or not the clientID/clientSecret params are sent in the request body. Defaults to `true`.
+* `headers` - An object container key-value pairs of headers to be sent along with each request. Defaults to {}.
 
 ```javascript
 // Set the configuration settings
