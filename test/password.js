@@ -6,21 +6,13 @@ const nock = require('nock');
 const expect = require('chai').expect;
 const oauth2Module = require('./../index.js');
 
-const oauth2 = oauth2Module({
-  clientID: 'client-id',
-  clientSecret: 'client-secret',
-  site: 'https://example.org',
-});
+const oauth2 = oauth2Module(require('./fixtures/oauth-options'));
 
-let request;
-let result;
-let resultPromise;
-let error;
-let errorPromise;
 const tokenParams = {
   username: 'alice',
   password: 'secret',
 };
+
 const oauthParams = {
   username: 'alice',
   password: 'secret',
@@ -31,6 +23,12 @@ const oauthParams = {
 
 describe('oauth2.password', function () {
   describe('#getToken', function () {
+    let request;
+    let result;
+    let resultPromise;
+    let error;
+    let errorPromise;
+
     beforeEach(function () {
       request = nock('https://example.org:443')
         .post('/oauth/token', qs.stringify(oauthParams))

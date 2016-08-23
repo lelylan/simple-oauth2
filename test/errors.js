@@ -5,23 +5,13 @@ const nock = require('nock');
 const expect = require('chai').expect;
 const oauth2Module = require('./../index.js');
 
-const oauth2 = oauth2Module({
-  clientID: 'client-id',
-  clientSecret: 'client-secret',
-  site: 'https://example.org',
-});
+const oauth2 = oauth2Module(require('./fixtures/oauth-options.json'));
 
-let request;
-let requestContent;
-let result;
-let resultPromise;
-let error;
-let errorPromise;
-const tokenConfig = {
+const tokenParams = {
   code: 'code',
   redirect_uri: 'http://callback.com',
 };
-const oauthConfig = {
+const oauthParams = {
   code: 'code',
   redirect_uri: 'http://callback.com',
   grant_type: 'authorization_code',
@@ -30,28 +20,35 @@ const oauthConfig = {
 };
 
 describe('Simple oauth2 Error', function () {
+  let request;
+  let requestContent;
+  let result;
+  let resultPromise;
+  let error;
+  let errorPromise;
+
   describe('with status code 401', function () {
     beforeEach(function () {
       request = nock('https://example.org:443')
-        .post('/oauth/token', qs.stringify(oauthConfig))
+        .post('/oauth/token', qs.stringify(oauthParams))
         .reply(401);
 
       requestContent = nock('https://example.org:443')
-        .post('/oauth/token', qs.stringify(oauthConfig))
+        .post('/oauth/token', qs.stringify(oauthParams))
         .reply(401, {
           content: 'No authorized',
         });
     });
 
     beforeEach(function (done) {
-      oauth2.authCode.getToken(tokenConfig, function (e, r) {
+      oauth2.authCode.getToken(tokenParams, function (e, r) {
         error = e; result = r; done();
       });
     });
 
     beforeEach(function () {
       return oauth2.authCode
-        .getToken(tokenConfig)
+        .getToken(tokenParams)
         .then(function (r) { resultPromise = r; })
         .catch(function (e) { errorPromise = e; });
     });
@@ -77,25 +74,25 @@ describe('Simple oauth2 Error', function () {
   describe('with status code 500', function () {
     beforeEach(function () {
       request = nock('https://example.org:443')
-        .post('/oauth/token', qs.stringify(oauthConfig))
+        .post('/oauth/token', qs.stringify(oauthParams))
         .reply(500);
 
       requestContent = nock('https://example.org:443')
-        .post('/oauth/token', qs.stringify(oauthConfig))
+        .post('/oauth/token', qs.stringify(oauthParams))
         .reply(500, {
           description: 'Error details.',
         });
     });
 
     beforeEach(function (done) {
-      oauth2.authCode.getToken(tokenConfig, function (e, r) {
+      oauth2.authCode.getToken(tokenParams, function (e, r) {
         error = e; result = r; done();
       });
     });
 
     beforeEach(function () {
       return oauth2.authCode
-        .getToken(tokenConfig)
+        .getToken(tokenParams)
         .then(function (r) { resultPromise = r; })
         .catch(function (e) { errorPromise = e; });
     });

@@ -1,0 +1,7 @@
+{
+  "code": "code",
+  "redirect_uri": "http://callback.com",
+  "grant_type": "authorization_code",
+  "client_id": "client-id",
+  "client_secret": "client-secret"
+}

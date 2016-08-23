@@ -7,30 +7,27 @@ const expect = require('chai').expect;
 const startOfYesterday = require('date-fns/start_of_yesterday');
 const oauth2Module = require('./../index.js');
 
-const oauth2 = oauth2Module({
-  clientID: 'client-id',
-  clientSecret: 'client-secret',
-  site: 'https://example.org',
-});
+const oauth2 = oauth2Module(require('./fixtures/oauth-options'));
 
-let request;
-let result;
-let resultPromise;
-let token;
-let tokenPromise;
-let error;
-let errorPromise;
-const tokenConfig = {
+const tokenParams = {
   code: 'code',
   redirect_uri: 'http://callback.com',
 };
 
 const refreshConfig = require('./fixtures/refresh-token.json');
 const refreshWithAdditionalParamsConfig = require('./fixtures/refresh-token-with-params.json');
-const oauthConfig = require('./fixtures/oauth-options.json');
+const oauthConfig = require('./fixtures/oauth-options-code.json');
 const revokeConfig = require('./fixtures/revoke-token-params.json');
 
 describe('oauth2.accessToken', function () {
+  let request;
+  let result;
+  let resultPromise;
+  let token;
+  let tokenPromise;
+  let error;
+  let errorPromise;
+
   beforeEach(function () {
     request = nock('https://example.org:443')
       .post('/oauth/token', qs.stringify(oauthConfig))
@@ -39,14 +36,14 @@ describe('oauth2.accessToken', function () {
   });
 
   beforeEach(function (done) {
-    oauth2.authCode.getToken(tokenConfig, function (e, r) {
+    oauth2.authCode.getToken(tokenParams, function (e, r) {
       error = e; result = r; done();
     });
   });
 
   beforeEach(function () {
     return oauth2.authCode
-      .getToken(tokenConfig)
+      .getToken(tokenParams)
       .then(function (r) { resultPromise = r; })
       .catch(function (e) { errorPromise = e; });
   });
