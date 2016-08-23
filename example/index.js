@@ -36,11 +36,11 @@ app.get('/callback', (req, res) => {
 
   oauth2.authCode.getToken(options, (error, result) => {
     if (error) {
-      console.error('Access Token Error', error.message) // eslint-disable-line
+      console.error('Access Token Error', error.message);
       return res.json('Authentication failed');
     }
 
-    console.log('The resulting token: ', result); // eslint-disable-line
+    console.log('The resulting token: ', result);
     const token = oauth2.accessToken.create(result);
 
     return res
