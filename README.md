@@ -127,7 +127,7 @@ Credits to [@lazybean](https://github.com/lazybean)
 The Authorization Code flow is made up from two parts. At first your application asks to
 the user the permission to access their data. If the user approves the OAuth2 server sends
 to the client an authorization code. In the second part, the client POST the authorization code
-along with its client secret to the Lelylan in order to get the access token.
+along with its client secret to the oauth server in order to get the access token.
 
 ```javascript
 // Set the client credentials and the OAuth2 server
