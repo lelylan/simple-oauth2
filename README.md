@@ -69,10 +69,10 @@ Install the client library using git:
 ### Express and Github example
 
 ```javascript
-var express = require('express'),
-    app = express();
+const express = require('express');
+const app = express();
 
-var oauth2 = require('simple-oauth2')({
+const oauth2 = require('simple-oauth2')({
   clientID: CLIENT_ID,
   clientSecret: CLIENT_SECRET,
   site: 'https://github.com/login',
@@ -81,7 +81,7 @@ var oauth2 = require('simple-oauth2')({
 });
 
 // Authorization uri definition
-var authorization_uri = oauth2.authCode.authorizeURL({
+const authorization_uri = oauth2.authCode.authorizeURL({
   redirect_uri: 'http://localhost:3000/callback',
   scope: 'notifications',
   state: '3(#0/!~'
@@ -94,10 +94,10 @@ app.get('/auth', function (req, res) {
 
 // Callback service parsing the authorization token and asking for the access token
 app.get('/callback', function (req, res) {
-  var code = req.query.code;
+  const code = req.query.code;
 
   oauth2.authCode.getToken({
-    code: code,
+    code,
     redirect_uri: 'http://localhost:3000/callback'
   }, saveToken);
 
@@ -106,7 +106,7 @@ app.get('/callback', function (req, res) {
       return console.log('Access Token Error', error.message);
     }
 
-    token = oauth2.accessToken.create(result);
+    const token = oauth2.accessToken.create(result);
   }
 });
 
@@ -131,17 +131,17 @@ along with its client secret to the oauth server in order to get the access toke
 
 ```javascript
 // Set the client credentials and the OAuth2 server
-var credentials = {
+const credentials = {
   clientID: '<client-id>',
   clientSecret: '<client-secret>',
   site: 'https://api.oauth.com'
 };
 
 // Initialize the OAuth2 Library
-var oauth2 = require('simple-oauth2')(credentials);
+const oauth2 = require('simple-oauth2')(credentials);
 
 // Authorization oauth2 URI
-var authorization_uri = oauth2.authCode.authorizeURL({
+const authorization_uri = oauth2.authCode.authorizeURL({
   redirect_uri: 'http://localhost:3000/callback',
   scope: '<scope>',
   state: '<state>'
@@ -151,8 +151,8 @@ var authorization_uri = oauth2.authCode.authorizeURL({
 res.redirect(authorization_uri);
 
 // Get the access token object (the authorization code is given from the previous step).
-var token;
-var tokenConfig = {
+let token;
+const tokenConfig = {
   code: '<code>',
   redirect_uri: 'http://localhost:3000/callback'
 };
@@ -187,8 +187,8 @@ test your application.
 
 ```javascript
 // Get the access token object.
-var token;
-var tokenConfig = {
+let token;
+const tokenConfig = {
   username: 'username',
   password: 'password' 
 };
@@ -228,16 +228,16 @@ This flow is suitable when client is requesting access to the protected resource
 
 ```javascript
 // Get the access token object.
-var credentials = {
+const credentials = {
   clientID: '<client-id>',
   clientSecret: '<client-secret>',
   site: 'https://api.oauth.com'
 };
 
 // Initialize the OAuth2 Library
-var oauth2 = require('simple-oauth2')(credentials);
-var token;
-var tokenConfig = {};
+let token;
+const oauth2 = require('simple-oauth2')(credentials);
+const tokenConfig = {};
 
 // Callbacks
 // Get the access token object for the client
@@ -271,14 +271,14 @@ access token when it is expired.
 
 ```javascript
 // Sample of a JSON access token (you got it through previous steps)
-var token = {
+const tokenObject = {
   'access_token': '<access-token>',
   'refresh_token': '<refresh-token>',
   'expires_in': '7200'
 };
 
 // Create the access token wrapper
-var token = oauth2.accessToken.create(token);
+const token = oauth2.accessToken.create(tokenObject);
 
 // Check if the token is expired. If expired it is refreshed.
 if (token.expired()) {
@@ -352,7 +352,6 @@ oauth2.authCode
 // => { "status": "401", "message": "Unauthorized" }
 ```
 
-
 ## Configuration
 Simple OAuth2 accepts an object with the following valid params.
 
@@ -369,7 +368,7 @@ Defaults to `true`.
 
 ```javascript
 // Set the configuration settings
-var credentials = {
+const credentials = {
   clientID: '<client-id>',
   clientSecret: '<client-secret>',
   site: 'https://www.oauth2.com',
@@ -379,7 +378,7 @@ var credentials = {
 };
 
 // Initialize the OAuth2 Library
-var oauth2 = require('simple-oauth2')(credentials);
+const oauth2 = require('simple-oauth2')(credentials);
 ```
 
 ## Contributing
