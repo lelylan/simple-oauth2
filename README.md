@@ -30,9 +30,9 @@ Simple OAuth 2.0 come to life thanks to the work I've made in Lelylan, an open s
 
 
 - [Requirements](#requirements)
-- [Installation](#installation)
 - [Getting started](#getting-started)
-  - [Express and Github example](#express-and-github-example)
+  - [Installation](#installation)
+  - [Example of Usage](#example-of-usage)
 - [OAuth2 Supported flows](#oauth2-supported-flows)
   - [Authorization Code flow](#authorization-code-flow)
   - [Password Credentials Flow](#password-credentials-flow)
@@ -50,10 +50,13 @@ Simple OAuth 2.0 come to life thanks to the work I've made in Lelylan, an open s
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## Requirements
-Node client library is tested against the latest minor Node versions: 0.12.0, 4, 5 and 6.
+Node client library is tested against the latest minor Node versions: 4, 5 and 6.
 
+To use in older node version, please use [simple-oauth2@0.x](https://github.com/lelylan/simple-oauth2/tree/v0.8.0).
 
-## Installation
+## Getting started
+
+### Installation
 Install the client library using [npm](http://npmjs.org/):
 
     $ npm install --save simple-oauth2
@@ -64,62 +67,8 @@ Install the client library using git:
     $ cd simple-oauth2
     $ npm install
 
-
-## Getting started
-### Express and Github example
-
-```javascript
-var express = require('express'),
-    app = express();
-
-var oauth2 = require('simple-oauth2')({
-  clientID: CLIENT_ID,
-  clientSecret: CLIENT_SECRET,
-  site: 'https://github.com/login',
-  tokenPath: '/oauth/access_token',
-  authorizationPath: '/oauth/authorize'
-});
-
-// Authorization uri definition
-var authorization_uri = oauth2.authCode.authorizeURL({
-  redirect_uri: 'http://localhost:3000/callback',
-  scope: 'notifications',
-  state: '3(#0/!~'
-});
-
-// Initial page redirecting to Github
-app.get('/auth', function (req, res) {
-    res.redirect(authorization_uri);
-});
-
-// Callback service parsing the authorization token and asking for the access token
-app.get('/callback', function (req, res) {
-  var code = req.query.code;
-
-  oauth2.authCode.getToken({
-    code: code,
-    redirect_uri: 'http://localhost:3000/callback'
-  }, saveToken);
-
-  function saveToken(error, result) {
-    if (error) {
-      return console.log('Access Token Error', error.message);
-    }
-
-    token = oauth2.accessToken.create(result);
-  }
-});
-
-app.get('/', function (req, res) {
-  res.send('Hello<br><a href="/auth">Log in with Github</a>');
-});
-
-app.listen(3000);
-
-console.log('Express server started on port 3000');
-```
-
-Credits to [@lazybean](https://github.com/lazybean)
+### Example of Usage
+See: [example folder](./example)
 
 ## OAuth2 Supported flows
 ### Authorization Code flow
@@ -127,21 +76,21 @@ Credits to [@lazybean](https://github.com/lazybean)
 The Authorization Code flow is made up from two parts. At first your application asks to
 the user the permission to access their data. If the user approves the OAuth2 server sends
 to the client an authorization code. In the second part, the client POST the authorization code
-along with its client secret to the Lelylan in order to get the access token.
+along with its client secret to the oauth server in order to get the access token.
 
 ```javascript
 // Set the client credentials and the OAuth2 server
-var credentials = {
+const credentials = {
   clientID: '<client-id>',
   clientSecret: '<client-secret>',
   site: 'https://api.oauth.com'
 };
 
 // Initialize the OAuth2 Library
-var oauth2 = require('simple-oauth2')(credentials);
+const oauth2 = require('simple-oauth2')(credentials);
 
 // Authorization oauth2 URI
-var authorization_uri = oauth2.authCode.authorizeURL({
+const authorization_uri = oauth2.authCode.authorizeURL({
   redirect_uri: 'http://localhost:3000/callback',
   scope: '<scope>',
   state: '<state>'
@@ -151,8 +100,8 @@ var authorization_uri = oauth2.authCode.authorizeURL({
 res.redirect(authorization_uri);
 
 // Get the access token object (the authorization code is given from the previous step).
-var token;
-var tokenConfig = {
+let token;
+const tokenConfig = {
   code: '<code>',
   redirect_uri: 'http://localhost:3000/callback'
 };
@@ -187,8 +136,8 @@ test your application.
 
 ```javascript
 // Get the access token object.
-var token;
-var tokenConfig = {
+let token;
+const tokenConfig = {
   username: 'username',
   password: 'password' 
 };
@@ -228,16 +177,16 @@ This flow is suitable when client is requesting access to the protected resource
 
 ```javascript
 // Get the access token object.
-var credentials = {
+const credentials = {
   clientID: '<client-id>',
   clientSecret: '<client-secret>',
   site: 'https://api.oauth.com'
 };
 
 // Initialize the OAuth2 Library
-var oauth2 = require('simple-oauth2')(credentials);
-var token;
-var tokenConfig = {};
+let token;
+const oauth2 = require('simple-oauth2')(credentials);
+const tokenConfig = {};
 
 // Callbacks
 // Get the access token object for the client
@@ -271,14 +220,14 @@ access token when it is expired.
 
 ```javascript
 // Sample of a JSON access token (you got it through previous steps)
-var token = {
+const tokenObject = {
   'access_token': '<access-token>',
   'refresh_token': '<refresh-token>',
   'expires_in': '7200'
 };
 
 // Create the access token wrapper
-var token = oauth2.accessToken.create(token);
+const token = oauth2.accessToken.create(tokenObject);
 
 // Check if the token is expired. If expired it is refreshed.
 if (token.expired()) {
@@ -352,7 +301,6 @@ oauth2.authCode
 // => { "status": "401", "message": "Unauthorized" }
 ```
 
-
 ## Configuration
 Simple OAuth2 accepts an object with the following valid params.
 
@@ -366,10 +314,11 @@ Simple OAuth2 accepts an object with the following valid params.
 Defaults to `true`.
 * `clientSecretParameterName` - Parameter name for the client secret. Defaults to `client_secret`.
 * `useBodyAuth` - Wheather or not the clientID/clientSecret params are sent in the request body. Defaults to `true`.
+* `headers` - An object container key-value pairs of headers to be sent along with each request. Defaults to {}.
 
 ```javascript
 // Set the configuration settings
-var credentials = {
+const credentials = {
   clientID: '<client-id>',
   clientSecret: '<client-secret>',
   site: 'https://www.oauth2.com',
@@ -379,7 +328,7 @@ var credentials = {
 };
 
 // Initialize the OAuth2 Library
-var oauth2 = require('simple-oauth2')(credentials);
+const oauth2 = require('simple-oauth2')(credentials);
 ```
 
 ## Contributing

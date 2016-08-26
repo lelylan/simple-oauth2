@@ -1,5 +1,12 @@
 # Changelog
 
+## Version Next
+* Refactored test to use fixtures.
+* Update code to comply with more linter rules.
+* Fixed examples in README to return on error.
+* Make global configuration consistent across oauth flows.
+* Clone params and configuration passed
+
 ## v0.8.0 (1 August 2016)
 * Upgraded code to strict mode.
 * Upgraded all the code base to es6.
