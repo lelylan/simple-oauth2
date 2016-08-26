@@ -10,9 +10,6 @@ const oauth2 = simpleOauthModule({
   site: 'https://github.com/login',
   tokenPath: '/oauth/access_token',
   authorizationPath: '/oauth/authorize',
-  headers: {
-    Accept: 'application/json',
-  },
 });
 
 // Authorization uri definition

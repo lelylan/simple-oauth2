@@ -18,7 +18,9 @@ const optionsSchema = joi
     useBasicAuthorizationHeader: joi.boolean().default(true),
     clientSecretParameterName: joi.string().default('client_secret'),
     useBodyAuth: joi.string().default(true),
-    headers: joi.object(),
+    headers: joi.object().default({
+      Accept: 'application/json',
+    }),
   });
 
 module.exports = function (options) {
