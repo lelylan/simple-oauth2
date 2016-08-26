@@ -81,16 +81,20 @@ along with its client secret to the oauth server in order to get the access toke
 ```javascript
 // Set the client credentials and the OAuth2 server
 const credentials = {
-  clientID: '<client-id>',
-  clientSecret: '<client-secret>',
-  site: 'https://api.oauth.com'
+  client: {
+    id: '<client-id>',
+    secret: '<client-secret>'
+  },
+  auth: {
+    tokenHost: 'https://api.oauth.com'
+  }
 };
 
 // Initialize the OAuth2 Library
-const oauth2 = require('simple-oauth2')(credentials);
+const oauth2 = require('simple-oauth2').create(credentials);
 
 // Authorization oauth2 URI
-const authorization_uri = oauth2.authCode.authorizeURL({
+const authorization_uri = oauth2.authorizationCode.authorizeURL({
   redirect_uri: 'http://localhost:3000/callback',
   scope: '<scope>',
   state: '<state>'
@@ -108,7 +112,7 @@ const tokenConfig = {
 
 // Callbacks
 // Save the access token
-oauth2.authCode.getToken(tokenConfig, function saveToken(error, result) {
+oauth2.authorizationCode.getToken(tokenConfig, function saveToken(error, result) {
   if (error) {
     return console.log('Access Token Error', error.message);
   }
@@ -118,7 +122,7 @@ oauth2.authCode.getToken(tokenConfig, function saveToken(error, result) {
 
 // Promises
 // Save the access token
-oauth2.authCode.getToken(tokenConfig)
+oauth2.authorizationCode.getToken(tokenConfig)
 .then(function saveToken(result) {
   token = oauth2.accessToken.create(result);
 })
@@ -144,7 +148,7 @@ const tokenConfig = {
 
 // Callbacks
 // Save the access token
-oauth2.password.getToken(tokenConfig, function saveToken(error, result) {
+oauth2.ownerPassword.getToken(tokenConfig, function saveToken(error, result) {
   if (error) {
     return console.log('Access Token Error', error.message);
   }
@@ -160,7 +164,7 @@ oauth2.password.getToken(tokenConfig, function saveToken(error, result) {
 
 // Promises
 // Save the access token
-oauth2.password
+oauth2.ownerPassword
   .getToken(tokenConfig)
   .then(function saveToken(result) {
     token = oauth2.accessToken.create(result);
@@ -176,21 +180,14 @@ oauth2.password
 This flow is suitable when client is requesting access to the protected resources under its control.
 
 ```javascript
-// Get the access token object.
-const credentials = {
-  clientID: '<client-id>',
-  clientSecret: '<client-secret>',
-  site: 'https://api.oauth.com'
-};
-
 // Initialize the OAuth2 Library
 let token;
-const oauth2 = require('simple-oauth2')(credentials);
+const oauth2 = require('simple-oauth2').create(credentials);
 const tokenConfig = {};
 
 // Callbacks
 // Get the access token object for the client
-oauth2.client.getToken(tokenConfig, function saveToken(error, result) {
+oauth2.clientCredentials.getToken(tokenConfig, function saveToken(error, result) {
   if (error) {
     return console.log('Access Token Error', error.message);
   }
@@ -201,7 +198,7 @@ oauth2.client.getToken(tokenConfig, function saveToken(error, result) {
 
 // Promises
 // Get the access token object for the client
-oauth2.client
+oauth2.clientCredentials
   .getToken(tokenConfig)
   .then(function saveToken(result) {
     token = oauth2.accessToken.create(result);
@@ -285,14 +282,14 @@ based on HTTP `status` and error `message`.
 
 ```javascript
 // Callbacks
-oauth2.authCode.getToken(function(error, token) {
+oauth2.authorizationCode.getToken(function(error, token) {
   if (error) {
     return console.log(error.message);
   }
 });
 
 // Promises
-oauth2.authCode
+oauth2.authorizationCode
   .getToken()
   .catch(function evalError(error) {
     console.log(error.message);
@@ -328,7 +325,7 @@ const credentials = {
 };
 
 // Initialize the OAuth2 Library
-const oauth2 = require('simple-oauth2')(credentials);
+const oauth2 = require('simple-oauth2').create(credentials);
 ```
 
 ## Contributing
