@@ -3,35 +3,57 @@
 const joi = require('joi');
 const authCodeModule = require('./lib/client/auth-code');
 const passwordModule = require('./lib/client/password');
-const clienteCredentialsModule = require('./lib/client/client');
 const accessTokenModule = require('./lib/client/access-token');
+const clientCredentialsModule = require('./lib/client/client');
 
 const optionsSchema = joi
   .object()
   .keys({
-    clientID: joi.string().required(),
-    clientSecret: joi.string().required(),
-    site: joi.string().required(),
-    tokenPath: joi.string().default('/oauth/token'),
-    authorizationPath: joi.string().default('/oauth/authorize'),
-    revocationPath: joi.string().default('/oauth/revoke'),
-    useBasicAuthorizationHeader: joi.boolean().default(true),
-    clientSecretParameterName: joi.string().default('client_secret'),
-    useBodyAuth: joi.string().default(true),
-    headers: joi.object().default({
-      Accept: 'application/json',
-    }),
+    client: joi.object().keys({
+      id: joi.string().required(),
+      secret: joi.string().required(),
+      secretParamName: joi.string().default('client_secret'),
+      idParamName: joi.string().default('client_id'),
+    }).required(),
+    auth: joi.object().keys({
+      tokenHost: joi.string().required().uri(['http', 'https']),
+      tokenPath: joi.string().default('/oauth/token'),
+      revokePath: joi.string().default('/oauth/revoke'),
+      authorizeHost: joi.string().default(joi.ref('tokenHost')),
+      authorizePath: joi.string().default('/oauth/authorize'),
+    }).required(),
+    http: joi.object().keys({
+      headers: joi.object().default({
+        Accept: 'application/json',
+      }),
+    }).default().unknown(true),
+    options: joi.object().keys({
+      useBasicAuthorizationHeader: joi.boolean().default(true),
+      useBodyAuth: joi.boolean().default(true),
+    }).default(),
   });
 
-module.exports = function (options) {
-  const opts = Object.assign({}, options || {});
-  const validOptions = joi
-    .attempt(opts, optionsSchema, 'Invalid options provided to simple-oauth2.');
+module.exports = {
 
-  return {
-    authCode: authCodeModule(validOptions),
-    password: passwordModule(validOptions),
-    client: clienteCredentialsModule(validOptions),
-    accessToken: accessTokenModule(validOptions),
-  };
+  /**
+   * Creates a new simple-oauth2 client
+   * with the passed configuration
+   *
+   * @param  {Object}  options Module options as defined in schema
+   */
+  create(options) {
+    let moduleOptions = Object.assign({}, options || {});
+    moduleOptions = joi.attempt(
+      moduleOptions,
+      optionsSchema,
+      'Invalid options provided to simple-oauth2.'
+    );
+
+    return {
+      authorizationCode: authCodeModule(moduleOptions),
+      ownerPassword: passwordModule(moduleOptions),
+      clientCredentials: clientCredentialsModule(moduleOptions),
+      accessToken: accessTokenModule(moduleOptions),
+    };
+  },
 };

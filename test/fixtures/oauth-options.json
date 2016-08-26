@@ -1,5 +1,9 @@
 {
-  "clientID": "client-id",
-  "clientSecret": "client-secret",
-  "site": "https://example.org"
+  "client": {
+    "id": "client-id",
+    "secret": "client-secret"
+  },
+  "auth": {
+    "tokenHost": "https://example.org"
+  }
 }

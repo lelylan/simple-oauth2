@@ -4,8 +4,11 @@
 * Refactored test to use fixtures.
 * Update code to comply with more linter rules.
 * Fixed examples in README to return on error.
-* Make global configuration consistent across oauth flows.
+* Added a working example example.
 * Clone params and configuration passed
+* Changed public api to, to make it consistent. Changed shortcut names to full names.
+* Changed public api to allow different sites for /authorize and /tokens
+* Added strict schema validation to module options.
 
 ## v0.8.0 (1 August 2016)
 * Upgraded code to strict mode.
