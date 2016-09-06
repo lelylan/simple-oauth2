@@ -6,8 +6,8 @@ const simpleOauthModule = require('./../');
 const app = express();
 const oauth2 = simpleOauthModule.create({
   client: {
-    id: '86ed2b2692df56ed45ce',
-    secret: '6c31467e320629c45ef9efa90bbccc2b1f4c3183',
+    id: '<CLIENT_ID>',
+    secret: '<CLIENT_SECRET>',
   },
   auth: {
     tokenHost: 'https://github.com',
