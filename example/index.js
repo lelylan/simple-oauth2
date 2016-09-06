@@ -4,16 +4,20 @@ const express = require('express');
 const simpleOauthModule = require('./../');
 
 const app = express();
-const oauth2 = simpleOauthModule({
-  clientID: '<CLIENT_ID>',
-  clientSecret: '<CLIENT_SECRET>',
-  site: 'https://github.com/login',
-  tokenPath: '/oauth/access_token',
-  authorizationPath: '/oauth/authorize',
+const oauth2 = simpleOauthModule.create({
+  client: {
+    id: '<CLIENT_ID>',
+    secret: '<CLIENT_SECRET>',
+  },
+  auth: {
+    tokenHost: 'https://github.com',
+    tokenPath: '/login/oauth/access_token',
+    authorizePath: '/login/oauth/authorize',
+  },
 });
 
 // Authorization uri definition
-const authorizationUri = oauth2.authCode.authorizeURL({
+const authorizationUri = oauth2.authorizationCode.authorizeURL({
   redirect_uri: 'http://localhost:3000/callback',
   scope: 'notifications',
   state: '3(#0/!~',
@@ -21,6 +25,7 @@ const authorizationUri = oauth2.authCode.authorizeURL({
 
 // Initial page redirecting to Github
 app.get('/auth', (req, res) => {
+  console.log(authorizationUri);
   res.redirect(authorizationUri);
 });
 
@@ -31,7 +36,7 @@ app.get('/callback', (req, res) => {
     code,
   };
 
-  oauth2.authCode.getToken(options, (error, result) => {
+  oauth2.authorizationCode.getToken(options, (error, result) => {
     if (error) {
       console.error('Access Token Error', error.message);
       return res.json('Authentication failed');
