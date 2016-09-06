@@ -7,7 +7,8 @@ const expect = require('chai').expect;
 const oauth2Module = require('./../index.js');
 
 const tokenParams = {};
-const oauth2 = oauth2Module(require('./fixtures/oauth-options'));
+const oauth2 = oauth2Module
+  .create(require('./fixtures/oauth-options'));
 
 describe('oauth2.Client', function () {
   describe('#getToken', function () {
@@ -29,13 +30,13 @@ describe('oauth2.Client', function () {
     });
 
     beforeEach(function (done) {
-      oauth2.client.getToken(tokenParams, function (e, r) {
+      oauth2.clientCredentials.getToken(tokenParams, function (e, r) {
         error = e; result = r; done();
       });
     });
 
     beforeEach(function () {
-      return oauth2.client
+      return oauth2.clientCredentials
         .getToken(tokenParams)
         .then(function (r) { resultPromise = r; })
         .catch(function (e) { errorPromise = e; });

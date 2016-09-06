@@ -7,7 +7,8 @@ const expect = require('chai').expect;
 const startOfYesterday = require('date-fns/start_of_yesterday');
 const oauth2Module = require('./../index.js');
 
-const oauth2 = oauth2Module(require('./fixtures/oauth-options'));
+const oauth2 = oauth2Module
+  .create(require('./fixtures/oauth-options'));
 
 const tokenParams = {
   code: 'code',
@@ -36,13 +37,13 @@ describe('oauth2.accessToken', function () {
   });
 
   beforeEach(function (done) {
-    oauth2.authCode.getToken(tokenParams, function (e, r) {
+    oauth2.authorizationCode.getToken(tokenParams, function (e, r) {
       error = e; result = r; done();
     });
   });
 
   beforeEach(function () {
-    return oauth2.authCode
+    return oauth2.authorizationCode
       .getToken(tokenParams)
       .then(function (r) { resultPromise = r; })
       .catch(function (e) { errorPromise = e; });

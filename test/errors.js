@@ -5,7 +5,8 @@ const nock = require('nock');
 const expect = require('chai').expect;
 const oauth2Module = require('./../index.js');
 
-const oauth2 = oauth2Module(require('./fixtures/oauth-options.json'));
+const oauth2 = oauth2Module
+  .create(require('./fixtures/oauth-options.json'));
 
 const tokenParams = {
   code: 'code',
@@ -41,13 +42,13 @@ describe('Simple oauth2 Error', function () {
     });
 
     beforeEach(function (done) {
-      oauth2.authCode.getToken(tokenParams, function (e, r) {
+      oauth2.authorizationCode.getToken(tokenParams, function (e, r) {
         error = e; result = r; done();
       });
     });
 
     beforeEach(function () {
-      return oauth2.authCode
+      return oauth2.authorizationCode
         .getToken(tokenParams)
         .then(function (r) { resultPromise = r; })
         .catch(function (e) { errorPromise = e; });
@@ -85,13 +86,13 @@ describe('Simple oauth2 Error', function () {
     });
 
     beforeEach(function (done) {
-      oauth2.authCode.getToken(tokenParams, function (e, r) {
+      oauth2.authorizationCode.getToken(tokenParams, function (e, r) {
         error = e; result = r; done();
       });
     });
 
     beforeEach(function () {
-      return oauth2.authCode
+      return oauth2.authorizationCode
         .getToken(tokenParams)
         .then(function (r) { resultPromise = r; })
         .catch(function (e) { errorPromise = e; });

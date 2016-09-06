@@ -6,7 +6,8 @@ const nock = require('nock');
 const expect = require('chai').expect;
 const oauth2Module = require('./../index.js');
 
-const oauth2 = oauth2Module(require('./fixtures/oauth-options'));
+const oauth2 = oauth2Module
+  .create(require('./fixtures/oauth-options'));
 
 const tokenParams = {
   username: 'alice',
@@ -37,13 +38,13 @@ describe('oauth2.password', function () {
     });
 
     beforeEach(function (done) {
-      oauth2.password.getToken(tokenParams, function (e, r) {
+      oauth2.ownerPassword.getToken(tokenParams, function (e, r) {
         error = e; result = r; done();
       });
     });
 
     beforeEach(function () {
-      return oauth2.password.getToken(tokenParams)
+      return oauth2.ownerPassword.getToken(tokenParams)
         .then(function (r) { resultPromise = r; })
         .catch(function (e) { errorPromise = e; });
     });
