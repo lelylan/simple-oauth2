@@ -1,5 +1,16 @@
 # Changelog
 
+## v1.0.0
+* Refactored test to use fixtures.
+* Update code to comply with more linter rules.
+* Fixed examples in README to return on error.
+* Added a working example example.
+* Clone params and configuration passed
+* Changed public api to, to make it consistent. Changed shortcut names to full names.
+* Changed public api to allow different sites for /authorize and /tokens
+* Added strict schema validation to module options.
+* Does not override expires_at property if passed into accessToken.create.
+
 ## v0.8.0 (1 August 2016)
 * Upgraded code to strict mode.
 * Upgraded all the code base to es6.
