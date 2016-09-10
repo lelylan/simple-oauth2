@@ -1,6 +1,6 @@
 # Changelog
 
-## Version Next
+## v1.0.0
 * Refactored test to use fixtures.
 * Update code to comply with more linter rules.
 * Fixed examples in README to return on error.
