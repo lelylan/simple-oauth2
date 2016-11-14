@@ -66,7 +66,7 @@ Install the client library using [npm](http://npmjs.org/):
 ### Options
 Simple OAuth2 accepts an object with the following valid params.
 
-* `client` - optional object with the following properties:
+* `client` - required object with the following properties:
   - `id` - Service registered client id. Required.
   - `secret` - Service registered client secret. Required.
   - `secretParamName` - Parameter name used to send the client secret. Default to **client_secret**.
