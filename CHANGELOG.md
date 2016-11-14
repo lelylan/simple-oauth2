@@ -1,5 +1,8 @@
 # Changelog
 
+## v1.0.1
+* Fixed documentation for **client** option.
+
 ## v1.0.0
 * Refactored test to use fixtures.
 * Update code to comply with more linter rules.
