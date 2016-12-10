@@ -75,6 +75,7 @@ Simple OAuth2 accepts an object with the following valid params.
 * `auth` - required object with the following properties.
   - `tokenHost` - String used to set the host to request the tokens to. Required.
   - `tokenPath` - String path to request an access token. Default to **/oauth/token**.
+  - `refreshPath` - String path to request a refresh token. Default to **/oauth/refresh**.
   - `revokePath` - String path to revoken an access token. Default to **/oauth/revoke**.
   - `authorizeHost` - String used to set the host to request an "authorization code". Default to the value set on `auth.tokenHost`.
   - `authorizePath` - String path to request an authorization code. Default to **/oauth/authorize**.
