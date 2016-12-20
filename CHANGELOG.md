@@ -1,5 +1,8 @@
 # Changelog
 
+## v1.0.2
+* Parse token payload response `expires_in` property as integer
+
 ## v1.0.1
 * Fixed documentation for **client** option.
 
