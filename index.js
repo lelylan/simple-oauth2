@@ -18,6 +18,7 @@ const optionsSchema = joi
     auth: joi.object().keys({
       tokenHost: joi.string().required().uri(['http', 'https']),
       tokenPath: joi.string().default('/oauth/token'),
+      refreshPath: joi.string().default('/oauth/refresh'),
       revokePath: joi.string().default('/oauth/revoke'),
       authorizeHost: joi.string().default(joi.ref('tokenHost')),
       authorizePath: joi.string().default('/oauth/authorize'),
