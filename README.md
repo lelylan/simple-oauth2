@@ -75,7 +75,7 @@ Simple OAuth2 accepts an object with the following valid params.
 * `auth` - required object with the following properties.
   - `tokenHost` - String used to set the host to request the tokens to. Required.
   - `tokenPath` - String path to request an access token. Default to **/oauth/token**.
-  - `revokePath` - String path to revoken an access token. Default to **/oauth/revoke**.
+  - `revokePath` - String path to revoke an access token. Default to **/oauth/revoke**.
   - `authorizeHost` - String used to set the host to request an "authorization code". Default to the value set on `auth.tokenHost`.
   - `authorizePath` - String path to request an authorization code. Default to **/oauth/authorize**.
 
@@ -83,7 +83,8 @@ Simple OAuth2 accepts an object with the following valid params.
   - Any key is allowed here. Default to `headers.Accept = application/json`.
 
 * `options` optional object to setup the module.
-  - `useBodyAuth` - Wheather or not the client.id/client.secret params are sent in the request body. Defaults to **true**.
+  - `useBodyAuth` - Whether or not the client.id/client.secret params are sent in the request body. Defaults to **true**.
+  - `useBasicAuthorizationHeader` - Whether or not the Basic Authorization header should be sent at the token request.
 
 ```javascript
 // Set the configuration settings
