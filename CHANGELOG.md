@@ -1,5 +1,8 @@
 # Changelog
 
+## v1.0.3
+* Add missing documentation for module options
+
 ## v1.0.2
 * Parse token payload response `expires_in` property as integer
 
