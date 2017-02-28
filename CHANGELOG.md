@@ -1,5 +1,8 @@
 # Changelog
 
+## v1.1.0
+* Add support to body encoding format in library requests
+
 ## v1.0.3
 * Add missing documentation for module options
 
