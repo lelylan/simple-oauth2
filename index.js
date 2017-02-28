@@ -28,6 +28,7 @@ const optionsSchema = joi
       }),
     }).default().unknown(true),
     options: joi.object().keys({
+      bodyFormat: joi.any().valid('form', 'json').default('form'),
       useBasicAuthorizationHeader: joi.boolean().default(true),
       useBodyAuth: joi.boolean().default(true),
     }).default(),
