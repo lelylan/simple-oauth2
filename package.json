@@ -34,7 +34,7 @@
     "chai": "^3.5.0",
     "doctoc": "^1.0.0",
     "mocha": "^3.0.0",
-    "nock": "^8.0.0",
+    "nock": "^9.0.13",
     "eslint": "^3.2.2",
     "eslint-config-airbnb-base": "^5.0.1",
     "eslint-plugin-import": "^1.12.0"
