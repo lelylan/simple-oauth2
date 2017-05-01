@@ -19,7 +19,7 @@
     "pretest": "npm run lint",
     "test": "mocha ",
     "lint": "eslint .",
-    "format": "eslint . --fix",
+    "fix": "eslint . --fix",
     "test-watch": "mocha --watch --reporter=spec",
     "docs-gen": "doctoc README.md --github --no-title"
   },
@@ -36,8 +36,8 @@
     "mocha": "^3.0.0",
     "nock": "^9.0.13",
     "eslint": "^3.2.2",
-    "eslint-config-airbnb-base": "^5.0.1",
-    "eslint-plugin-import": "^1.12.0"
+    "eslint-config-airbnb-base": "^11.1.3",
+    "eslint-plugin-import": "^2.2.0"
   },
   "license": "Apache-2.0"
 }
