@@ -1,5 +1,8 @@
 # Changelog
 
+## v1.3.0
+* Add support for custom idParamName in authCode.authorizeURL() method
+
 ## v1.2.0
 * Upgrade dependencies, to avoid using outdated/vulnerable versions
 
