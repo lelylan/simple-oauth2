@@ -255,6 +255,39 @@ if (token.expired()) {
 }
 ```
 
+The `expired` helper is useful for knowing when a token has definitively
+expired. However, there is a common race condition when tokens are near
+expiring. If an OAuth 2.0 token is issued with a `expires_in` property (as
+opposed to an `expires_at` property), there can be discrepancies between the
+time the OAuth 2.0 server issues the access token and when it is received.
+These come down to factors such as network and processing latency. This can be
+worked around by preemptively refreshing the access token:
+
+```javascript
+// Provide a window of time before the actual expiration to refresh the token
+const EXPIRATION_WINDOW_IN_SECONDS = 300;
+
+const tokenObject = token.token;
+const expirationTimeInSeconds = tokenObject.expires_at.getTime() / 1000;
+const expirationWindowStart = expirationTimeInSeconds - EXPIRATION_WINDOW_IN_SECONDS;
+
+// If the start of the window has passed, refresh the token
+const nowInSeconds = (new Date()).getTime() / 1000;
+const shouldRefresh = nowInSeconds >= expirationWindowStart;
+if (shouldRefresh) {
+  // Callbacks
+  token.refresh((error, result) => {
+    token = result;
+  })
+
+  // Promises
+  token.refresh()
+  .then((result) => {
+    token = result;
+  });
+}
+```
+
 When you've done with the token or you want to log out, you can
 revoke the access token and refresh token.
 
