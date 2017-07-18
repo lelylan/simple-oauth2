@@ -140,14 +140,14 @@ oauth2.authorizationCode.getToken(tokenConfig, (error, result) => {
     return console.log('Access Token Error', error.message);
   }
 
-  const token = oauth2.accessToken.create(result);
+  const accessToken = oauth2.accessToken.create(result);
 });
 
 // Promises
 // Save the access token
 oauth2.authorizationCode.getToken(tokenConfig)
 .then((result) => {
-  const token = oauth2.accessToken.create(result);
+  const accessToken = oauth2.accessToken.create(result);
 })
 .catch((error) => {
   console.log('Access Token Error', error.message);
@@ -177,7 +177,7 @@ oauth2.ownerPassword.getToken(tokenConfig, (error, result) => {
     return console.log('Access Token Error', error.message);
   }
 
-  const token = oauth2.accessToken.create(result);
+  const accessToken = oauth2.accessToken.create(result);
 });
 
 // Promises
@@ -185,9 +185,9 @@ oauth2.ownerPassword.getToken(tokenConfig, (error, result) => {
 oauth2.ownerPassword
   .getToken(tokenConfig)
   .then((result) => {
-    const token = oauth2.accessToken.create(result);
+    const accessToken = oauth2.accessToken.create(result);
 
-    return token;
+    return accessToken;
   });
 ```
 
@@ -206,7 +206,7 @@ oauth2.clientCredentials.getToken(tokenConfig, (error, result) => {
     return console.log('Access Token Error', error.message);
   }
 
-  const token = oauth2.accessToken.create(result);
+  const accessToken = oauth2.accessToken.create(result);
 });
 
 
@@ -215,7 +215,7 @@ oauth2.clientCredentials.getToken(tokenConfig, (error, result) => {
 oauth2.clientCredentials
   .getToken(tokenConfig)
   .then((result) => {
-    const token = oauth2.accessToken.create(result);
+    const accessToken = oauth2.accessToken.create(result);
   })
   .catch((error) => {
     console.log('Access Token error', error.message);
@@ -238,19 +238,19 @@ const tokenObject = {
 };
 
 // Create the access token wrapper
-const token = oauth2.accessToken.create(tokenObject);
+let accessToken = oauth2.accessToken.create(tokenObject);
 
 // Check if the token is expired. If expired it is refreshed.
-if (token.expired()) {
+if (accessToken.expired()) {
   // Callbacks
-  token.refresh((error, result) => {
-    token = result;
+  accessToken.refresh((error, result) => {
+    accessToken = result;
   })
 
   // Promises
-  token.refresh()
+  accessToken.refresh()
   .then((result) => {
-    token = result;
+    accessToken = result;
   });
 }
 ```
@@ -267,8 +267,8 @@ worked around by preemptively refreshing the access token:
 // Provide a window of time before the actual expiration to refresh the token
 const EXPIRATION_WINDOW_IN_SECONDS = 300;
 
-const tokenObject = token.token;
-const expirationTimeInSeconds = tokenObject.expires_at.getTime() / 1000;
+const { token } = accessToken;
+const expirationTimeInSeconds = token.expires_at.getTime() / 1000;
 const expirationWindowStart = expirationTimeInSeconds - EXPIRATION_WINDOW_IN_SECONDS;
 
 // If the start of the window has passed, refresh the token
@@ -276,14 +276,14 @@ const nowInSeconds = (new Date()).getTime() / 1000;
 const shouldRefresh = nowInSeconds >= expirationWindowStart;
 if (shouldRefresh) {
   // Callbacks
-  token.refresh((error, result) => {
-    token = result;
+  accessToken.refresh((error, result) => {
+    accessToken = result;
   })
 
   // Promises
-  token.refresh()
+  accessToken.refresh()
   .then((result) => {
-    token = result;
+    accessToken = result;
   });
 }
 ```
@@ -295,21 +295,21 @@ revoke the access token and refresh token.
 
 // Callbacks
 // Revoke only the access token
-token.revoke('access_token', (error) => {
+accessToken.revoke('access_token', (error) => {
   // Session ended. But the refresh_token is still valid.
 
   // Revoke the refresh_token
-  token.revoke('refresh_token', (error) => {
+  accessToken.revoke('refresh_token', (error) => {
     console.log('token revoked.');
   });
 });
 
 // Promises
 // Revoke only the access token
-token.revoke('access_token')
+accessToken.revoke('access_token')
   .then(() => {
     // Revoke the refresh token
-    return token.revoke('refresh_token');
+    return accessToken.revoke('refresh_token');
   })
   .then(() => {
     console.log('Token revoked');
