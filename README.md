@@ -86,6 +86,7 @@ Simple OAuth2 accepts an object with the following valid params.
   - `bodyFormat` - Format of data sent in the request body. Valid values are `form` or `json`. Defaults to **form**.
   - `useBodyAuth` - Whether or not the client.id/client.secret params are sent in the request body. Defaults to **true**.
   - `useBasicAuthorizationHeader` - Whether or not the Basic Authorization header should be sent at the token request.
+  - `expirationBuffer` - Number of seconds before an access token's real expiration time to report it as expired. Defaults to **0**.
 
 ```javascript
 // Set the configuration settings

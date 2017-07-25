@@ -31,6 +31,7 @@ const optionsSchema = joi
       bodyFormat: joi.any().valid('form', 'json').default('form'),
       useBasicAuthorizationHeader: joi.boolean().default(true),
       useBodyAuth: joi.boolean().default(true),
+      expirationBuffer: joi.number().min(0).default(0),
     }).default(),
   });
 
