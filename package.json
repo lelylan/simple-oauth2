@@ -1,6 +1,6 @@
 {
   "name": "simple-oauth2",
-  "version": "1.1.0",
+  "version": "1.3.0",
   "description": "Node.js client for OAuth2",
   "author": "Andrea Reginato <andrea.reginato@gmail.com>",
   "contributors": [
@@ -19,25 +19,25 @@
     "pretest": "npm run lint",
     "test": "mocha ",
     "lint": "eslint .",
-    "format": "eslint . --fix",
+    "fix": "eslint . --fix",
     "test-watch": "mocha --watch --reporter=spec",
     "docs-gen": "doctoc README.md --github --no-title"
   },
   "dependencies": {
-    "bluebird": "^2.10.1",
+    "bluebird": "^3.5.0",
     "date-fns": "^1.3.0",
     "debug": "^2.2.0",
-    "joi": "^9.0.4",
-    "request": "^2.67.0"
+    "joi": "^10.4.1",
+    "request": "^2.81.0"
   },
   "devDependencies": {
     "chai": "^3.5.0",
     "doctoc": "^1.0.0",
     "mocha": "^3.0.0",
-    "nock": "^8.0.0",
+    "nock": "^9.0.13",
     "eslint": "^3.2.2",
-    "eslint-config-airbnb-base": "^5.0.1",
-    "eslint-plugin-import": "^1.12.0"
+    "eslint-config-airbnb-base": "^11.1.3",
+    "eslint-plugin-import": "^2.2.0"
   },
   "license": "Apache-2.0"
 }

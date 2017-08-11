@@ -9,23 +9,6 @@ const oauth2Module = require('./../index.js');
 const oauth2 = oauth2Module
   .create(require('./fixtures/oauth-options'));
 
-const tokenParams = {
-  code: 'code',
-  redirect_uri: 'http://callback.com',
-};
-const oauthParams = {
-  code: 'code',
-  redirect_uri: 'http://callback.com',
-  grant_type: 'authorization_code',
-  client_id: 'client-id',
-  client_secret: 'client-secret',
-};
-const authorizeConfig = {
-  redirect_uri: 'http://localhost:3000/callback',
-  scope: 'user',
-  state: '02afe928b',
-};
-
 describe('oauth2.authCode', function () {
   let request;
   let result;
@@ -34,6 +17,12 @@ describe('oauth2.authCode', function () {
   let errorPromise;
 
   describe('#authorizeURL', function () {
+    const authorizeConfig = {
+      redirect_uri: 'http://localhost:3000/callback',
+      scope: 'user',
+      state: '02afe928b',
+    };
+
     it('returns the authorization URI', function () {
       result = oauth2.authorizationCode.authorizeURL(authorizeConfig);
 
@@ -41,7 +30,26 @@ describe('oauth2.authCode', function () {
       expect(result).to.be.equal(expected);
     });
 
-    it('should allow absolute URI for authorizationPath', function () {
+    it('returns the authorization URI with a custom idParamName', () => {
+      const oauth2Temp = oauth2Module.create({
+        client: {
+          id: 'client-id',
+          secret: 'client-secret',
+          idParamName: 'incredible-param-name',
+        },
+        auth: {
+          tokenHost: 'https://example.org',
+        },
+      });
+
+      result = oauth2Temp.authorizationCode.authorizeURL(authorizeConfig);
+
+      const expected = `https://example.org/oauth/authorize?redirect_uri=${encodeURIComponent('http://localhost:3000/callback')}&scope=user&state=02afe928b&response_type=code&incredible-param-name=client-id`;
+
+      expect(result).to.be.equal(expected);
+    });
+
+    it('uses a custom authorizationHost', function () {
       const oauth2Temp = oauth2Module.create({
         client: {
           id: 'client-id',
@@ -52,14 +60,29 @@ describe('oauth2.authCode', function () {
           authorizeHost: 'https://othersite.com',
         },
       });
+
       result = oauth2Temp.authorizationCode.authorizeURL(authorizeConfig);
 
       const expected = `https://othersite.com/oauth/authorize?redirect_uri=${encodeURIComponent('http://localhost:3000/callback')}&scope=user&state=02afe928b&response_type=code&client_id=client-id`;
+
       expect(result).to.be.equal(expected);
     });
   });
 
   describe('#getToken', function () {
+    const tokenParams = {
+      code: 'code',
+      redirect_uri: 'http://callback.com',
+    };
+
+    const oauthParams = {
+      code: 'code',
+      redirect_uri: 'http://callback.com',
+      grant_type: 'authorization_code',
+      client_id: 'client-id',
+      client_secret: 'client-secret',
+    };
+
     beforeEach(function () {
       request = nock('https://example.org')
         .post('/oauth/token', qs.stringify(oauthParams))
