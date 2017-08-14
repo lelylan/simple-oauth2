@@ -32,6 +32,7 @@ const optionsSchema = joi
       useBasicAuthorizationHeader: joi.boolean().default(true),
       useBodyAuth: joi.boolean().default(true),
     }).default(),
+    requestOverride: joi.func().arity(1),
   });
 
 module.exports = {
