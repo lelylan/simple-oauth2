@@ -1,5 +1,9 @@
 # Changelog
 
+## Next
+* Update dependencies
+* Add Node 8 to test matrix
+
 ## v1.3.0
 * Add support for custom idParamName in authCode.authorizeURL() method
 
