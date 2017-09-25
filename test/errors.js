@@ -2,7 +2,7 @@
 
 const qs = require('querystring');
 const nock = require('nock');
-const expect = require('chai').expect;
+const { expect } = require('chai');
 const oauth2Module = require('./../index.js');
 
 const oauth2 = oauth2Module
