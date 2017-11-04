@@ -1,6 +1,6 @@
 # Changelog
 
-## Next
+## v1.4.0
 * Update dependencies
 * Add Node 8 to test matrix
 
