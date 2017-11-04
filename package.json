@@ -21,7 +21,8 @@
     "lint": "eslint .",
     "fix": "eslint . --fix",
     "test-watch": "mocha --watch --reporter=spec",
-    "docs-gen": "doctoc README.md --github --no-title"
+    "docs-gen": "doctoc README.md --github --no-title",
+    "clean-install": "rm -rf node_modules && npm install"
   },
   "dependencies": {
     "bluebird": "^3.5.0",

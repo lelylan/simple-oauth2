@@ -23,3 +23,4 @@ docs/
 
 .idea/
 *.iml
+.vscode
