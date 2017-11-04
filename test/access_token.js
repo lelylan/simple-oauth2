@@ -3,12 +3,13 @@
 const qs = require('querystring');
 const nock = require('nock');
 const path = require('path');
-const expect = require('chai').expect;
+const chai = require('chai');
 const startOfYesterday = require('date-fns/start_of_yesterday');
 const oauth2Module = require('./../index.js');
 const isValid = require('date-fns/is_valid');
 const isEqual = require('date-fns/is_equal');
 
+const expect = chai.expect;
 const oauth2 = oauth2Module
   .create(require('./fixtures/oauth-options'));
 

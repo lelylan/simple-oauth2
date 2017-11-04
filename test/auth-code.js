@@ -3,9 +3,10 @@
 const path = require('path');
 const qs = require('querystring');
 const nock = require('nock');
-const expect = require('chai').expect;
+const chai = require('chai');
 const oauth2Module = require('./../index.js');
 
+const expect = chai.expect;
 const oauth2 = oauth2Module
   .create(require('./fixtures/oauth-options'));
 
@@ -26,7 +27,7 @@ describe('oauth2.authCode', function () {
     it('returns the authorization URI', function () {
       result = oauth2.authorizationCode.authorizeURL(authorizeConfig);
 
-      const expected = `https://example.org/oauth/authorize?redirect_uri=${encodeURIComponent('http://localhost:3000/callback')}&scope=user&state=02afe928b&response_type=code&client_id=client-id`;
+      const expected = `https://example.org/oauth/authorize?response_type=code&client_id=client-id&redirect_uri=${encodeURIComponent('http://localhost:3000/callback')}&scope=user&state=02afe928b`;
       expect(result).to.be.equal(expected);
     });
 
@@ -44,7 +45,7 @@ describe('oauth2.authCode', function () {
 
       result = oauth2Temp.authorizationCode.authorizeURL(authorizeConfig);
 
-      const expected = `https://example.org/oauth/authorize?redirect_uri=${encodeURIComponent('http://localhost:3000/callback')}&scope=user&state=02afe928b&response_type=code&incredible-param-name=client-id`;
+      const expected = `https://example.org/oauth/authorize?response_type=code&incredible-param-name=client-id&redirect_uri=${encodeURIComponent('http://localhost:3000/callback')}&scope=user&state=02afe928b`;
 
       expect(result).to.be.equal(expected);
     });
@@ -63,7 +64,7 @@ describe('oauth2.authCode', function () {
 
       result = oauth2Temp.authorizationCode.authorizeURL(authorizeConfig);
 
-      const expected = `https://othersite.com/oauth/authorize?redirect_uri=${encodeURIComponent('http://localhost:3000/callback')}&scope=user&state=02afe928b&response_type=code&client_id=client-id`;
+      const expected = `https://othersite.com/oauth/authorize?response_type=code&client_id=client-id&redirect_uri=${encodeURIComponent('http://localhost:3000/callback')}&scope=user&state=02afe928b`;
 
       expect(result).to.be.equal(expected);
     });

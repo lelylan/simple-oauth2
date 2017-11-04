@@ -3,9 +3,10 @@
 const path = require('path');
 const qs = require('querystring');
 const nock = require('nock');
-const expect = require('chai').expect;
+const chai = require('chai');
 const oauth2Module = require('./../index.js');
 
+const expect = chai.expect;
 const oauth2 = oauth2Module
   .create(require('./fixtures/oauth-options'));
 
