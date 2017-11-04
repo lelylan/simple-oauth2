@@ -4,7 +4,7 @@
     "sourceType": "script"
   },
   "rules": {
-    "no-param-reassign": 0,
+    "no-param-reassign": "off",
     "comma-dangle": ["error", {
       "arrays": "always-multiline",
       "objects": "always-multiline",
