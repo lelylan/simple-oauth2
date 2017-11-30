@@ -6,8 +6,7 @@ const chai = require('chai');
 const oauth2Module = require('./../index.js');
 
 const expect = chai.expect;
-const oauth2 = oauth2Module
-  .create(require('./fixtures/oauth-options.json'));
+const oauth2 = oauth2Module.create(require('./fixtures/module-config.json'));
 
 const tokenParams = {
   code: 'code',

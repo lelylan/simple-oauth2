@@ -10,8 +10,7 @@ const isValid = require('date-fns/is_valid');
 const isEqual = require('date-fns/is_equal');
 
 const expect = chai.expect;
-const oauth2 = oauth2Module
-  .create(require('./fixtures/oauth-options'));
+const oauth2 = oauth2Module.create(require('./fixtures/module-config'));
 
 const tokenParams = {
   code: 'code',
@@ -20,7 +19,7 @@ const tokenParams = {
 
 const refreshConfig = require('./fixtures/refresh-token.json');
 const refreshWithAdditionalParamsConfig = require('./fixtures/refresh-token-with-params.json');
-const oauthConfig = require('./fixtures/oauth-options-code.json');
+const authorizationCodeParams = require('./fixtures/auth-code-params.json');
 const revokeConfig = require('./fixtures/revoke-token-params.json');
 
 describe('access token request', function () {
@@ -41,7 +40,7 @@ describe('access token request', function () {
     };
 
     request = nock('https://authorization-server.org:443', options)
-      .post('/oauth/token', qs.stringify(oauthConfig))
+      .post('/oauth/token', qs.stringify(authorizationCodeParams))
       .times(2)
       .replyWithFile(200, path.join(__dirname, '/fixtures/access_token.json'));
   });

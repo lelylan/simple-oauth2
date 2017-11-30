@@ -8,8 +8,7 @@ const oauth2Module = require('./../index.js');
 
 const expect = chai.expect;
 const tokenParams = {};
-const oauth2 = oauth2Module
-  .create(require('./fixtures/oauth-options'));
+const oauth2 = oauth2Module.create(require('./fixtures/module-config'));
 
 describe('client credentials grant type', function () {
   describe('#getToken', function () {
