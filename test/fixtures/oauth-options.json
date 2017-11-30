@@ -4,6 +4,6 @@
     "secret": "client-secret"
   },
   "auth": {
-    "tokenHost": "https://example.org"
+    "tokenHost": "https://authorization-server.org"
   }
 }

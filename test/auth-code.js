@@ -10,7 +10,7 @@ const expect = chai.expect;
 const oauth2 = oauth2Module
   .create(require('./fixtures/oauth-options'));
 
-describe('oauth2.authCode', function () {
+describe('authorization code grant type', function () {
   let request;
   let result;
   let resultPromise;
@@ -27,7 +27,7 @@ describe('oauth2.authCode', function () {
     it('returns the authorization URI', function () {
       result = oauth2.authorizationCode.authorizeURL(authorizeConfig);
 
-      const expected = `https://example.org/oauth/authorize?response_type=code&client_id=client-id&redirect_uri=${encodeURIComponent('http://localhost:3000/callback')}&scope=user&state=02afe928b`;
+      const expected = `https://authorization-server.org/oauth/authorize?response_type=code&client_id=client-id&redirect_uri=${encodeURIComponent('http://localhost:3000/callback')}&scope=user&state=02afe928b`;
       expect(result).to.be.equal(expected);
     });
 
@@ -39,13 +39,13 @@ describe('oauth2.authCode', function () {
           idParamName: 'incredible-param-name',
         },
         auth: {
-          tokenHost: 'https://example.org',
+          tokenHost: 'https://authorization-server.org',
         },
       });
 
       result = oauth2Temp.authorizationCode.authorizeURL(authorizeConfig);
 
-      const expected = `https://example.org/oauth/authorize?response_type=code&incredible-param-name=client-id&redirect_uri=${encodeURIComponent('http://localhost:3000/callback')}&scope=user&state=02afe928b`;
+      const expected = `https://authorization-server.org/oauth/authorize?response_type=code&incredible-param-name=client-id&redirect_uri=${encodeURIComponent('http://localhost:3000/callback')}&scope=user&state=02afe928b`;
 
       expect(result).to.be.equal(expected);
     });
@@ -57,7 +57,7 @@ describe('oauth2.authCode', function () {
           secret: 'client-secret',
         },
         auth: {
-          tokenHost: 'https://example.org',
+          tokenHost: 'https://authorization-server.org',
           authorizeHost: 'https://othersite.com',
         },
       });
@@ -85,7 +85,14 @@ describe('oauth2.authCode', function () {
     };
 
     beforeEach(function () {
-      request = nock('https://example.org')
+      const options = {
+        reqheaders: {
+          Accept: 'application/json',
+          Authorization: 'Basic Y2xpZW50LWlkOmNsaWVudC1zZWNyZXQ=',
+        },
+      };
+
+      request = nock('https://authorization-server.org', options)
         .post('/oauth/token', qs.stringify(oauthParams))
         .times(2)
         .replyWithFile(200, path.join(__dirname, '/fixtures/access_token.json'));

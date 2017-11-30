@@ -31,11 +31,18 @@ describe('Simple oauth2 Error', function () {
 
   describe('with status code 401', function () {
     beforeEach(function () {
-      request = nock('https://example.org:443')
+      const options = {
+        reqheaders: {
+          Accept: 'application/json',
+          Authorization: 'Basic Y2xpZW50LWlkOmNsaWVudC1zZWNyZXQ=',
+        },
+      };
+
+      request = nock('https://authorization-server.org:443', options)
         .post('/oauth/token', qs.stringify(oauthParams))
         .reply(401);
 
-      requestContent = nock('https://example.org:443')
+      requestContent = nock('https://authorization-server.org:443', options)
         .post('/oauth/token', qs.stringify(oauthParams))
         .reply(401, {
           content: 'No authorized',
@@ -75,11 +82,18 @@ describe('Simple oauth2 Error', function () {
 
   describe('with status code 500', function () {
     beforeEach(function () {
-      request = nock('https://example.org:443')
+      const options = {
+        reqheaders: {
+          Accept: 'application/json',
+          Authorization: 'Basic Y2xpZW50LWlkOmNsaWVudC1zZWNyZXQ=',
+        },
+      };
+
+      request = nock('https://authorization-server.org:443', options)
         .post('/oauth/token', qs.stringify(oauthParams))
         .reply(500);
 
-      requestContent = nock('https://example.org:443')
+      requestContent = nock('https://authorization-server.org:443', options)
         .post('/oauth/token', qs.stringify(oauthParams))
         .reply(500, {
           description: 'Error details.',

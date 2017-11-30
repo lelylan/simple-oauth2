@@ -23,7 +23,7 @@ const oauthParams = {
   client_secret: 'client-secret',
 };
 
-describe('oauth2.password', function () {
+describe('owner password gran type', function () {
   describe('#getToken', function () {
     let request;
     let result;
@@ -32,7 +32,14 @@ describe('oauth2.password', function () {
     let errorPromise;
 
     beforeEach(function () {
-      request = nock('https://example.org:443')
+      const options = {
+        reqheaders: {
+          Accept: 'application/json',
+          Authorization: 'Basic Y2xpZW50LWlkOmNsaWVudC1zZWNyZXQ=',
+        },
+      };
+
+      request = nock('https://authorization-server.org:443', options)
         .post('/oauth/token', qs.stringify(oauthParams))
         .times(2)
         .replyWithFile(200, path.join(__dirname, '/fixtures/access_token.json'));

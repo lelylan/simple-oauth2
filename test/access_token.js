@@ -23,7 +23,7 @@ const refreshWithAdditionalParamsConfig = require('./fixtures/refresh-token-with
 const oauthConfig = require('./fixtures/oauth-options-code.json');
 const revokeConfig = require('./fixtures/revoke-token-params.json');
 
-describe('oauth2.accessToken', function () {
+describe('access token request', function () {
   let request;
   let result;
   let resultPromise;
@@ -33,7 +33,14 @@ describe('oauth2.accessToken', function () {
   let errorPromise;
 
   beforeEach(function () {
-    request = nock('https://example.org:443')
+    const options = {
+      reqheaders: {
+        Accept: 'application/json',
+        Authorization: 'Basic Y2xpZW50LWlkOmNsaWVudC1zZWNyZXQ=',
+      },
+    };
+
+    request = nock('https://authorization-server.org:443', options)
       .post('/oauth/token', qs.stringify(oauthConfig))
       .times(2)
       .replyWithFile(200, path.join(__dirname, '/fixtures/access_token.json'));
@@ -108,7 +115,14 @@ describe('oauth2.accessToken', function () {
 
   describe('when refreshes token', function () {
     beforeEach(function () {
-      request = nock('https://example.org:443')
+      const options = {
+        reqheaders: {
+          Accept: 'application/json',
+          Authorization: 'Basic Y2xpZW50LWlkOmNsaWVudC1zZWNyZXQ=',
+        },
+      };
+
+      request = nock('https://authorization-server.org:443', options)
         .post('/oauth/token', qs.stringify(refreshConfig))
         .times(2)
         .replyWithFile(200, path.join(__dirname, '/fixtures/access_token.json'));
@@ -144,7 +158,14 @@ describe('oauth2.accessToken', function () {
 
   describe('when refreshes token with additional params', function () {
     beforeEach(function () {
-      request = nock('https://example.org:443')
+      const options = {
+        reqheaders: {
+          Accept: 'application/json',
+          Authorization: 'Basic Y2xpZW50LWlkOmNsaWVudC1zZWNyZXQ=',
+        },
+      };
+
+      request = nock('https://authorization-server.org:443', options)
         .post('/oauth/token', qs.stringify(refreshWithAdditionalParamsConfig))
         .times(2)
         .replyWithFile(200, path.join(__dirname, '/fixtures/access_token.json'));
@@ -182,7 +203,14 @@ describe('oauth2.accessToken', function () {
 
   describe('#revoke', function () {
     beforeEach(function () {
-      request = nock('https://example.org:443')
+      const options = {
+        reqheaders: {
+          Accept: 'application/json',
+          Authorization: 'Basic Y2xpZW50LWlkOmNsaWVudC1zZWNyZXQ=',
+        },
+      };
+
+      request = nock('https://authorization-server.org:443', options)
         .post('/oauth/revoke', qs.stringify(revokeConfig))
         .times(2)
         .reply(200);

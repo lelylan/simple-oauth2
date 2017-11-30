@@ -1,36 +1,36 @@
 'use strict';
 
-const joi = require('joi');
+const Joi = require('joi');
 const authCodeModule = require('./lib/client/auth-code');
 const passwordModule = require('./lib/client/password');
 const accessTokenModule = require('./lib/client/access-token');
 const clientCredentialsModule = require('./lib/client/client');
 
-const optionsSchema = joi
+const optionsSchema = Joi
   .object()
   .keys({
-    client: joi.object().keys({
-      id: joi.string().required(),
-      secret: joi.string().required(),
-      secretParamName: joi.string().default('client_secret'),
-      idParamName: joi.string().default('client_id'),
+    client: Joi.object().keys({
+      id: Joi.string().required(),
+      secret: Joi.string().required(),
+      secretParamName: Joi.string().default('client_secret'),
+      idParamName: Joi.string().default('client_id'),
     }).required(),
-    auth: joi.object().keys({
-      tokenHost: joi.string().required().uri(['http', 'https']),
-      tokenPath: joi.string().default('/oauth/token'),
-      revokePath: joi.string().default('/oauth/revoke'),
-      authorizeHost: joi.string().default(joi.ref('tokenHost')),
-      authorizePath: joi.string().default('/oauth/authorize'),
+    auth: Joi.object().keys({
+      tokenHost: Joi.string().required().uri(['http', 'https']),
+      tokenPath: Joi.string().default('/oauth/token'),
+      revokePath: Joi.string().default('/oauth/revoke'),
+      authorizeHost: Joi.string().default(Joi.ref('tokenHost')),
+      authorizePath: Joi.string().default('/oauth/authorize'),
     }).required(),
-    http: joi.object().keys({
-      headers: joi.object().default({
+    http: Joi.object().keys({
+      headers: Joi.object().default({
         Accept: 'application/json',
       }),
     }).default().unknown(true),
-    options: joi.object().keys({
-      bodyFormat: joi.any().valid('form', 'json').default('form'),
-      useBasicAuthorizationHeader: joi.boolean().default(true),
-      useBodyAuth: joi.boolean().default(true),
+    options: Joi.object().keys({
+      bodyFormat: Joi.any().valid('form', 'json').default('form'),
+      useBasicAuthorizationHeader: Joi.boolean().default(true),
+      useBodyAuth: Joi.boolean().default(true),
     }).default(),
   });
 
@@ -43,11 +43,10 @@ module.exports = {
    * @param  {Object}  options Module options as defined in schema
    */
   create(options) {
-    let moduleOptions = Object.assign({}, options || {});
-    moduleOptions = joi.attempt(
-      moduleOptions,
+    const moduleOptions = Joi.attempt(
+      options || {},
       optionsSchema,
-      'Invalid options provided to simple-oauth2.'
+      'Invalid options provided to simple-oauth2'
     );
 
     return {

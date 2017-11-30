@@ -11,7 +11,7 @@ const tokenParams = {};
 const oauth2 = oauth2Module
   .create(require('./fixtures/oauth-options'));
 
-describe('oauth2.Client', function () {
+describe('client credentials grant type', function () {
   describe('#getToken', function () {
     let request;
     let result;
@@ -20,7 +20,14 @@ describe('oauth2.Client', function () {
     let errorPromise;
 
     beforeEach(function () {
-      request = nock('https://example.org:443')
+      const options = {
+        reqheaders: {
+          Accept: 'application/json',
+          Authorization: 'Basic Y2xpZW50LWlkOmNsaWVudC1zZWNyZXQ=',
+        },
+      };
+
+      request = nock('https://authorization-server.org:443', options)
         .post('/oauth/token', qs.stringify({
           grant_type: 'client_credentials',
           client_id: 'client-id',
