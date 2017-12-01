@@ -4,58 +4,174 @@ const path = require('path');
 const qs = require('querystring');
 const nock = require('nock');
 const chai = require('chai');
-const oauth2Module = require('./../index.js');
+const oauth2Module = require('./../index');
+const expectedAccessToken = require('./fixtures/access_token');
 
 const expect = chai.expect;
 const tokenParams = {};
-const oauth2 = oauth2Module.create(require('./fixtures/module-config'));
+const baseConfig = require('./fixtures/module-config');
 
-describe('client credentials grant type', function () {
-  describe('#getToken', function () {
+describe('client credentials grant type', () => {
+  describe('when requesting an access token', () => {
+    let oauth2;
     let request;
     let result;
     let resultPromise;
-    let error;
-    let errorPromise;
 
-    beforeEach(function () {
-      const options = {
-        reqheaders: {
-          Accept: 'application/json',
-          Authorization: 'Basic Y2xpZW50LWlkOmNsaWVudC1zZWNyZXQ=',
-        },
-      };
+    describe('with body credentials', () => {
+      describe('with json body', () => {
+        before(() => {
+          const config = Object.assign({}, baseConfig, {
+            options: {
+              bodyFormat: 'json',
+              useBodyAuth: true,
+              useBasicAuthorizationHeader: false,
+            },
+          });
 
-      request = nock('https://authorization-server.org:443', options)
-        .post('/oauth/token', qs.stringify({
-          grant_type: 'client_credentials',
-          client_id: 'client-id',
-          client_secret: 'client-secret',
-        }))
-        .times(2)
-        .replyWithFile(200, path.join(__dirname, '/fixtures/access_token.json'));
-    });
+          oauth2 = oauth2Module.create(config);
+        });
 
-    beforeEach(function (done) {
-      oauth2.clientCredentials.getToken(tokenParams, function (e, r) {
-        error = e; result = r; done();
+        beforeEach(() => {
+          const options = {
+            reqheaders: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+            },
+          };
+
+          request = nock('https://authorization-server.org:443', options)
+            .post('/oauth/token', {
+              grant_type: 'client_credentials',
+              client_id: 'client-id',
+              client_secret: 'client-secret',
+            })
+            .times(2)
+            .reply(200, expectedAccessToken);
+        });
+
+        beforeEach((done) => {
+          oauth2.clientCredentials.getToken(tokenParams, (e, r) => {
+            result = r; done(e);
+          });
+        });
+
+        beforeEach(() => {
+          return oauth2.clientCredentials
+            .getToken(tokenParams)
+            .then((r) => { resultPromise = r; });
+        });
+
+        it('makes the HTTP request', () => {
+          expect(request.isDone()).to.be.equal(true);
+        });
+
+        it('returns an access token as result of the token request', () => {
+          expect(result).to.be.deep.equal(expectedAccessToken);
+          expect(resultPromise).to.be.deep.equal(expectedAccessToken);
+        });
+      });
+
+      describe('with form body', () => {
+        before(() => {
+          const config = Object.assign({}, baseConfig, {
+            options: {
+              bodyFormat: 'form',
+              useBodyAuth: true,
+              useBasicAuthorizationHeader: false,
+            },
+          });
+
+          oauth2 = oauth2Module.create(config);
+        });
+
+        beforeEach(() => {
+          const options = {
+            reqheaders: {
+              Accept: 'application/json',
+              'Content-Type': 'application/x-www-form-urlencoded',
+            },
+          };
+
+          request = nock('https://authorization-server.org:443', options)
+            .post('/oauth/token', qs.stringify({
+              grant_type: 'client_credentials',
+              client_id: 'client-id',
+              client_secret: 'client-secret',
+            }))
+            .times(2)
+            .reply(200, expectedAccessToken);
+        });
+
+        beforeEach((done) => {
+          oauth2.clientCredentials.getToken(tokenParams, (e, r) => {
+            result = r; done(e);
+          });
+        });
+
+        beforeEach(() => {
+          return oauth2.clientCredentials
+            .getToken(tokenParams)
+            .then((r) => { resultPromise = r; });
+        });
+
+        it('makes the HTTP request', () => {
+          expect(request.isDone()).to.be.equal(true);
+        });
+
+        it('returns an access token as result of the token request', () => {
+          expect(result).to.be.deep.equal(expectedAccessToken);
+          expect(resultPromise).to.be.deep.equal(expectedAccessToken);
+        });
       });
     });
 
-    beforeEach(function () {
-      return oauth2.clientCredentials
-        .getToken(tokenParams)
-        .then(function (r) { resultPromise = r; })
-        .catch(function (e) { errorPromise = e; });
-    });
+    describe('with header credentials', () => {
+      before(() => {
+        const config = Object.assign({}, baseConfig, {
+          options: {
+            useBodyAuth: false,
+            useBasicAuthorizationHeader: true,
+          },
+        });
 
-    it('makes the HTTP request', function () {
-      expect(request.isDone()).to.be.equal(true);
-    });
+        oauth2 = oauth2Module.create(config);
+      });
 
-    it('returns an access token as result of the token request', function () {
-      expect(result).to.have.property('access_token');
-      expect(resultPromise).to.have.property('access_token');
+      beforeEach(() => {
+        const options = {
+          reqheaders: {
+            Accept: 'application/json',
+            Authorization: 'Basic Y2xpZW50LWlkOmNsaWVudC1zZWNyZXQ=',
+          },
+        };
+
+        request = nock('https://authorization-server.org:443', options)
+          .post('/oauth/token')
+          .times(2)
+          .reply(200, expectedAccessToken);
+      });
+
+      beforeEach((done) => {
+        oauth2.clientCredentials.getToken(tokenParams, (e, r) => {
+          result = r; done(e);
+        });
+      });
+
+      beforeEach(() => {
+        return oauth2.clientCredentials
+          .getToken(tokenParams)
+          .then((r) => { resultPromise = r; });
+      });
+
+      it('makes the HTTP request', () => {
+        expect(request.isDone()).to.be.equal(true);
+      });
+
+      it('returns an access token as result of the token request', () => {
+        expect(result).to.be.deep.equal(expectedAccessToken);
+        expect(resultPromise).to.be.deep.equal(expectedAccessToken);
+      });
     });
   });
 });
