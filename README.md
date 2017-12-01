@@ -349,20 +349,16 @@ oauth2.authorizationCode
 ## Contributing
 See [CONTRIBUTING](https://github.com/lelylan/simple-oauth2/blob/master/CONTRIBUTING.md)
 
-
 ## Authors
 [Andrea Reginato](http://twitter.com/lelylan)
-
 
 ### Contributors
 Special thanks to the following people for submitting patches.
 
 * [Jonathan Samines](http://twitter.com/jonathansamines)
 
-
 ## Changelog
 See [CHANGELOG](https://github.com/lelylan/simple-oauth2/blob/master/CHANGELOG.md)
-
 
 ## License
 
