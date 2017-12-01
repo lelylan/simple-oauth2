@@ -31,8 +31,6 @@ describe('owner password gran type', () => {
         let request;
         let result;
         let resultPromise;
-        let error;
-        let errorPromise;
 
         before(() => {
           const config = Object.assign({}, baseConfig, {
@@ -62,14 +60,13 @@ describe('owner password gran type', () => {
 
         beforeEach((done) => {
           oauth2.ownerPassword.getToken(tokenOptions, (e, r) => {
-            error = e; result = r; done();
+            result = r; done(e);
           });
         });
 
         beforeEach(() => {
           return oauth2.ownerPassword.getToken(tokenOptions)
-            .then((r) => { resultPromise = r; })
-            .catch((e) => { errorPromise = e; });
+            .then((r) => { resultPromise = r; });
         });
 
         it('makes the HTTP request', () => {
@@ -118,14 +115,13 @@ describe('owner password gran type', () => {
 
         beforeEach((done) => {
           oauth2.ownerPassword.getToken(tokenOptions, (e, r) => {
-            error = e; result = r; done();
+            result = r; done(e);
           });
         });
 
         beforeEach(() => {
           return oauth2.ownerPassword.getToken(tokenOptions)
-            .then((r) => { resultPromise = r; })
-            .catch((e) => { errorPromise = e; });
+            .then((r) => { resultPromise = r; });
         });
 
         it('makes the HTTP request', () => {
@@ -174,14 +170,13 @@ describe('owner password gran type', () => {
 
       beforeEach((done) => {
         oauth2.ownerPassword.getToken(tokenOptions, (e, r) => {
-          error = e; result = r; done();
+          result = r; done(e);
         });
       });
 
       beforeEach(() => {
         return oauth2.ownerPassword.getToken(tokenOptions)
-          .then((r) => { resultPromise = r; })
-          .catch((e) => { errorPromise = e; });
+          .then((r) => { resultPromise = r; });
       });
 
       it('makes the HTTP request', () => {

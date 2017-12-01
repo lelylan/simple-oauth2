@@ -5,6 +5,7 @@ const qs = require('querystring');
 const nock = require('nock');
 const chai = require('chai');
 const oauth2Module = require('./../index');
+const expectedAccessToken = require('./fixtures/access_token');
 
 const expect = chai.expect;
 const baseConfig = require('./fixtures/module-config');
@@ -13,8 +14,6 @@ describe('authorization code grant type', () => {
   let request;
   let result;
   let resultPromise;
-  let error;
-  let errorPromise;
 
   describe('when computing an authorization url', () => {
     const authorizeConfig = {
@@ -91,56 +90,194 @@ describe('authorization code grant type', () => {
   });
 
   describe('when requesting an access token', () => {
-    let oauth2;
-    const tokenParams = {
-      code: 'code',
-      redirect_uri: 'http://callback.com',
-    };
+    describe('with body credentials', () => {
+      describe('with format json', () => {
+        let oauth2;
+        const tokenParams = {
+          code: 'code',
+          redirect_uri: 'http://callback.com',
+        };
 
-    const oauthParams = {
-      code: 'code',
-      redirect_uri: 'http://callback.com',
-      grant_type: 'authorization_code',
-      client_id: 'client-id',
-      client_secret: 'client-secret',
-    };
+        const tokenRequestParams = {
+          code: 'code',
+          redirect_uri: 'http://callback.com',
+          grant_type: 'authorization_code',
+          client_id: 'client-id',
+          client_secret: 'client-secret',
+        };
 
-    beforeEach(() => {
-      const options = {
-        reqheaders: {
-          Accept: 'application/json',
-          Authorization: 'Basic Y2xpZW50LWlkOmNsaWVudC1zZWNyZXQ=',
-        },
-      };
+        before(() => {
+          const config = Object.assign({}, baseConfig, {
+            options: {
+              useBodyAuth: true,
+              bodyFormat: 'json',
+              useBasicAuthorizationHeader: false,
+            },
+          });
 
-      oauth2 = oauth2Module.create(baseConfig);
+          oauth2 = oauth2Module.create(config);
+        });
 
-      request = nock('https://authorization-server.org', options)
-        .post('/oauth/token', qs.stringify(oauthParams))
-        .times(2)
-        .replyWithFile(200, path.join(__dirname, '/fixtures/access_token.json'));
-    });
+        beforeEach(() => {
+          const options = {
+            reqheaders: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+            },
+          };
 
-    beforeEach((done) => {
-      oauth2.authorizationCode.getToken(tokenParams, (e, r) => {
-        error = e; result = r; done();
+          request = nock('https://authorization-server.org', options)
+            .post('/oauth/token', tokenRequestParams)
+            .times(2)
+            .reply(200, expectedAccessToken);
+        });
+
+        beforeEach((done) => {
+          oauth2.authorizationCode.getToken(tokenParams, (e, r) => {
+            result = r; done(e);
+          });
+        });
+
+        beforeEach(() => {
+          return oauth2.authorizationCode
+            .getToken(tokenParams)
+            .then((r) => { resultPromise = r; });
+        });
+
+        it('makes the HTTP request', () => {
+          request.done();
+        });
+
+        it('returns an access token as result of the token request', () => {
+          expect(result).to.be.deep.equal(expectedAccessToken);
+          expect(resultPromise).to.be.deep.equal(expectedAccessToken);
+        });
+      });
+
+      describe('with format form', () => {
+        let oauth2;
+        const tokenParams = {
+          code: 'code',
+          redirect_uri: 'http://callback.com',
+        };
+
+        const tokenRequestParams = {
+          code: 'code',
+          redirect_uri: 'http://callback.com',
+          grant_type: 'authorization_code',
+          client_id: 'client-id',
+          client_secret: 'client-secret',
+        };
+
+        before(() => {
+          const config = Object.assign({}, baseConfig, {
+            options: {
+              useBodyAuth: true,
+              bodyFormat: 'form',
+              useBasicAuthorizationHeader: false,
+            },
+          });
+
+          oauth2 = oauth2Module.create(config);
+        });
+
+        beforeEach(() => {
+          const options = {
+            reqheaders: {
+              Accept: 'application/json',
+              'Content-Type': 'application/x-www-form-urlencoded',
+            },
+          };
+
+          request = nock('https://authorization-server.org', options)
+            .post('/oauth/token', qs.stringify(tokenRequestParams))
+            .times(2)
+            .reply(200, expectedAccessToken);
+        });
+
+        beforeEach((done) => {
+          oauth2.authorizationCode.getToken(tokenParams, (e, r) => {
+            result = r; done(e);
+          });
+        });
+
+        beforeEach(() => {
+          return oauth2.authorizationCode
+            .getToken(tokenParams)
+            .then((r) => { resultPromise = r; });
+        });
+
+        it('makes the HTTP request', () => {
+          request.done();
+        });
+
+        it('returns an access token as result of the token request', () => {
+          expect(result).to.be.deep.equal(expectedAccessToken);
+          expect(resultPromise).to.be.deep.equal(expectedAccessToken);
+        });
       });
     });
 
-    beforeEach(() => {
-      return oauth2.authorizationCode
-        .getToken(tokenParams)
-        .then((r) => { resultPromise = r; })
-        .catch((e) => { errorPromise = e; });
-    });
+    describe('with header credentials', () => {
+      let oauth2;
+      const tokenParams = {
+        code: 'code',
+        redirect_uri: 'http://callback.com',
+      };
 
-    it('makes the HTTP request', () => {
-      request.done();
-    });
+      const tokenRequestParams = {
+        code: 'code',
+        redirect_uri: 'http://callback.com',
+        grant_type: 'authorization_code',
+        client_id: 'client-id',
+        client_secret: 'client-secret',
+      };
 
-    it('returns an access token as result of the token request', () => {
-      expect(result).to.have.property('access_token');
-      expect(resultPromise).to.have.property('access_token');
+      before(() => {
+        const config = Object.assign({}, baseConfig, {
+          options: {
+            useBodyAuth: false,
+            useBasicAuthorizationHeader: true,
+          },
+        });
+
+        oauth2 = oauth2Module.create(config);
+      });
+
+      beforeEach(() => {
+        const options = {
+          reqheaders: {
+            Accept: 'application/json',
+            Authorization: 'Basic Y2xpZW50LWlkOmNsaWVudC1zZWNyZXQ=',
+          },
+        };
+
+        request = nock('https://authorization-server.org', options)
+          .post('/oauth/token')
+          .times(2)
+          .reply(200, expectedAccessToken);
+      });
+
+      beforeEach((done) => {
+        oauth2.authorizationCode.getToken(tokenParams, (e, r) => {
+          result = r; done(e);
+        });
+      });
+
+      beforeEach(() => {
+        return oauth2.authorizationCode
+          .getToken(tokenParams)
+          .then((r) => { resultPromise = r; });
+      });
+
+      it('makes the HTTP request', () => {
+        request.done();
+      });
+
+      it('returns an access token as result of the token request', () => {
+        expect(result).to.be.deep.equal(expectedAccessToken);
+        expect(resultPromise).to.be.deep.equal(expectedAccessToken);
+      });
     });
   });
 });
