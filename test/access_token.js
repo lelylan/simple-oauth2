@@ -209,17 +209,11 @@ describe('access token request', () => {
     });
 
     beforeEach((done) => {
-      result = null;
-      token.revoke('refresh_token', (e) => {
-        done(e);
-      });
+      token.revoke('refresh_token', done);
     });
 
     beforeEach(() => {
-      resultPromise = null;
-
-      return tokenPromise.revoke('refresh_token')
-        .then((r) => { resultPromise = r; });
+      return tokenPromise.revoke('refresh_token');
     });
 
     it('make HTTP call', () => {
