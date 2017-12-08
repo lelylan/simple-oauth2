@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.5.0
+* Update debug dependency
+* Add support to encode the authorization headers
+
 ## v1.4.0
 * Update dependencies
 * Add Node 8 to test matrix
