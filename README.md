@@ -1,8 +1,8 @@
+# Simple OAuth2
+
 [![NPM Package Version](https://img.shields.io/npm/v/simple-oauth2.svg?style=flat-square)](https://www.npmjs.com/package/simple-oauth2)
 [![Build Status](https://img.shields.io/travis/lelylan/simple-oauth2.svg?style=flat-square)](https://travis-ci.org/lelylan/simple-oauth2)
 [![Dependency Status](https://img.shields.io/david/lelylan/simple-oauth2.svg?style=flat-square)](https://david-dm.org/lelylan/simple-oauth2)
-
-# Simple OAuth2
 
 Node.js client library for [OAuth2](http://oauth.net/2/) (this library supports both callbacks or promises for async flow).
 
