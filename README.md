@@ -22,7 +22,6 @@ Simple OAuth 2.0 come to life thanks to the work I've made in Lelylan, an open s
 <a href="https://github.com/lelylan/lelylan">
 <img src="https://raw.githubusercontent.com/lelylan/lelylan/master/public/logo-lelylan.png" data-canonical-src="https://raw.githubusercontent.com/lelylan/lelylan/master/public/logo-lelylan.png" width="300"/></a>
 
-
 ## Table of Contents
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
@@ -50,6 +49,7 @@ Simple OAuth 2.0 come to life thanks to the work I've made in Lelylan, an open s
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## Requirements
+
 Node client library is tested against the latest minor Node versions: 4, 5 and 6.
 
 To use in older node version, please use [simple-oauth2@0.x](https://github.com/lelylan/simple-oauth2/tree/v0.8.0).
@@ -57,13 +57,15 @@ To use in older node version, please use [simple-oauth2@0.x](https://github.com/
 ## Getting started
 
 ### Installation
+
 Install the client library using [npm](http://npmjs.org/):
 
-  ```bash
-    $ npm install --save simple-oauth2
-  ```
+```bash
+npm install --save simple-oauth2
+```
 
 ### Options
+
 Simple OAuth2 accepts an object with the following valid params.
 
 * `client` - required object with the following properties:
@@ -104,9 +106,11 @@ const oauth2 = require('simple-oauth2').create(credentials);
 ```
 
 ### Example of Usage
+
 See the [example folder](./example).
 
 ## OAuth2 Supported flows
+
 ### Authorization Code flow
 
 The Authorization Code flow is made up from two parts. At first your application asks to
@@ -223,6 +227,7 @@ oauth2.clientCredentials
 ```
 
 ## Helpers
+
 ### Access Token object
 
 When a token expires we need to refresh it. Simple OAuth2 offers the
@@ -321,18 +326,17 @@ accessToken.revoke('access_token')
 
 ### Errors
 
-Exceptions are raised when a 4xx or 5xx status code is returned.
+Errors are returned when a 4xx or 5xx status code is received.
 
-    HTTPError
+    BoomError
 
-Through the error message attribute you can access the JSON representation
-based on HTTP `status` and error `message`.
+As a standard [boom](https://github.com/hapijs/boom) error you can access any of the boom error properties. The total amount of information varies according to the generated status code.
 
 ```javascript
 // Callbacks
 oauth2.authorizationCode.getToken({}, (error, token) => {
   if (error) {
-    return console.log(error.message);
+    return console.log(error);
   }
 });
 
@@ -340,24 +344,32 @@ oauth2.authorizationCode.getToken({}, (error, token) => {
 oauth2.authorizationCode
   .getToken({})
   .catch((error) => {
-    console.log(error.message);
+    console.log(error);
   });
 
-// => { "status": "401", "message": "Unauthorized" }
+// => {
+//     "statusCode": 401,
+//     "error": "Unauthorized",
+//     "message": "invalid password"
+// }
 ```
 
 ## Contributing
+
 See [CONTRIBUTING](https://github.com/lelylan/simple-oauth2/blob/master/CONTRIBUTING.md)
 
 ## Authors
+
 [Andrea Reginato](http://twitter.com/lelylan)
 
 ### Contributors
+
 Special thanks to the following people for submitting patches.
 
 * [Jonathan Samines](http://twitter.com/jonathansamines)
 
 ## Changelog
+
 See [CHANGELOG](https://github.com/lelylan/simple-oauth2/blob/master/CHANGELOG.md)
 
 ## License
