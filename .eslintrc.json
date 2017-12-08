@@ -5,6 +5,7 @@
   },
   "rules": {
     "no-param-reassign": "off",
+    "arrow-body-style": "off",
     "comma-dangle": ["error", {
       "arrays": "always-multiline",
       "objects": "always-multiline",

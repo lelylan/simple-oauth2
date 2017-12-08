@@ -10,8 +10,7 @@ const isValid = require('date-fns/is_valid');
 const isEqual = require('date-fns/is_equal');
 
 const expect = chai.expect;
-const oauth2 = oauth2Module
-  .create(require('./fixtures/oauth-options'));
+const oauth2 = oauth2Module.create(require('./fixtures/module-config'));
 
 const tokenParams = {
   code: 'code',
@@ -20,121 +19,130 @@ const tokenParams = {
 
 const refreshConfig = require('./fixtures/refresh-token.json');
 const refreshWithAdditionalParamsConfig = require('./fixtures/refresh-token-with-params.json');
-const oauthConfig = require('./fixtures/oauth-options-code.json');
+const authorizationCodeParams = require('./fixtures/auth-code-params.json');
 const revokeConfig = require('./fixtures/revoke-token-params.json');
 
-describe('oauth2.accessToken', function () {
+describe('access token request', () => {
   let request;
   let result;
   let resultPromise;
   let token;
   let tokenPromise;
-  let error;
-  let errorPromise;
 
-  beforeEach(function () {
-    request = nock('https://example.org:443')
-      .post('/oauth/token', qs.stringify(oauthConfig))
+  beforeEach(() => {
+    const options = {
+      reqheaders: {
+        Accept: 'application/json',
+        Authorization: 'Basic dGhlK2NsaWVudCtpZDp0aGUrY2xpZW50K3NlY3JldA==',
+      },
+    };
+
+    request = nock('https://authorization-server.org:443', options)
+      .post('/oauth/token', qs.stringify(authorizationCodeParams))
       .times(2)
       .replyWithFile(200, path.join(__dirname, '/fixtures/access_token.json'));
   });
 
-  beforeEach(function (done) {
-    oauth2.authorizationCode.getToken(tokenParams, function (e, r) {
-      error = e; result = r; done();
+  beforeEach((done) => {
+    oauth2.authorizationCode.getToken(tokenParams, (e, r) => {
+      result = r; done(e);
     });
   });
 
-  beforeEach(function () {
+  beforeEach(() => {
     return oauth2.authorizationCode
       .getToken(tokenParams)
-      .then(function (r) { resultPromise = r; })
-      .catch(function (e) { errorPromise = e; });
+      .then((r) => { resultPromise = r; });
   });
 
-  beforeEach(function () {
+  beforeEach(() => {
     token = oauth2.accessToken.create(result);
     tokenPromise = oauth2.accessToken.create(resultPromise);
   });
 
-  describe('#create', function () {
-    it('creates an access token wrapper object', function () {
+  describe('#create', () => {
+    it('creates an access token wrapper object', () => {
       expect(token).to.have.property('token');
       expect(tokenPromise).to.have.property('token');
     });
   });
 
-  describe('#create with expires_at', function () {
-    it('uses the set expires_at property', function () {
+  describe('#create with expires_at', () => {
+    it('uses the set expires_at property', () => {
       token.token.expires_at = startOfYesterday();
       const expiredToken = oauth2.accessToken.create(token.token);
+
       expect(isValid(expiredToken.token.expires_at)).to.be.equal(true);
-      expect(isEqual(expiredToken.token.expires_at, token.token.expires_at))
-        .to.be.equal(true);
+      expect(isEqual(expiredToken.token.expires_at, token.token.expires_at)).to.be.equal(true);
     });
 
-    it('parses a set expires_at property', function () {
+    it('parses a set expires_at property', () => {
       const yesterday = startOfYesterday();
       token.token.expires_at = yesterday.toString();
       const expiredToken = oauth2.accessToken.create(token.token);
+
       expect(isValid(expiredToken.token.expires_at)).to.be.equal(true);
-      expect(isEqual(expiredToken.token.expires_at, token.token.expires_at))
-        .to.be.equal(true);
+      expect(isEqual(expiredToken.token.expires_at, token.token.expires_at)).to.be.equal(true);
     });
 
-    it('create its own date by default', function () {
+    it('create its own date by default', () => {
       expect(isValid(token.token.expires_at)).to.be.equal(true);
     });
   });
 
-  describe('when not expired', function () {
-    it('returns false', function () {
+  describe('when not expired', () => {
+    it('returns false', () => {
       expect(token.expired()).to.be.equal(false);
       expect(tokenPromise.expired()).to.be.equal(false);
     });
   });
 
-  describe('when expired', function () {
-    beforeEach(function () {
+  describe('when expired', () => {
+    beforeEach(() => {
       token.token.expires_at = startOfYesterday();
       tokenPromise.token.expires_at = startOfYesterday();
     });
 
-    it('returns false', function () {
+    it('returns false', () => {
       expect(token.expired()).to.be.equal(true);
       expect(tokenPromise.expired()).to.be.equal(true);
     });
   });
 
-  describe('when refreshes token', function () {
-    beforeEach(function () {
-      request = nock('https://example.org:443')
+  describe('when refreshes token', () => {
+    beforeEach(() => {
+      const options = {
+        reqheaders: {
+          Accept: 'application/json',
+          Authorization: 'Basic dGhlK2NsaWVudCtpZDp0aGUrY2xpZW50K3NlY3JldA==',
+        },
+      };
+
+      request = nock('https://authorization-server.org:443', options)
         .post('/oauth/token', qs.stringify(refreshConfig))
         .times(2)
         .replyWithFile(200, path.join(__dirname, '/fixtures/access_token.json'));
     });
 
-    beforeEach(function (done) {
+    beforeEach((done) => {
       result = null;
-      token.refresh(function (e, r) {
-        error = e; result = r; done();
+      token.refresh((e, r) => {
+        result = r; done(e);
       });
     });
 
-    beforeEach(function () {
+    beforeEach(() => {
       resultPromise = null;
-      errorPromise = null;
 
       return token.refresh()
-        .then(function (r) { resultPromise = r; })
-        .catch(function (e) { errorPromise = e; });
+        .then((r) => { resultPromise = r; });
     });
 
-    it('makes the HTTP request', function () {
+    it('makes the HTTP request', () => {
       expect(request.isDone()).to.be.equal(true);
     });
 
-    it('returns a new oauth2.accessToken as a result of the token refresh', function () {
+    it('returns a new oauth2.accessToken as a result of the token refresh', () => {
       expect(result).to.not.be.equal(global);
       expect(result.token).to.have.property('access_token');
       expect(resultPromise).to.not.be.equal(global);
@@ -142,69 +150,73 @@ describe('oauth2.accessToken', function () {
     });
   });
 
-  describe('when refreshes token with additional params', function () {
-    beforeEach(function () {
-      request = nock('https://example.org:443')
+  describe('when refreshes token with additional params', () => {
+    beforeEach(() => {
+      const options = {
+        reqheaders: {
+          Accept: 'application/json',
+          Authorization: 'Basic dGhlK2NsaWVudCtpZDp0aGUrY2xpZW50K3NlY3JldA==',
+        },
+      };
+
+      request = nock('https://authorization-server.org:443', options)
         .post('/oauth/token', qs.stringify(refreshWithAdditionalParamsConfig))
         .times(2)
         .replyWithFile(200, path.join(__dirname, '/fixtures/access_token.json'));
     });
 
-    beforeEach(function (done) {
+    beforeEach((done) => {
       result = null;
-      token.refresh({ scope: 'TESTING_EXAMPLE_SCOPES' }, function (e, r) {
-        error = e; result = r; done();
+      token.refresh({ scope: 'TESTING_EXAMPLE_SCOPES' }, (e, r) => {
+        result = r; done(e);
       });
     });
 
-    beforeEach(function () {
+    beforeEach(() => {
       resultPromise = null;
-      errorPromise = null;
 
       return token.refresh({ scope: 'TESTING_EXAMPLE_SCOPES' })
-        .then(function (r) { resultPromise = r; })
-        .catch(function (e) { errorPromise = e; });
+        .then((r) => { resultPromise = r; });
     });
 
-    it('makes the HTTP request', function () {
+    it('makes the HTTP request', () => {
       expect(request.isDone()).to.be.equal(true);
     });
 
-    it('returns a new oauth2.accessToken as result of callback api', function () {
+    it('returns a new oauth2.accessToken as result of callback api', () => {
       expect(result.token).to.have.property('access_token');
     });
 
-    it('returns a new oauth2.accessToken as a result of the token refresh', function () {
+    it('returns a new oauth2.accessToken as a result of the token refresh', () => {
       expect(result.token).to.have.property('access_token');
       expect(resultPromise.token).to.have.property('access_token');
     });
   });
 
-  describe('#revoke', function () {
-    beforeEach(function () {
-      request = nock('https://example.org:443')
+  describe('#revoke', () => {
+    beforeEach(() => {
+      const options = {
+        reqheaders: {
+          Accept: 'application/json',
+          Authorization: 'Basic dGhlK2NsaWVudCtpZDp0aGUrY2xpZW50K3NlY3JldA==',
+        },
+      };
+
+      request = nock('https://authorization-server.org:443', options)
         .post('/oauth/revoke', qs.stringify(revokeConfig))
         .times(2)
         .reply(200);
     });
 
-    beforeEach(function (done) {
-      result = null;
-      token.revoke('refresh_token', function (e) {
-        error = e; done();
-      });
+    beforeEach((done) => {
+      token.revoke('refresh_token', done);
     });
 
-    beforeEach(function () {
-      resultPromise = null;
-      errorPromise = null;
-
-      return tokenPromise.revoke('refresh_token')
-        .then(function (r) { resultPromise = r; })
-        .catch(function (e) { errorPromise = e; });
+    beforeEach(() => {
+      return tokenPromise.revoke('refresh_token');
     });
 
-    it('make HTTP call', function () {
+    it('make HTTP call', () => {
       expect(request.isDone()).to.be.equal(true);
     });
   });
