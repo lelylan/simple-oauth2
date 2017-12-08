@@ -69,25 +69,25 @@ npm install --save simple-oauth2
 Simple OAuth2 accepts an object with the following valid params.
 
 * `client` - required object with the following properties:
-  - `id` - Service registered client id. Required.
-  - `secret` - Service registered client secret. Required.
-  - `secretParamName` - Parameter name used to send the client secret. Default to **client_secret**.
-  - `idParamName` - Parameter name used to send the client id. Default to **client_id**.
+  * `id` - Service registered client id. Required.
+  * `secret` - Service registered client secret. Required.
+  * `secretParamName` - Parameter name used to send the client secret. Default to **client_secret**.
+  * `idParamName` - Parameter name used to send the client id. Default to **client_id**.
 
 * `auth` - required object with the following properties.
-  - `tokenHost` - String used to set the host to request the tokens to. Required.
-  - `tokenPath` - String path to request an access token. Default to **/oauth/token**.
-  - `revokePath` - String path to revoke an access token. Default to **/oauth/revoke**.
-  - `authorizeHost` - String used to set the host to request an "authorization code". Default to the value set on `auth.tokenHost`.
-  - `authorizePath` - String path to request an authorization code. Default to **/oauth/authorize**.
+  * `tokenHost` - String used to set the host to request the tokens to. Required.
+  * `tokenPath` - String path to request an access token. Default to **/oauth/token**.
+  * `revokePath` - String path to revoke an access token. Default to **/oauth/revoke**.
+  * `authorizeHost` - String used to set the host to request an "authorization code". Default to the value set on `auth.tokenHost`.
+  * `authorizePath` - String path to request an authorization code. Default to **/oauth/authorize**.
 
 * `http` optional object used to set global options to the internal http library (request-js).
-  - Any key is allowed here. Default to `headers.Accept = application/json`.
+  * Any key is allowed here. Default to `headers.Accept = application/json`.
 
 * `options` optional object to setup the module.
-  - `bodyFormat` - Format of data sent in the request body. Valid values are `form` or `json`. Defaults to **form**.
-  - `useBodyAuth` - Whether or not the client.id/client.secret params are sent in the request body. Defaults to **true**.
-  - `useBasicAuthorizationHeader` - Whether or not the Basic Authorization header should be sent at the token request. Defaults to **true**.
+  * `bodyFormat` - Format of data sent in the request body. Valid values are `form` or `json`. Defaults to **form**.
+  * `useBodyAuth` - Whether or not the client.id/client.secret params are sent in the request body. Defaults to **true**.
+  * `useBasicAuthorizationHeader` - Whether or not the Basic Authorization header should be sent at the token request. Defaults to **true**.
 
 ```javascript
 // Set the configuration settings
@@ -171,7 +171,7 @@ const oauth2 = require('simple-oauth2').create(credentials);
 // Get the access token object.
 const tokenConfig = {
   username: 'username',
-  password: 'password' 
+  password: 'password'
 };
 
 // Callbacks
