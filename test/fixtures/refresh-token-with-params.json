@@ -2,6 +2,6 @@
   "scope": "TESTING_EXAMPLE_SCOPES",
   "grant_type": "refresh_token",
   "refresh_token": "8D175C5F-AE24-4333-8795-332B3BDA8FE3",
-  "client_id": "client-id",
-  "client_secret": "client-secret"
+  "client_id": "the client id",
+  "client_secret": "the client secret"
 }

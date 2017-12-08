@@ -33,7 +33,7 @@ describe('access token request', () => {
     const options = {
       reqheaders: {
         Accept: 'application/json',
-        Authorization: 'Basic Y2xpZW50LWlkOmNsaWVudC1zZWNyZXQ=',
+        Authorization: 'Basic dGhlK2NsaWVudCtpZDp0aGUrY2xpZW50K3NlY3JldA==',
       },
     };
 
@@ -114,7 +114,7 @@ describe('access token request', () => {
       const options = {
         reqheaders: {
           Accept: 'application/json',
-          Authorization: 'Basic Y2xpZW50LWlkOmNsaWVudC1zZWNyZXQ=',
+          Authorization: 'Basic dGhlK2NsaWVudCtpZDp0aGUrY2xpZW50K3NlY3JldA==',
         },
       };
 
@@ -155,7 +155,7 @@ describe('access token request', () => {
       const options = {
         reqheaders: {
           Accept: 'application/json',
-          Authorization: 'Basic Y2xpZW50LWlkOmNsaWVudC1zZWNyZXQ=',
+          Authorization: 'Basic dGhlK2NsaWVudCtpZDp0aGUrY2xpZW50K3NlY3JldA==',
         },
       };
 
@@ -198,7 +198,7 @@ describe('access token request', () => {
       const options = {
         reqheaders: {
           Accept: 'application/json',
-          Authorization: 'Basic Y2xpZW50LWlkOmNsaWVudC1zZWNyZXQ=',
+          Authorization: 'Basic dGhlK2NsaWVudCtpZDp0aGUrY2xpZW50K3NlY3JldA==',
         },
       };
 

@@ -19,8 +19,8 @@ const tokenRequestParams = {
   username: 'alice',
   password: 'secret',
   grant_type: 'password',
-  client_id: 'client-id',
-  client_secret: 'client-secret',
+  client_id: 'the client id',
+  client_secret: 'the client secret',
 };
 
 describe('owner password gran type', () => {
@@ -140,8 +140,6 @@ describe('owner password gran type', () => {
       let request;
       let result;
       let resultPromise;
-      let error;
-      let errorPromise;
 
       before(() => {
         const config = Object.assign({}, baseConfig, {
@@ -158,7 +156,7 @@ describe('owner password gran type', () => {
         const options = {
           reqheaders: {
             Accept: 'application/json',
-            Authorization: 'Basic Y2xpZW50LWlkOmNsaWVudC1zZWNyZXQ=',
+            Authorization: 'Basic dGhlK2NsaWVudCtpZDp0aGUrY2xpZW50K3NlY3JldA==',
           },
         };
 

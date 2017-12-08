@@ -43,8 +43,8 @@ describe('client credentials grant type', () => {
           request = nock('https://authorization-server.org:443', options)
             .post('/oauth/token', {
               grant_type: 'client_credentials',
-              client_id: 'client-id',
-              client_secret: 'client-secret',
+              client_id: 'the client id',
+              client_secret: 'the client secret',
             })
             .times(2)
             .reply(200, expectedAccessToken);
@@ -96,8 +96,8 @@ describe('client credentials grant type', () => {
           request = nock('https://authorization-server.org:443', options)
             .post('/oauth/token', qs.stringify({
               grant_type: 'client_credentials',
-              client_id: 'client-id',
-              client_secret: 'client-secret',
+              client_id: 'the client id',
+              client_secret: 'the client secret',
             }))
             .times(2)
             .reply(200, expectedAccessToken);
@@ -142,7 +142,7 @@ describe('client credentials grant type', () => {
         const options = {
           reqheaders: {
             Accept: 'application/json',
-            Authorization: 'Basic Y2xpZW50LWlkOmNsaWVudC1zZWNyZXQ=',
+            Authorization: 'Basic dGhlK2NsaWVudCtpZDp0aGUrY2xpZW50K3NlY3JldA==',
           },
         };
 

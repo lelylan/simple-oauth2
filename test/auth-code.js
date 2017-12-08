@@ -26,7 +26,7 @@ describe('authorization code grant type', () => {
       it('returns the authorization URI', () => {
         const oauth2 = oauth2Module.create(baseConfig);
         const authorizationURL = oauth2.authorizationCode.authorizeURL(authorizeConfig);
-        const expectedAuthorizationURL = `https://authorization-server.org/oauth/authorize?response_type=code&client_id=client-id&redirect_uri=${encodeURIComponent('http://localhost:3000/callback')}&scope=user&state=02afe928b`;
+        const expectedAuthorizationURL = `https://authorization-server.org/oauth/authorize?response_type=code&client_id=the%20client%20id&redirect_uri=${encodeURIComponent('http://localhost:3000/callback')}&scope=user&state=02afe928b`;
 
         expect(authorizationURL).to.be.equal(expectedAuthorizationURL);
       });
@@ -102,8 +102,8 @@ describe('authorization code grant type', () => {
           code: 'code',
           redirect_uri: 'http://callback.com',
           grant_type: 'authorization_code',
-          client_id: 'client-id',
-          client_secret: 'client-secret',
+          client_id: 'the client id',
+          client_secret: 'the client secret',
         };
 
         before(() => {
@@ -165,8 +165,8 @@ describe('authorization code grant type', () => {
           code: 'code',
           redirect_uri: 'http://callback.com',
           grant_type: 'authorization_code',
-          client_id: 'client-id',
-          client_secret: 'client-secret',
+          client_id: 'the client id',
+          client_secret: 'the client secret',
         };
 
         before(() => {
@@ -229,8 +229,6 @@ describe('authorization code grant type', () => {
         code: 'code',
         redirect_uri: 'http://callback.com',
         grant_type: 'authorization_code',
-        client_id: 'client-id',
-        client_secret: 'client-secret',
       };
 
       before(() => {
@@ -248,12 +246,12 @@ describe('authorization code grant type', () => {
         const options = {
           reqheaders: {
             Accept: 'application/json',
-            Authorization: 'Basic Y2xpZW50LWlkOmNsaWVudC1zZWNyZXQ=',
+            Authorization: 'Basic dGhlK2NsaWVudCtpZDp0aGUrY2xpZW50K3NlY3JldA==',
           },
         };
 
         request = nock('https://authorization-server.org', options)
-          .post('/oauth/token')
+          .post('/oauth/token', tokenRequestParams)
           .times(2)
           .reply(200, expectedAccessToken);
       });
