@@ -1,0 +1,9 @@
+{
+  "client": {
+    "id": "the client id",
+    "secret": "the client secret"
+  },
+  "auth": {
+    "tokenHost": "https://authorization-server.org"
+  }
+}

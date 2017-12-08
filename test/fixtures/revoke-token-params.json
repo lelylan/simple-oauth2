@@ -1,6 +1,6 @@
 {
-  "token": "ec1a59d298",
+  "token": "8D175C5F-AE24-4333-8795-332B3BDA8FE3",
   "token_type_hint": "refresh_token",
-  "client_id": "client-id",
-  "client_secret": "client-secret"
+  "client_id": "the client id",
+  "client_secret": "the client secret"
 }
