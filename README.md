@@ -85,7 +85,7 @@ Simple OAuth2 accepts an object with the following valid params.
 * `options` optional object to setup the module.
   - `bodyFormat` - Format of data sent in the request body. Valid values are `form` or `json`. Defaults to **form**.
   - `useBodyAuth` - Whether or not the client.id/client.secret params are sent in the request body. Defaults to **true**.
-  - `useBasicAuthorizationHeader` - Whether or not the Basic Authorization header should be sent at the token request.
+  - `useBasicAuthorizationHeader` - Whether or not the Basic Authorization header should be sent at the token request. Defaults to **true**.
 
 ```javascript
 // Set the configuration settings
