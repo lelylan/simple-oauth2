@@ -1,8 +1,8 @@
-# Simple OAuth2
-
 [![NPM Package Version](https://img.shields.io/npm/v/simple-oauth2.svg?style=flat-square)](https://www.npmjs.com/package/simple-oauth2)
 [![Build Status](https://img.shields.io/travis/lelylan/simple-oauth2.svg?style=flat-square)](https://travis-ci.org/lelylan/simple-oauth2)
 [![Dependency Status](https://img.shields.io/david/lelylan/simple-oauth2.svg?style=flat-square)](https://david-dm.org/lelylan/simple-oauth2)
+
+# Simple OAuth2
 
 Node.js client library for [OAuth2](http://oauth.net/2/) (this library supports both callbacks or promises for async flow).
 
@@ -21,6 +21,7 @@ Simple OAuth 2.0 come to life thanks to the work I've made in Lelylan, an open s
 
 <a href="https://github.com/lelylan/lelylan">
 <img src="https://raw.githubusercontent.com/lelylan/lelylan/master/public/logo-lelylan.png" data-canonical-src="https://raw.githubusercontent.com/lelylan/lelylan/master/public/logo-lelylan.png" width="300"/></a>
+
 
 ## Table of Contents
 
@@ -49,7 +50,6 @@ Simple OAuth 2.0 come to life thanks to the work I've made in Lelylan, an open s
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## Requirements
-
 Node client library is tested against the latest minor Node versions: 4, 5 and 6.
 
 To use in older node version, please use [simple-oauth2@0.x](https://github.com/lelylan/simple-oauth2/tree/v0.8.0).
@@ -57,37 +57,35 @@ To use in older node version, please use [simple-oauth2@0.x](https://github.com/
 ## Getting started
 
 ### Installation
-
 Install the client library using [npm](http://npmjs.org/):
 
-```bash
-npm install --save simple-oauth2
-```
+  ```bash
+    $ npm install --save simple-oauth2
+  ```
 
 ### Options
-
 Simple OAuth2 accepts an object with the following valid params.
 
 * `client` - required object with the following properties:
-  * `id` - Service registered client id. Required.
-  * `secret` - Service registered client secret. Required.
-  * `secretParamName` - Parameter name used to send the client secret. Default to **client_secret**.
-  * `idParamName` - Parameter name used to send the client id. Default to **client_id**.
+  - `id` - Service registered client id. Required.
+  - `secret` - Service registered client secret. Required.
+  - `secretParamName` - Parameter name used to send the client secret. Default to **client_secret**.
+  - `idParamName` - Parameter name used to send the client id. Default to **client_id**.
 
 * `auth` - required object with the following properties.
-  * `tokenHost` - String used to set the host to request the tokens to. Required.
-  * `tokenPath` - String path to request an access token. Default to **/oauth/token**.
-  * `revokePath` - String path to revoke an access token. Default to **/oauth/revoke**.
-  * `authorizeHost` - String used to set the host to request an "authorization code". Default to the value set on `auth.tokenHost`.
-  * `authorizePath` - String path to request an authorization code. Default to **/oauth/authorize**.
+  - `tokenHost` - String used to set the host to request the tokens to. Required.
+  - `tokenPath` - String path to request an access token. Default to **/oauth/token**.
+  - `revokePath` - String path to revoke an access token. Default to **/oauth/revoke**.
+  - `authorizeHost` - String used to set the host to request an "authorization code". Default to the value set on `auth.tokenHost`.
+  - `authorizePath` - String path to request an authorization code. Default to **/oauth/authorize**.
 
-* `http` optional object used to set global options to the internal http library ([wreck](https://github.com/hapijs/wreck)).
-  * All options except **baseUrl** are allowed. Default to `headers.Accept = application/json`.
+* `http` optional object used to set global options to the internal http library (request-js).
+  - Any key is allowed here. Default to `headers.Accept = application/json`.
 
 * `options` optional object to setup the module.
-  * `bodyFormat` - Format of data sent in the request body. Valid values are `form` or `json`. Defaults to **form**.
-  * `useBodyAuth` - Whether or not the client.id/client.secret params are sent in the request body. Defaults to **true**.
-  * `useBasicAuthorizationHeader` - Whether or not the Basic Authorization header should be sent at the token request. Defaults to **true**.
+  - `bodyFormat` - Format of data sent in the request body. Valid values are `form` or `json`. Defaults to **form**.
+  - `useBodyAuth` - Whether or not the client.id/client.secret params are sent in the request body. Defaults to **true**.
+  - `useBasicAuthorizationHeader` - Whether or not the Basic Authorization header should be sent at the token request.
 
 ```javascript
 // Set the configuration settings
@@ -106,11 +104,9 @@ const oauth2 = require('simple-oauth2').create(credentials);
 ```
 
 ### Example of Usage
-
 See the [example folder](./example).
 
 ## OAuth2 Supported flows
-
 ### Authorization Code flow
 
 The Authorization Code flow is made up from two parts. At first your application asks to
@@ -171,7 +167,7 @@ const oauth2 = require('simple-oauth2').create(credentials);
 // Get the access token object.
 const tokenConfig = {
   username: 'username',
-  password: 'password'
+  password: 'password' 
 };
 
 // Callbacks
@@ -227,7 +223,6 @@ oauth2.clientCredentials
 ```
 
 ## Helpers
-
 ### Access Token object
 
 When a token expires we need to refresh it. Simple OAuth2 offers the
@@ -326,17 +321,18 @@ accessToken.revoke('access_token')
 
 ### Errors
 
-Errors are returned when a 4xx or 5xx status code is received.
+Exceptions are raised when a 4xx or 5xx status code is returned.
 
-    BoomError
+    HTTPError
 
-As a standard [boom](https://github.com/hapijs/boom) error you can access any of the boom error properties. The total amount of information varies according to the generated status code.
+Through the error message attribute you can access the JSON representation
+based on HTTP `status` and error `message`.
 
 ```javascript
 // Callbacks
 oauth2.authorizationCode.getToken({}, (error, token) => {
   if (error) {
-    return console.log(error);
+    return console.log(error.message);
   }
 });
 
@@ -344,32 +340,24 @@ oauth2.authorizationCode.getToken({}, (error, token) => {
 oauth2.authorizationCode
   .getToken({})
   .catch((error) => {
-    console.log(error);
+    console.log(error.message);
   });
 
-// => {
-//     "statusCode": 401,
-//     "error": "Unauthorized",
-//     "message": "invalid password"
-// }
+// => { "status": "401", "message": "Unauthorized" }
 ```
 
 ## Contributing
-
 See [CONTRIBUTING](https://github.com/lelylan/simple-oauth2/blob/master/CONTRIBUTING.md)
 
 ## Authors
-
 [Andrea Reginato](http://twitter.com/lelylan)
 
 ### Contributors
-
 Special thanks to the following people for submitting patches.
 
 * [Jonathan Samines](http://twitter.com/jonathansamines)
 
 ## Changelog
-
 See [CHANGELOG](https://github.com/lelylan/simple-oauth2/blob/master/CHANGELOG.md)
 
 ## License
