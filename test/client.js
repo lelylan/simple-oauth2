@@ -1,13 +1,11 @@
 'use strict';
 
-const path = require('path');
 const qs = require('querystring');
 const nock = require('nock');
-const chai = require('chai');
+const { expect } = require('chai');
 const oauth2Module = require('./../index');
 const expectedAccessToken = require('./fixtures/access_token');
 
-const expect = chai.expect;
 const tokenParams = {};
 const baseConfig = require('./fixtures/module-config');
 

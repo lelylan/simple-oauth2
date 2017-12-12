@@ -40,6 +40,8 @@ describe('Simple oauth2 Error', () => {
     });
 
     beforeEach(async () => {
+      result = undefined;
+
       try {
         result = await oauth2.authorizationCode.getToken(tokenParams);
       } catch (err) {
@@ -58,6 +60,7 @@ describe('Simple oauth2 Error', () => {
         statusCode: 401,
       };
 
+      expect(result).to.be.equal(undefined);
       expect(error.isBoom).to.be.equal(true);
       expect(error.output.payload).to.be.deep.equal(authorizationError);
     });
@@ -98,6 +101,7 @@ describe('Simple oauth2 Error', () => {
         statusCode: 500,
       };
 
+      expect(result).to.be.equal(undefined);
       expect(error.isBoom).to.be.equal(true);
       expect(error.output.payload).to.be.deep.equal(internalServerError);
     });

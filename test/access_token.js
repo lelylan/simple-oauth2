@@ -2,15 +2,13 @@
 
 const qs = require('querystring');
 const nock = require('nock');
-const path = require('path');
-const chai = require('chai');
+const { expect } = require('chai');
 const startOfYesterday = require('date-fns/start_of_yesterday');
 const oauth2Module = require('./../index.js');
 const isValid = require('date-fns/is_valid');
 const isEqual = require('date-fns/is_equal');
 const expectedAccessToken = require('./fixtures/access_token');
 
-const expect = chai.expect;
 const oauth2 = oauth2Module.create(require('./fixtures/module-config'));
 
 const tokenParams = {
