@@ -8,6 +8,7 @@ const startOfYesterday = require('date-fns/start_of_yesterday');
 const oauth2Module = require('./../index.js');
 const isValid = require('date-fns/is_valid');
 const isEqual = require('date-fns/is_equal');
+const expectedAccessToken = require('./fixtures/access_token');
 
 const expect = chai.expect;
 const oauth2 = oauth2Module.create(require('./fixtures/module-config'));
@@ -40,7 +41,7 @@ describe('access token request', () => {
     request = nock('https://authorization-server.org:443', options)
       .post('/oauth/token', qs.stringify(authorizationCodeParams))
       .times(2)
-      .replyWithFile(200, path.join(__dirname, '/fixtures/access_token.json'));
+      .reply(200, expectedAccessToken);
   });
 
   beforeEach((done) => {
@@ -121,7 +122,7 @@ describe('access token request', () => {
       request = nock('https://authorization-server.org:443', options)
         .post('/oauth/token', qs.stringify(refreshConfig))
         .times(2)
-        .replyWithFile(200, path.join(__dirname, '/fixtures/access_token.json'));
+        .reply(200, expectedAccessToken);
     });
 
     beforeEach((done) => {
@@ -143,9 +144,7 @@ describe('access token request', () => {
     });
 
     it('returns a new oauth2.accessToken as a result of the token refresh', () => {
-      expect(result).to.not.be.equal(global);
       expect(result.token).to.have.property('access_token');
-      expect(resultPromise).to.not.be.equal(global);
       expect(resultPromise.token).to.have.property('access_token');
     });
   });
@@ -162,7 +161,7 @@ describe('access token request', () => {
       request = nock('https://authorization-server.org:443', options)
         .post('/oauth/token', qs.stringify(refreshWithAdditionalParamsConfig))
         .times(2)
-        .replyWithFile(200, path.join(__dirname, '/fixtures/access_token.json'));
+        .reply(200, expectedAccessToken);
     });
 
     beforeEach((done) => {
