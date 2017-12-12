@@ -6,8 +6,8 @@ const simpleOauthModule = require('./../');
 const app = express();
 const oauth2 = simpleOauthModule.create({
   client: {
-    id: '<CLIENT_ID>',
-    secret: '<CLIENT_SECRET>',
+    id: 'Iv1.7f8c5f07c6e664b6',
+    secret: '157a48113ca5cedddff982a9093e99a6e3d75d06',
   },
   auth: {
     tokenHost: 'https://github.com',
@@ -30,25 +30,24 @@ app.get('/auth', (req, res) => {
 });
 
 // Callback service parsing the authorization token and asking for the access token
-app.get('/callback', (req, res) => {
+app.get('/callback', async (req, res) => {
   const code = req.query.code;
   const options = {
     code,
   };
 
-  oauth2.authorizationCode.getToken(options, (error, result) => {
-    if (error) {
-      console.error('Access Token Error', error.message);
-      return res.json('Authentication failed');
-    }
+  try {
+    const result = await oauth2.authorizationCode.getToken(options);
 
     console.log('The resulting token: ', result);
+
     const token = oauth2.accessToken.create(result);
 
-    return res
-      .status(200)
-      .json(token);
-  });
+    return res.status(200).json(token)
+  } catch(error) {
+    console.error('Access Token Error', error.message);
+    return res.status(500).json('Authentication failed');
+  }
 });
 
 app.get('/success', (req, res) => {
@@ -60,7 +59,7 @@ app.get('/', (req, res) => {
 });
 
 app.listen(3000, () => {
-  console.log('Express server started on port 3000'); // eslint-disable-line
+  console.log('Express server started on port 3000');
 });
 
 
