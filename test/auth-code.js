@@ -3,17 +3,15 @@
 const path = require('path');
 const qs = require('querystring');
 const nock = require('nock');
-const chai = require('chai');
+const { expect } = require('chai');
 const oauth2Module = require('./../index');
 const expectedAccessToken = require('./fixtures/access_token');
 
-const expect = chai.expect;
 const baseConfig = require('./fixtures/module-config');
 
 describe('authorization code grant type', () => {
   let request;
   let result;
-  let resultPromise;
 
   describe('when computing an authorization url', () => {
     const authorizeConfig = {
@@ -128,20 +126,11 @@ describe('authorization code grant type', () => {
 
           request = nock('https://authorization-server.org', options)
             .post('/oauth/token', tokenRequestParams)
-            .times(2)
             .reply(200, expectedAccessToken);
         });
 
-        beforeEach((done) => {
-          oauth2.authorizationCode.getToken(tokenParams, (e, r) => {
-            result = r; done(e);
-          });
-        });
-
-        beforeEach(() => {
-          return oauth2.authorizationCode
-            .getToken(tokenParams)
-            .then((r) => { resultPromise = r; });
+        beforeEach(async () => {
+          result = await oauth2.authorizationCode.getToken(tokenParams);
         });
 
         it('makes the HTTP request', () => {
@@ -150,7 +139,6 @@ describe('authorization code grant type', () => {
 
         it('returns an access token as result of the token request', () => {
           expect(result).to.be.deep.equal(expectedAccessToken);
-          expect(resultPromise).to.be.deep.equal(expectedAccessToken);
         });
       });
 
@@ -191,20 +179,11 @@ describe('authorization code grant type', () => {
 
           request = nock('https://authorization-server.org', options)
             .post('/oauth/token', qs.stringify(tokenRequestParams))
-            .times(2)
             .reply(200, expectedAccessToken);
         });
 
-        beforeEach((done) => {
-          oauth2.authorizationCode.getToken(tokenParams, (e, r) => {
-            result = r; done(e);
-          });
-        });
-
-        beforeEach(() => {
-          return oauth2.authorizationCode
-            .getToken(tokenParams)
-            .then((r) => { resultPromise = r; });
+        beforeEach(async () => {
+          result = await oauth2.authorizationCode.getToken(tokenParams);
         });
 
         it('makes the HTTP request', () => {
@@ -213,7 +192,6 @@ describe('authorization code grant type', () => {
 
         it('returns an access token as result of the token request', () => {
           expect(result).to.be.deep.equal(expectedAccessToken);
-          expect(resultPromise).to.be.deep.equal(expectedAccessToken);
         });
       });
     });
@@ -252,20 +230,11 @@ describe('authorization code grant type', () => {
 
         request = nock('https://authorization-server.org', options)
           .post('/oauth/token', tokenRequestParams)
-          .times(2)
           .reply(200, expectedAccessToken);
       });
 
-      beforeEach((done) => {
-        oauth2.authorizationCode.getToken(tokenParams, (e, r) => {
-          result = r; done(e);
-        });
-      });
-
-      beforeEach(() => {
-        return oauth2.authorizationCode
-          .getToken(tokenParams)
-          .then((r) => { resultPromise = r; });
+      beforeEach(async () => {
+        result = await oauth2.authorizationCode.getToken(tokenParams);
       });
 
       it('makes the HTTP request', () => {
@@ -274,7 +243,6 @@ describe('authorization code grant type', () => {
 
       it('returns an access token as result of the token request', () => {
         expect(result).to.be.deep.equal(expectedAccessToken);
-        expect(resultPromise).to.be.deep.equal(expectedAccessToken);
       });
     });
   });

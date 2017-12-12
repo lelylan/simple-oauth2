@@ -30,7 +30,6 @@ describe('owner password gran type', () => {
         let oauth2;
         let request;
         let result;
-        let resultPromise;
 
         before(() => {
           const config = Object.assign({}, baseConfig, {
@@ -54,19 +53,11 @@ describe('owner password gran type', () => {
 
           request = nock('https://authorization-server.org:443', options)
             .post('/oauth/token', tokenRequestParams)
-            .times(2)
             .reply(200, expectedAccessToken);
         });
 
-        beforeEach((done) => {
-          oauth2.ownerPassword.getToken(tokenOptions, (e, r) => {
-            result = r; done(e);
-          });
-        });
-
-        beforeEach(() => {
-          return oauth2.ownerPassword.getToken(tokenOptions)
-            .then((r) => { resultPromise = r; });
+        beforeEach(async () => {
+          result = await oauth2.ownerPassword.getToken(tokenOptions);
         });
 
         it('makes the HTTP request', () => {
@@ -75,7 +66,6 @@ describe('owner password gran type', () => {
 
         it('returns an access token as result of the token request', () => {
           expect(result).to.be.deep.equal(expectedAccessToken);
-          expect(resultPromise).to.be.deep.equal(expectedAccessToken);
         });
       });
 
@@ -109,28 +99,19 @@ describe('owner password gran type', () => {
 
           request = nock('https://authorization-server.org:443', options)
             .post('/oauth/token', qs.stringify(tokenRequestParams))
-            .times(2)
             .reply(200, expectedAccessToken);
         });
 
-        beforeEach((done) => {
-          oauth2.ownerPassword.getToken(tokenOptions, (e, r) => {
-            result = r; done(e);
-          });
-        });
-
-        beforeEach(() => {
-          return oauth2.ownerPassword.getToken(tokenOptions)
-            .then((r) => { resultPromise = r; });
+        beforeEach(async () => {
+          result = await oauth2.ownerPassword.getToken(tokenOptions);
         });
 
         it('makes the HTTP request', () => {
-          return request.done();
+          request.done();
         });
 
         it('returns an access token as result of the token request', () => {
           expect(result).to.be.deep.equal(expectedAccessToken);
-          expect(resultPromise).to.be.deep.equal(expectedAccessToken);
         });
       });
     });
@@ -139,7 +120,6 @@ describe('owner password gran type', () => {
       let oauth2;
       let request;
       let result;
-      let resultPromise;
 
       before(() => {
         const config = Object.assign({}, baseConfig, {
@@ -162,28 +142,19 @@ describe('owner password gran type', () => {
 
         request = nock('https://authorization-server.org:443', options)
           .post('/oauth/token')
-          .times(2)
           .reply(200, expectedAccessToken);
       });
 
-      beforeEach((done) => {
-        oauth2.ownerPassword.getToken(tokenOptions, (e, r) => {
-          result = r; done(e);
-        });
-      });
-
-      beforeEach(() => {
-        return oauth2.ownerPassword.getToken(tokenOptions)
-          .then((r) => { resultPromise = r; });
+      beforeEach(async () => {
+        result = await oauth2.ownerPassword.getToken(tokenOptions);
       });
 
       it('makes the HTTP request', () => {
-        return request.done();
+        request.done();
       });
 
       it('returns an access token as result of the token request', () => {
         expect(result).to.be.deep.equal(expectedAccessToken);
-        expect(resultPromise).to.be.deep.equal(expectedAccessToken);
       });
     });
   });

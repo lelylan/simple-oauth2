@@ -2,10 +2,9 @@
 
 const qs = require('querystring');
 const nock = require('nock');
-const chai = require('chai');
-const oauth2Module = require('./../index.js');
+const { expect } = require('chai');
+const oauth2Module = require('./../index');
 
-const expect = chai.expect;
 const oauth2 = oauth2Module.create(require('./fixtures/module-config.json'));
 
 const tokenParams = {
@@ -24,9 +23,7 @@ const oauthParams = {
 describe('Simple oauth2 Error', () => {
   let request;
   let result;
-  let resultPromise;
   let error;
-  let errorPromise;
 
   describe('with status code 401', () => {
     beforeEach(() => {
@@ -39,25 +36,19 @@ describe('Simple oauth2 Error', () => {
 
       request = nock('https://authorization-server.org:443', options)
         .post('/oauth/token', qs.stringify(oauthParams))
-        .times(2)
         .reply(401);
     });
 
-    beforeEach((done) => {
-      oauth2.authorizationCode.getToken(tokenParams, (e, r) => {
-        error = e; result = r; done();
-      });
-    });
-
-    beforeEach(() => {
-      return oauth2.authorizationCode
-        .getToken(tokenParams)
-        .then((r) => { resultPromise = r; })
-        .catch((e) => { errorPromise = e; });
+    beforeEach(async () => {
+      try {
+        result = await oauth2.authorizationCode.getToken(tokenParams);
+      } catch (err) {
+        error = err;
+      }
     });
 
     it('makes the HTTP request', () => {
-      expect(request.isDone()).to.be.equal(true);
+      request.done();
     });
 
     it('returns an error object with the httpStatusCode and message as a result of the token request', () => {
@@ -69,9 +60,6 @@ describe('Simple oauth2 Error', () => {
 
       expect(error.isBoom).to.be.equal(true);
       expect(error.output.payload).to.be.deep.equal(authorizationError);
-
-      expect(errorPromise.isBoom).to.be.equal(true);
-      expect(errorPromise.output.payload).to.be.deep.equal(authorizationError);
     });
   });
 
@@ -86,27 +74,21 @@ describe('Simple oauth2 Error', () => {
 
       request = nock('https://authorization-server.org:443', options)
         .post('/oauth/token', qs.stringify(oauthParams))
-        .times(2)
         .reply(500, {
           customError: 'An amazing error has occured',
         });
     });
 
-    beforeEach((done) => {
-      oauth2.authorizationCode.getToken(tokenParams, (e, r) => {
-        error = e; result = r; done();
-      });
-    });
-
-    beforeEach(() => {
-      return oauth2.authorizationCode
-        .getToken(tokenParams)
-        .then((r) => { resultPromise = r; })
-        .catch((e) => { errorPromise = e; });
+    beforeEach(async () => {
+      try {
+        result = await oauth2.authorizationCode.getToken(tokenParams);
+      } catch (err) {
+        error = err;
+      }
     });
 
     it('makes the HTTP request', () => {
-      expect(request.isDone()).to.be.equal(true);
+      request.done();
     });
 
     it('returns an error object with the httpStatusCode and message as a result of the token request', () => {
@@ -118,9 +100,6 @@ describe('Simple oauth2 Error', () => {
 
       expect(error.isBoom).to.be.equal(true);
       expect(error.output.payload).to.be.deep.equal(internalServerError);
-
-      expect(errorPromise.isBoom).to.be.equal(true);
-      expect(errorPromise.output.payload).to.be.deep.equal(internalServerError);
     });
   });
 });
