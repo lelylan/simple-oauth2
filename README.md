@@ -81,8 +81,8 @@ Simple OAuth2 accepts an object with the following valid params.
   * `authorizeHost` - String used to set the host to request an "authorization code". Default to the value set on `auth.tokenHost`.
   * `authorizePath` - String path to request an authorization code. Default to **/oauth/authorize**.
 
-* `http` optional object used to set global options to the internal http library (request-js).
-  * Any key is allowed here. Default to `headers.Accept = application/json`.
+* `http` optional object used to set global options to the internal http library ([wreck](https://github.com/hapijs/wreck)).
+  * All options except **baseUrl** are allowed. Default to `headers.Accept = application/json`.
 
 * `options` optional object to setup the module.
   * `bodyFormat` - Format of data sent in the request body. Valid values are `form` or `json`. Defaults to **form**.
