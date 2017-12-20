@@ -3,9 +3,10 @@
 const qs = require('querystring');
 const nock = require('nock');
 const { expect } = require('chai');
+const baseConfig = require('./fixtures/module-config.json');
 const oauth2Module = require('./../index');
 
-const oauth2 = oauth2Module.create(require('./fixtures/module-config.json'));
+const oauth2 = oauth2Module.create(baseConfig);
 
 const tokenParams = {
   code: 'code',
@@ -16,30 +17,28 @@ const oauthParams = {
   code: 'code',
   redirect_uri: 'http://callback.com',
   grant_type: 'authorization_code',
-  client_id: 'the client id',
-  client_secret: 'the client secret',
 };
 
 describe('Simple oauth2 Error', () => {
-  let request;
+  let scope;
   let result;
   let error;
 
   describe('with status code 401', () => {
-    beforeEach(() => {
-      const options = {
+    before(() => {
+      const scopeOptions = {
         reqheaders: {
           Accept: 'application/json',
           Authorization: 'Basic dGhlK2NsaWVudCtpZDp0aGUrY2xpZW50K3NlY3JldA==',
         },
       };
 
-      request = nock('https://authorization-server.org:443', options)
-        .post('/oauth/token', qs.stringify(oauthParams))
+      scope = nock('https://authorization-server.org:443', scopeOptions)
+        .post('/oauth/token')
         .reply(401);
     });
 
-    beforeEach(async () => {
+    before(async () => {
       result = undefined;
 
       try {
@@ -49,11 +48,11 @@ describe('Simple oauth2 Error', () => {
       }
     });
 
-    it('makes the HTTP request', () => {
-      request.done();
+    it('performs the http request', () => {
+      scope.done();
     });
 
-    it('returns an error object with the httpStatusCode and message as a result of the token request', () => {
+    it('rejects with a boom error', () => {
       const authorizationError = {
         error: 'Unauthorized',
         message: 'Response Error: 401 null',
@@ -67,22 +66,22 @@ describe('Simple oauth2 Error', () => {
   });
 
   describe('with status code 500', () => {
-    beforeEach(() => {
-      const options = {
+    before(() => {
+      const scopeOptions = {
         reqheaders: {
           Accept: 'application/json',
           Authorization: 'Basic dGhlK2NsaWVudCtpZDp0aGUrY2xpZW50K3NlY3JldA==',
         },
       };
 
-      request = nock('https://authorization-server.org:443', options)
+      scope = nock('https://authorization-server.org:443', scopeOptions)
         .post('/oauth/token', qs.stringify(oauthParams))
         .reply(500, {
           customError: 'An amazing error has occured',
         });
     });
 
-    beforeEach(async () => {
+    before(async () => {
       try {
         result = await oauth2.authorizationCode.getToken(tokenParams);
       } catch (err) {
@@ -90,11 +89,11 @@ describe('Simple oauth2 Error', () => {
       }
     });
 
-    it('makes the HTTP request', () => {
-      request.done();
+    it('performs the http request', () => {
+      scope.done();
     });
 
-    it('returns an error object with the httpStatusCode and message as a result of the token request', () => {
+    it('rejects with a boom error', () => {
       const internalServerError = {
         error: 'Internal Server Error',
         message: 'An internal server error occurred',

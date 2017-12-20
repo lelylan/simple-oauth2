@@ -1,12 +1,11 @@
 'use strict';
 
-const qs = require('querystring');
 const nock = require('nock');
+const qs = require('querystring');
 const { expect } = require('chai');
 const oauth2Module = require('./../index');
-const expectedAccessToken = require('./fixtures/access_token');
-
 const baseConfig = require('./fixtures/module-config');
+const expectedAccessToken = require('./fixtures/access_token');
 
 const tokenOptions = {
   username: 'alice',
@@ -25,41 +24,36 @@ describe('owner password gran type', () => {
   describe('when requesting an access token', () => {
     describe('with body credentials', () => {
       describe('with json format', () => {
-        let oauth2;
-        let request;
+        let scope;
         let result;
 
         before(() => {
-          const config = Object.assign({}, baseConfig, {
-            options: {
-              bodyFormat: 'json',
-              useBodyAuth: true,
-              useBasicAuthorizationHeader: false,
-            },
-          });
-
-          oauth2 = oauth2Module.create(config);
-        });
-
-        beforeEach(() => {
-          const options = {
+          const scopeOptions = {
             reqheaders: {
               Accept: 'application/json',
               'Content-Type': 'application/json',
             },
           };
 
-          request = nock('https://authorization-server.org:443', options)
+          scope = nock('https://authorization-server.org:443', scopeOptions)
             .post('/oauth/token', tokenRequestParams)
             .reply(200, expectedAccessToken);
         });
 
-        beforeEach(async () => {
+        before(async () => {
+          const config = Object.assign({}, baseConfig, {
+            options: {
+              bodyFormat: 'json',
+              authorizationMethod: 'body',
+            },
+          });
+
+          const oauth2 = oauth2Module.create(config);
           result = await oauth2.ownerPassword.getToken(tokenOptions);
         });
 
-        it('makes the HTTP request', () => {
-          return request.done();
+        it('performs the http request', () => {
+          scope.done();
         });
 
         it('returns an access token as result of the token request', () => {
@@ -68,41 +62,36 @@ describe('owner password gran type', () => {
       });
 
       describe('with form format', () => {
-        let oauth2;
-        let request;
+        let scope;
         let result;
 
         before(() => {
-          const config = Object.assign({}, baseConfig, {
-            options: {
-              bodyFormat: 'form',
-              useBodyAuth: true,
-              useBasicAuthorizationHeader: false,
-            },
-          });
-
-          oauth2 = oauth2Module.create(config);
-        });
-
-        beforeEach(() => {
-          const options = {
+          const scopeOptions = {
             reqheaders: {
               Accept: 'application/json',
               'Content-Type': 'application/x-www-form-urlencoded',
             },
           };
 
-          request = nock('https://authorization-server.org:443', options)
+          scope = nock('https://authorization-server.org:443', scopeOptions)
             .post('/oauth/token', qs.stringify(tokenRequestParams))
             .reply(200, expectedAccessToken);
         });
 
-        beforeEach(async () => {
+        before(async () => {
+          const config = Object.assign({}, baseConfig, {
+            options: {
+              bodyFormat: 'form',
+              authorizationMethod: 'body',
+            },
+          });
+
+          const oauth2 = oauth2Module.create(config);
           result = await oauth2.ownerPassword.getToken(tokenOptions);
         });
 
-        it('makes the HTTP request', () => {
-          request.done();
+        it('performs the http request', () => {
+          scope.done();
         });
 
         it('returns an access token as result of the token request', () => {
@@ -112,40 +101,35 @@ describe('owner password gran type', () => {
     });
 
     describe('with header credentials', () => {
-      let oauth2;
-      let request;
+      let scope;
       let result;
 
       before(() => {
-        const config = Object.assign({}, baseConfig, {
-          options: {
-            useBodyAuth: false,
-            useBasicAuthorizationHeader: true,
-          },
-        });
-
-        oauth2 = oauth2Module.create(config);
-      });
-
-      beforeEach(() => {
-        const options = {
+        const scopeOptions = {
           reqheaders: {
             Accept: 'application/json',
             Authorization: 'Basic dGhlK2NsaWVudCtpZDp0aGUrY2xpZW50K3NlY3JldA==',
           },
         };
 
-        request = nock('https://authorization-server.org:443', options)
+        scope = nock('https://authorization-server.org:443', scopeOptions)
           .post('/oauth/token')
           .reply(200, expectedAccessToken);
       });
 
-      beforeEach(async () => {
+      before(async () => {
+        const config = Object.assign({}, baseConfig, {
+          options: {
+            authorizationMethod: 'header',
+          },
+        });
+
+        const oauth2 = oauth2Module.create(config);
         result = await oauth2.ownerPassword.getToken(tokenOptions);
       });
 
-      it('makes the HTTP request', () => {
-        request.done();
+      it('performs the http request', () => {
+        scope.done();
       });
 
       it('returns an access token as result of the token request', () => {

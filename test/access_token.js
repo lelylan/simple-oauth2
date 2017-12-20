@@ -3,38 +3,38 @@
 const qs = require('querystring');
 const nock = require('nock');
 const { expect } = require('chai');
-const startOfYesterday = require('date-fns/start_of_yesterday');
-const oauth2Module = require('./../index.js');
 const isValid = require('date-fns/is_valid');
 const isEqual = require('date-fns/is_equal');
+const startOfYesterday = require('date-fns/start_of_yesterday');
+const oauth2Module = require('./../index.js');
+const baseConfig = require('./fixtures/module-config');
+const revokeConfig = require('./fixtures/revoke-token-params.json');
+const refreshConfig = require('./fixtures/refresh-token.json');
 const expectedAccessToken = require('./fixtures/access_token');
+const authorizationCodeParams = require('./fixtures/auth-code-params.json');
+const refreshWithAdditionalParamsConfig = require('./fixtures/refresh-token-with-params.json');
 
-const oauth2 = oauth2Module.create(require('./fixtures/module-config'));
+const oauth2 = oauth2Module.create(baseConfig);
 
 const tokenParams = {
   code: 'code',
   redirect_uri: 'http://callback.com',
 };
 
-const refreshConfig = require('./fixtures/refresh-token.json');
-const refreshWithAdditionalParamsConfig = require('./fixtures/refresh-token-with-params.json');
-const authorizationCodeParams = require('./fixtures/auth-code-params.json');
-const revokeConfig = require('./fixtures/revoke-token-params.json');
-
 describe('access token request', () => {
-  let request;
+  let scope;
   let result;
   let token;
 
   beforeEach(() => {
-    const options = {
+    const scopeOptions = {
       reqheaders: {
         Accept: 'application/json',
         Authorization: 'Basic dGhlK2NsaWVudCtpZDp0aGUrY2xpZW50K3NlY3JldA==',
       },
     };
 
-    request = nock('https://authorization-server.org:443', options)
+    scope = nock('https://authorization-server.org:443', scopeOptions)
       .post('/oauth/token', qs.stringify(authorizationCodeParams))
       .reply(200, expectedAccessToken);
   });
@@ -91,14 +91,14 @@ describe('access token request', () => {
 
   describe('when refreshes token', () => {
     beforeEach(() => {
-      const options = {
+      const scopeOptions = {
         reqheaders: {
           Accept: 'application/json',
           Authorization: 'Basic dGhlK2NsaWVudCtpZDp0aGUrY2xpZW50K3NlY3JldA==',
         },
       };
 
-      request = nock('https://authorization-server.org:443', options)
+      scope = nock('https://authorization-server.org:443', scopeOptions)
         .post('/oauth/token', qs.stringify(refreshConfig))
         .reply(200, expectedAccessToken);
     });
@@ -107,8 +107,8 @@ describe('access token request', () => {
       result = await token.refresh();
     });
 
-    it('makes the HTTP request', () => {
-      request.done();
+    it('performs the http request', () => {
+      scope.done();
     });
 
     it('returns a new oauth2.accessToken as a result of the token refresh', () => {
@@ -118,14 +118,14 @@ describe('access token request', () => {
 
   describe('when refreshes token with additional params', () => {
     beforeEach(() => {
-      const options = {
+      const scopeOptions = {
         reqheaders: {
           Accept: 'application/json',
           Authorization: 'Basic dGhlK2NsaWVudCtpZDp0aGUrY2xpZW50K3NlY3JldA==',
         },
       };
 
-      request = nock('https://authorization-server.org:443', options)
+      scope = nock('https://authorization-server.org:443', scopeOptions)
         .post('/oauth/token', qs.stringify(refreshWithAdditionalParamsConfig))
         .reply(200, expectedAccessToken);
     });
@@ -134,8 +134,8 @@ describe('access token request', () => {
       result = await token.refresh({ scope: 'TESTING_EXAMPLE_SCOPES' });
     });
 
-    it('makes the HTTP request', () => {
-      request.done();
+    it('performs the http request', () => {
+      scope.done();
     });
 
     it('returns a new oauth2.accessToken as a result of the token refresh', () => {
@@ -144,25 +144,25 @@ describe('access token request', () => {
   });
 
   describe('#revoke', () => {
-    beforeEach(() => {
-      const options = {
+    before(() => {
+      const scopeOptions = {
         reqheaders: {
           Accept: 'application/json',
           Authorization: 'Basic dGhlK2NsaWVudCtpZDp0aGUrY2xpZW50K3NlY3JldA==',
         },
       };
 
-      request = nock('https://authorization-server.org:443', options)
+      scope = nock('https://authorization-server.org:443', scopeOptions)
         .post('/oauth/revoke', qs.stringify(revokeConfig))
         .reply(200);
     });
 
-    beforeEach(() => {
+    before(() => {
       return token.revoke('refresh_token');
     });
 
-    it('make HTTP call', () => {
-      request.done();
+    it('performs the http request', () => {
+      scope.done();
     });
   });
 });
