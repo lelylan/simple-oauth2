@@ -126,7 +126,7 @@ describe('authorization code grant type', () => {
           result = await oauth2.authorizationCode.getToken(tokenParams);
         });
 
-        it('makes the HTTP request', () => {
+        it('performs the http request', () => {
           scope.done();
         });
 
@@ -174,7 +174,7 @@ describe('authorization code grant type', () => {
           result = await oauth2.authorizationCode.getToken(tokenParams);
         });
 
-        it('makes the HTTP request', () => {
+        it('performs the http request', () => {
           scope.done();
         });
 
@@ -221,6 +221,56 @@ describe('authorization code grant type', () => {
       });
 
       it('performs the http request', () => {
+        scope.done();
+      });
+
+      it('resolves the access token', () => {
+        expect(result).to.be.deep.equal(expectedAccessToken);
+      });
+    });
+
+    describe('with additional http configuration', () => {
+      before(() => {
+        const scopeOptions = {
+          reqheaders: {
+            Accept: 'application/json',
+            Authorization: 'Basic dGhlK2NsaWVudCtpZDp0aGUrY2xpZW50K3NlY3JldA==',
+            'X-MYTHICAL-HEADER': 'mythical value',
+            'USER-AGENT': 'hello agent',
+          },
+        };
+
+        const expectedRequestParams = {
+          code: 'code',
+          redirect_uri: 'http://callback.com',
+          grant_type: 'authorization_code',
+        };
+
+        scope = nock('https://authorization-server.org', scopeOptions)
+          .post('/oauth/token', expectedRequestParams)
+          .reply(200, expectedAccessToken);
+      });
+
+      before(async () => {
+        const config = Object.assign({}, baseConfig, {
+          http: {
+            headers: {
+              'X-MYTHICAL-HEADER': 'mythical value',
+              'USER-AGENT': 'hello agent',
+            },
+          },
+        });
+
+        const tokenParams = {
+          code: 'code',
+          redirect_uri: 'http://callback.com',
+        };
+
+        const oauth2 = oauth2Module.create(config);
+        result = await oauth2.authorizationCode.getToken(tokenParams);
+      });
+
+      it('performs the http request with custom headers', () => {
         scope.done();
       });
 

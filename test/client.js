@@ -7,7 +7,9 @@ const oauth2Module = require('./../index');
 const baseConfig = require('./fixtures/module-config');
 const expectedAccessToken = require('./fixtures/access_token');
 
-const tokenParams = {};
+const tokenParams = {
+  random_param: 'random value',
+};
 
 describe('client credentials grant type', () => {
   describe('when requesting an access token', () => {
@@ -28,6 +30,7 @@ describe('client credentials grant type', () => {
             grant_type: 'client_credentials',
             client_id: 'the client id',
             client_secret: 'the client secret',
+            random_param: 'random value',
           };
 
           scope = nock('https://authorization-server.org:443', scopeOptions)
@@ -66,6 +69,7 @@ describe('client credentials grant type', () => {
           };
 
           const expectedRequestParams = {
+            random_param: 'random value',
             grant_type: 'client_credentials',
             client_id: 'the client id',
             client_secret: 'the client secret',
@@ -116,6 +120,45 @@ describe('client credentials grant type', () => {
         const config = Object.assign({}, baseConfig, {
           options: {
             authorizationMethod: 'header',
+          },
+        });
+
+        const oauth2 = oauth2Module.create(config);
+        result = await oauth2.clientCredentials.getToken(tokenParams);
+      });
+
+      it('performs the http request', () => {
+        scope.done();
+      });
+
+      it('returns an access token as result of the token request', () => {
+        expect(result).to.be.deep.equal(expectedAccessToken);
+      });
+    });
+
+    describe('with additional http configuration', () => {
+      before(() => {
+        const scopeOptions = {
+          reqheaders: {
+            Accept: 'application/json',
+            Authorization: 'Basic dGhlK2NsaWVudCtpZDp0aGUrY2xpZW50K3NlY3JldA==',
+            'X-MYTHICAL-HEADER': 'mythical value',
+            'USER-AGENT': 'hello agent',
+          },
+        };
+
+        scope = nock('https://authorization-server.org:443', scopeOptions)
+          .post('/oauth/token')
+          .reply(200, expectedAccessToken);
+      });
+
+      before(async () => {
+        const config = Object.assign({}, baseConfig, {
+          http: {
+            headers: {
+              'X-MYTHICAL-HEADER': 'mythical value',
+              'USER-AGENT': 'hello agent',
+            },
           },
         });
 
