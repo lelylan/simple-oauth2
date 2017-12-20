@@ -253,7 +253,11 @@ revoke the access token and refresh token.
 
 // Revoke both access and refresh tokens
 try {
+  // Revoke only the access token
   await accessToken.revoke('access_token')
+
+  // Session ended. But the refresh_token is still valid.
+  // Revoke the refresh token
   await accessToken.revoke('refresh_token');
 } catch (error) {
   console.log('Error revoking token: ', error.message);
