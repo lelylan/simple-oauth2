@@ -1,32 +1,47 @@
 # Changelog
 
+## Next
+
+* Replace internal request library to wreck
+* Replace bluebird with native promise implementation
+* Replace callback interface with async/await
+
 ## v1.5.0
+
 * Update debug dependency
 * Add support to encode the authorization headers
 
 ## v1.4.0
+
 * Update dependencies
 * Add Node 8 to test matrix
 
 ## v1.3.0
+
 * Add support for custom idParamName in authCode.authorizeURL() method
 
 ## v1.2.0
+
 * Upgrade dependencies, to avoid using outdated/vulnerable versions
 
 ## v1.1.0
+
 * Add support to body encoding format in library requests
 
 ## v1.0.3
+
 * Add missing documentation for module options
 
 ## v1.0.2
+
 * Parse token payload response `expires_in` property as integer
 
 ## v1.0.1
+
 * Fixed documentation for **client** option.
 
 ## v1.0.0
+
 * Refactored test to use fixtures.
 * Update code to comply with more linter rules.
 * Fixed examples in README to return on error.
@@ -38,28 +53,34 @@
 * Does not override expires_at property if passed into accessToken.create.
 
 ## v0.8.0 (1 August 2016)
+
 * Upgraded code to strict mode.
 * Upgraded all the code base to es6.
 * Updated linter settings to meet the new es6 code requirements.
 * Fixed shared value for access token, causing tokens to be overriding.
 
 ## v0.7.0 (22 April 2016)
+
 * Replaced internal logger by the debug module logger.
 * Fixed some project metadata.
 
 ## v0.6.0 (04 April 2016)
+
 * Added optional sending support to the body auth params.
 * Updated license information.
 * Updated main dependencies version.
 * Fixed leaked token when a refresh token was used.
 
 ## v0.5.1 (25 January 2016)
+
 * Fixed error class prototype inheritance. Now inherits correctly from Error.
 
 ## v0.5.0 (22 January 2016)
+
 * Now all error states returned from the server, are rejected as HTTPError instances. (This allow to know what httpStatusCode was returned)
 
 ## v0.4.0 (18 January 2016)
+
 * Updated project dependencies.
 * Added support for passing arguments to the refresh token action.
 * Added project badges.
@@ -68,6 +89,7 @@
 * Fixed bug, which resolved promises even if the token wasn´t retrieved. #64
 
 ## v0.3.0 (29 November 2015)
+
 * Better documentation!
 * Added support for promise based API
 

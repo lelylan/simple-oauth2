@@ -2,15 +2,13 @@
 
 const qs = require('querystring');
 const nock = require('nock');
-const path = require('path');
-const chai = require('chai');
+const { expect } = require('chai');
 const startOfYesterday = require('date-fns/start_of_yesterday');
 const oauth2Module = require('./../index.js');
 const isValid = require('date-fns/is_valid');
 const isEqual = require('date-fns/is_equal');
 const expectedAccessToken = require('./fixtures/access_token');
 
-const expect = chai.expect;
 const oauth2 = oauth2Module.create(require('./fixtures/module-config'));
 
 const tokenParams = {
@@ -26,9 +24,7 @@ const revokeConfig = require('./fixtures/revoke-token-params.json');
 describe('access token request', () => {
   let request;
   let result;
-  let resultPromise;
   let token;
-  let tokenPromise;
 
   beforeEach(() => {
     const options = {
@@ -40,31 +36,17 @@ describe('access token request', () => {
 
     request = nock('https://authorization-server.org:443', options)
       .post('/oauth/token', qs.stringify(authorizationCodeParams))
-      .times(2)
       .reply(200, expectedAccessToken);
   });
 
-  beforeEach((done) => {
-    oauth2.authorizationCode.getToken(tokenParams, (e, r) => {
-      result = r; done(e);
-    });
-  });
-
-  beforeEach(() => {
-    return oauth2.authorizationCode
-      .getToken(tokenParams)
-      .then((r) => { resultPromise = r; });
-  });
-
-  beforeEach(() => {
+  beforeEach(async () => {
+    result = await oauth2.authorizationCode.getToken(tokenParams);
     token = oauth2.accessToken.create(result);
-    tokenPromise = oauth2.accessToken.create(resultPromise);
   });
 
   describe('#create', () => {
     it('creates an access token wrapper object', () => {
       expect(token).to.have.property('token');
-      expect(tokenPromise).to.have.property('token');
     });
   });
 
@@ -94,19 +76,16 @@ describe('access token request', () => {
   describe('when not expired', () => {
     it('returns false', () => {
       expect(token.expired()).to.be.equal(false);
-      expect(tokenPromise.expired()).to.be.equal(false);
     });
   });
 
   describe('when expired', () => {
     beforeEach(() => {
       token.token.expires_at = startOfYesterday();
-      tokenPromise.token.expires_at = startOfYesterday();
     });
 
     it('returns false', () => {
       expect(token.expired()).to.be.equal(true);
-      expect(tokenPromise.expired()).to.be.equal(true);
     });
   });
 
@@ -121,31 +100,19 @@ describe('access token request', () => {
 
       request = nock('https://authorization-server.org:443', options)
         .post('/oauth/token', qs.stringify(refreshConfig))
-        .times(2)
         .reply(200, expectedAccessToken);
     });
 
-    beforeEach((done) => {
-      result = null;
-      token.refresh((e, r) => {
-        result = r; done(e);
-      });
-    });
-
-    beforeEach(() => {
-      resultPromise = null;
-
-      return token.refresh()
-        .then((r) => { resultPromise = r; });
+    beforeEach(async () => {
+      result = await token.refresh();
     });
 
     it('makes the HTTP request', () => {
-      expect(request.isDone()).to.be.equal(true);
+      request.done();
     });
 
     it('returns a new oauth2.accessToken as a result of the token refresh', () => {
       expect(result.token).to.have.property('access_token');
-      expect(resultPromise.token).to.have.property('access_token');
     });
   });
 
@@ -160,35 +127,19 @@ describe('access token request', () => {
 
       request = nock('https://authorization-server.org:443', options)
         .post('/oauth/token', qs.stringify(refreshWithAdditionalParamsConfig))
-        .times(2)
         .reply(200, expectedAccessToken);
     });
 
-    beforeEach((done) => {
-      result = null;
-      token.refresh({ scope: 'TESTING_EXAMPLE_SCOPES' }, (e, r) => {
-        result = r; done(e);
-      });
-    });
-
-    beforeEach(() => {
-      resultPromise = null;
-
-      return token.refresh({ scope: 'TESTING_EXAMPLE_SCOPES' })
-        .then((r) => { resultPromise = r; });
+    beforeEach(async () => {
+      result = await token.refresh({ scope: 'TESTING_EXAMPLE_SCOPES' });
     });
 
     it('makes the HTTP request', () => {
-      expect(request.isDone()).to.be.equal(true);
-    });
-
-    it('returns a new oauth2.accessToken as result of callback api', () => {
-      expect(result.token).to.have.property('access_token');
+      request.done();
     });
 
     it('returns a new oauth2.accessToken as a result of the token refresh', () => {
       expect(result.token).to.have.property('access_token');
-      expect(resultPromise.token).to.have.property('access_token');
     });
   });
 
@@ -203,20 +154,15 @@ describe('access token request', () => {
 
       request = nock('https://authorization-server.org:443', options)
         .post('/oauth/revoke', qs.stringify(revokeConfig))
-        .times(2)
         .reply(200);
     });
 
-    beforeEach((done) => {
-      token.revoke('refresh_token', done);
-    });
-
     beforeEach(() => {
-      return tokenPromise.revoke('refresh_token');
+      return token.revoke('refresh_token');
     });
 
     it('make HTTP call', () => {
-      expect(request.isDone()).to.be.equal(true);
+      request.done();
     });
   });
 });

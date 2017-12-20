@@ -4,7 +4,7 @@
 [![Build Status](https://img.shields.io/travis/lelylan/simple-oauth2.svg?style=flat-square)](https://travis-ci.org/lelylan/simple-oauth2)
 [![Dependency Status](https://img.shields.io/david/lelylan/simple-oauth2.svg?style=flat-square)](https://david-dm.org/lelylan/simple-oauth2)
 
-Node.js client library for [OAuth2](http://oauth.net/2/) (this library supports both callbacks or promises for async flow).
+Node.js client library for [OAuth2](http://oauth.net/2/).
 
 OAuth2 lets users grant the access to the desired resources to third party applications,
 giving them the possibility to enable and disable those accesses whenever they want.
@@ -50,9 +50,9 @@ Simple OAuth 2.0 come to life thanks to the work I've made in Lelylan, an open s
 
 ## Requirements
 
-Node client library is tested against the latest minor Node versions: 4, 5 and 6.
+The node client library is tested against the latest Node 8 LTS and newer versions.
 
-To use in older node version, please use [simple-oauth2@0.x](https://github.com/lelylan/simple-oauth2/tree/v0.8.0).
+To use in node 4, 5 or 6, please use [simple-oauth2@1.x](https://github.com/lelylan/simple-oauth2/tree/1.5.0). Older node versions are unsupported.
 
 ## Getting started
 
@@ -137,25 +137,14 @@ const tokenConfig = {
   redirect_uri: 'http://localhost:3000/callback'
 };
 
-// Callbacks
 // Save the access token
-oauth2.authorizationCode.getToken(tokenConfig, (error, result) => {
-  if (error) {
-    return console.log('Access Token Error', error.message);
-  }
-
+try {
+  const result = await oauth2.authorizationCode.getToken(tokenConfig)
   const accessToken = oauth2.accessToken.create(result);
-});
-
-// Promises
-// Save the access token
-oauth2.authorizationCode.getToken(tokenConfig)
-.then((result) => {
-  const accessToken = oauth2.accessToken.create(result);
-})
-.catch((error) => {
+} catch (error) {
   console.log('Access Token Error', error.message);
-});
+}
+
 ```
 
 ### Password Credentials Flow
@@ -174,25 +163,13 @@ const tokenConfig = {
   password: 'password'
 };
 
-// Callbacks
 // Save the access token
-oauth2.ownerPassword.getToken(tokenConfig, (error, result) => {
-  if (error) {
-    return console.log('Access Token Error', error.message);
-  }
-
+try {
+  const result = await oauth2.ownerPassword.getToken(tokenConfig);
   const accessToken = oauth2.accessToken.create(result);
-});
-
-// Promises
-// Save the access token
-oauth2.ownerPassword
-  .getToken(tokenConfig)
-  .then((result) => {
-    const accessToken = oauth2.accessToken.create(result);
-
-    return accessToken;
-  });
+} catch (error) {
+  console.log('Access Token Error', error.message);
+}
 ```
 
 ### Client Credentials Flow
@@ -203,27 +180,13 @@ This flow is suitable when client is requesting access to the protected resource
 const oauth2 = require('simple-oauth2').create(credentials);
 const tokenConfig = {};
 
-// Callbacks
 // Get the access token object for the client
-oauth2.clientCredentials.getToken(tokenConfig, (error, result) => {
-  if (error) {
-    return console.log('Access Token Error', error.message);
-  }
-
+try {
+  const result = await oauth2.clientCredentials.getToken(tokenConfig);
   const accessToken = oauth2.accessToken.create(result);
-});
-
-
-// Promises
-// Get the access token object for the client
-oauth2.clientCredentials
-  .getToken(tokenConfig)
-  .then((result) => {
-    const accessToken = oauth2.accessToken.create(result);
-  })
-  .catch((error) => {
-    console.log('Access Token error', error.message);
-  });
+} catch (error) {
+  console.log('Access Token error', error.message);
+}
 ```
 
 ## Helpers
@@ -247,16 +210,11 @@ let accessToken = oauth2.accessToken.create(tokenObject);
 
 // Check if the token is expired. If expired it is refreshed.
 if (accessToken.expired()) {
-  // Callbacks
-  accessToken.refresh((error, result) => {
-    accessToken = result;
-  })
-
-  // Promises
-  accessToken.refresh()
-  .then((result) => {
-    accessToken = result;
-  });
+  try {
+    accessToken = await accessToken.refresh();
+  } catch (error) {
+    console.log('Error refreshing access token: ', error.message);
+  }
 }
 ```
 
@@ -280,16 +238,11 @@ const expirationWindowStart = expirationTimeInSeconds - EXPIRATION_WINDOW_IN_SEC
 const nowInSeconds = (new Date()).getTime() / 1000;
 const shouldRefresh = nowInSeconds >= expirationWindowStart;
 if (shouldRefresh) {
-  // Callbacks
-  accessToken.refresh((error, result) => {
-    accessToken = result;
-  })
-
-  // Promises
-  accessToken.refresh()
-  .then((result) => {
-    accessToken = result;
-  });
+  try {
+    accessToken = await accessToken.refresh();
+  } catch (error) {
+    console.log('Error refreshing access token: ', error.message);
+  }
 }
 ```
 
@@ -298,30 +251,17 @@ revoke the access token and refresh token.
 
 ```javascript
 
-// Callbacks
-// Revoke only the access token
-accessToken.revoke('access_token', (error) => {
+// Revoke both access and refresh tokens
+try {
+  // Revoke only the access token
+  await accessToken.revoke('access_token')
+
   // Session ended. But the refresh_token is still valid.
-
-  // Revoke the refresh_token
-  accessToken.revoke('refresh_token', (error) => {
-    console.log('token revoked.');
-  });
-});
-
-// Promises
-// Revoke only the access token
-accessToken.revoke('access_token')
-  .then(() => {
-    // Revoke the refresh token
-    return accessToken.revoke('refresh_token');
-  })
-  .then(() => {
-    console.log('Token revoked');
-  })
-  .catch((error) => {
-    console.log('Error revoking token.', error.message);
-  });
+  // Revoke the refresh token
+  await accessToken.revoke('refresh_token');
+} catch (error) {
+  console.log('Error revoking token: ', error.message);
+}
 ```
 
 ### Errors
@@ -333,19 +273,12 @@ Errors are returned when a 4xx or 5xx status code is received.
 As a standard [boom](https://github.com/hapijs/boom) error you can access any of the boom error properties. The total amount of information varies according to the generated status code.
 
 ```javascript
-// Callbacks
-oauth2.authorizationCode.getToken({}, (error, token) => {
-  if (error) {
-    return console.log(error);
-  }
-});
 
-// Promises
-oauth2.authorizationCode
-  .getToken({})
-  .catch((error) => {
-    console.log(error);
-  });
+try {
+  await oauth2.authorizationCode.getToken();
+} catch(error) {
+  console.log(error);
+}
 
 // => {
 //     "statusCode": 401,

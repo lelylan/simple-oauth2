@@ -1,13 +1,11 @@
 'use strict';
 
-const path = require('path');
 const qs = require('querystring');
 const nock = require('nock');
-const chai = require('chai');
+const { expect } = require('chai');
 const oauth2Module = require('./../index');
 const expectedAccessToken = require('./fixtures/access_token');
 
-const expect = chai.expect;
 const tokenParams = {};
 const baseConfig = require('./fixtures/module-config');
 
@@ -16,7 +14,6 @@ describe('client credentials grant type', () => {
     let oauth2;
     let request;
     let result;
-    let resultPromise;
 
     describe('with body credentials', () => {
       describe('with json body', () => {
@@ -46,20 +43,11 @@ describe('client credentials grant type', () => {
               client_id: 'the client id',
               client_secret: 'the client secret',
             })
-            .times(2)
             .reply(200, expectedAccessToken);
         });
 
-        beforeEach((done) => {
-          oauth2.clientCredentials.getToken(tokenParams, (e, r) => {
-            result = r; done(e);
-          });
-        });
-
-        beforeEach(() => {
-          return oauth2.clientCredentials
-            .getToken(tokenParams)
-            .then((r) => { resultPromise = r; });
+        beforeEach(async () => {
+          result = await oauth2.clientCredentials.getToken(tokenParams);
         });
 
         it('makes the HTTP request', () => {
@@ -68,7 +56,6 @@ describe('client credentials grant type', () => {
 
         it('returns an access token as result of the token request', () => {
           expect(result).to.be.deep.equal(expectedAccessToken);
-          expect(resultPromise).to.be.deep.equal(expectedAccessToken);
         });
       });
 
@@ -99,20 +86,11 @@ describe('client credentials grant type', () => {
               client_id: 'the client id',
               client_secret: 'the client secret',
             }))
-            .times(2)
             .reply(200, expectedAccessToken);
         });
 
-        beforeEach((done) => {
-          oauth2.clientCredentials.getToken(tokenParams, (e, r) => {
-            result = r; done(e);
-          });
-        });
-
-        beforeEach(() => {
-          return oauth2.clientCredentials
-            .getToken(tokenParams)
-            .then((r) => { resultPromise = r; });
+        beforeEach(async () => {
+          result = await oauth2.clientCredentials.getToken(tokenParams);
         });
 
         it('makes the HTTP request', () => {
@@ -121,7 +99,6 @@ describe('client credentials grant type', () => {
 
         it('returns an access token as result of the token request', () => {
           expect(result).to.be.deep.equal(expectedAccessToken);
-          expect(resultPromise).to.be.deep.equal(expectedAccessToken);
         });
       });
     });
@@ -148,20 +125,11 @@ describe('client credentials grant type', () => {
 
         request = nock('https://authorization-server.org:443', options)
           .post('/oauth/token')
-          .times(2)
           .reply(200, expectedAccessToken);
       });
 
-      beforeEach((done) => {
-        oauth2.clientCredentials.getToken(tokenParams, (e, r) => {
-          result = r; done(e);
-        });
-      });
-
-      beforeEach(() => {
-        return oauth2.clientCredentials
-          .getToken(tokenParams)
-          .then((r) => { resultPromise = r; });
+      beforeEach(async () => {
+        result = await oauth2.clientCredentials.getToken(tokenParams);
       });
 
       it('makes the HTTP request', () => {
@@ -170,7 +138,6 @@ describe('client credentials grant type', () => {
 
       it('returns an access token as result of the token request', () => {
         expect(result).to.be.deep.equal(expectedAccessToken);
-        expect(resultPromise).to.be.deep.equal(expectedAccessToken);
       });
     });
   });

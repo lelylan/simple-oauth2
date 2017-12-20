@@ -37,23 +37,18 @@ const optionsSchema = Joi
 module.exports = {
 
   /**
-   * Creates a new simple-oauth2 client
-   * with the passed configuration
-   *
-   * @param  {Object}  options Module options as defined in schema
+   * Creates a new simple-oauth2 client with the provided configuration
+   * @param  {Object}  opts Module options as defined in schema
+   * @returns {Object} The simple-oauth2 client
    */
-  create(options) {
-    const moduleOptions = Joi.attempt(
-      options || {},
-      optionsSchema,
-      'Invalid options provided to simple-oauth2'
-    );
+  create(opts = {}) {
+    const options = Joi.attempt(opts, optionsSchema, 'Invalid options provided to simple-oauth2');
 
     return {
-      authorizationCode: authCodeModule(moduleOptions),
-      ownerPassword: passwordModule(moduleOptions),
-      clientCredentials: clientCredentialsModule(moduleOptions),
-      accessToken: accessTokenModule(moduleOptions),
+      accessToken: accessTokenModule(options),
+      ownerPassword: passwordModule(options),
+      authorizationCode: authCodeModule(options),
+      clientCredentials: clientCredentialsModule(options),
     };
   },
 };
