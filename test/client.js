@@ -21,7 +21,7 @@ describe('client credentials grant type', () => {
           const config = Object.assign({}, baseConfig, {
             options: {
               bodyFormat: 'json',
-              authorizationMode: 'body',
+              authorizationMethod: 'body',
             },
           });
 
@@ -63,7 +63,7 @@ describe('client credentials grant type', () => {
           const config = Object.assign({}, baseConfig, {
             options: {
               bodyFormat: 'form',
-              authorizationMode: 'body',
+              authorizationMethod: 'body',
             },
           });
 
@@ -105,7 +105,7 @@ describe('client credentials grant type', () => {
       before(() => {
         const config = Object.assign({}, baseConfig, {
           options: {
-            authorizationMode: 'header',
+            authorizationMethod: 'header',
           },
         });
 

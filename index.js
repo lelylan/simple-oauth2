@@ -29,7 +29,7 @@ const optionsSchema = Joi
     }).default().unknown(true),
     options: Joi.object().keys({
       bodyFormat: Joi.any().only('form', 'json').default('form'),
-      authorizationMode: Joi.any().only('header', 'body').default('header'),
+      authorizationMethod: Joi.any().only('header', 'body').default('header'),
     }).default(),
   });
 
