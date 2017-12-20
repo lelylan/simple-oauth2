@@ -1,12 +1,11 @@
 'use strict';
 
-const qs = require('querystring');
 const nock = require('nock');
+const qs = require('querystring');
 const { expect } = require('chai');
 const oauth2Module = require('./../index');
-const expectedAccessToken = require('./fixtures/access_token');
-
 const baseConfig = require('./fixtures/module-config');
+const expectedAccessToken = require('./fixtures/access_token');
 
 const tokenOptions = {
   username: 'alice',
@@ -33,8 +32,7 @@ describe('owner password gran type', () => {
           const config = Object.assign({}, baseConfig, {
             options: {
               bodyFormat: 'json',
-              useBodyAuth: true,
-              useBasicAuthorizationHeader: false,
+              authorizationMode: 'body',
             },
           });
 
@@ -76,8 +74,7 @@ describe('owner password gran type', () => {
           const config = Object.assign({}, baseConfig, {
             options: {
               bodyFormat: 'form',
-              useBodyAuth: true,
-              useBasicAuthorizationHeader: false,
+              authorizationMode: 'body',
             },
           });
 
@@ -119,8 +116,7 @@ describe('owner password gran type', () => {
       before(() => {
         const config = Object.assign({}, baseConfig, {
           options: {
-            useBodyAuth: false,
-            useBasicAuthorizationHeader: true,
+            authorizationMode: 'header',
           },
         });
 

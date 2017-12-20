@@ -28,9 +28,8 @@ const optionsSchema = Joi
       }),
     }).default().unknown(true),
     options: Joi.object().keys({
-      bodyFormat: Joi.any().valid('form', 'json').default('form'),
-      useBasicAuthorizationHeader: Joi.boolean().default(true),
-      useBodyAuth: Joi.boolean().default(true),
+      bodyFormat: Joi.any().only('form', 'json').default('form'),
+      authorizationMode: Joi.any().only('header', 'body').default('header'),
     }).default(),
   });
 

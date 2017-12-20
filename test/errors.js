@@ -16,8 +16,6 @@ const oauthParams = {
   code: 'code',
   redirect_uri: 'http://callback.com',
   grant_type: 'authorization_code',
-  client_id: 'the client id',
-  client_secret: 'the client secret',
 };
 
 describe('Simple oauth2 Error', () => {
@@ -35,7 +33,7 @@ describe('Simple oauth2 Error', () => {
       };
 
       request = nock('https://authorization-server.org:443', options)
-        .post('/oauth/token', qs.stringify(oauthParams))
+        .post('/oauth/token')
         .reply(401);
     });
 

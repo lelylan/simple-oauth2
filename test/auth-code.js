@@ -1,12 +1,11 @@
 'use strict';
 
-const qs = require('querystring');
 const nock = require('nock');
+const qs = require('querystring');
 const { expect } = require('chai');
 const oauth2Module = require('./../index');
-const expectedAccessToken = require('./fixtures/access_token');
-
 const baseConfig = require('./fixtures/module-config');
+const expectedAccessToken = require('./fixtures/access_token');
 
 describe('authorization code grant type', () => {
   let request;
@@ -106,9 +105,8 @@ describe('authorization code grant type', () => {
         before(() => {
           const config = Object.assign({}, baseConfig, {
             options: {
-              useBodyAuth: true,
               bodyFormat: 'json',
-              useBasicAuthorizationHeader: false,
+              authorizationMode: 'body',
             },
           });
 
@@ -159,9 +157,8 @@ describe('authorization code grant type', () => {
         before(() => {
           const config = Object.assign({}, baseConfig, {
             options: {
-              useBodyAuth: true,
               bodyFormat: 'form',
-              useBasicAuthorizationHeader: false,
+              authorizationMode: 'body',
             },
           });
 
@@ -211,8 +208,7 @@ describe('authorization code grant type', () => {
       before(() => {
         const config = Object.assign({}, baseConfig, {
           options: {
-            useBodyAuth: false,
-            useBasicAuthorizationHeader: true,
+            authorizationMode: 'header',
           },
         });
 

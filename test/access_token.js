@@ -3,23 +3,23 @@
 const qs = require('querystring');
 const nock = require('nock');
 const { expect } = require('chai');
-const startOfYesterday = require('date-fns/start_of_yesterday');
-const oauth2Module = require('./../index.js');
 const isValid = require('date-fns/is_valid');
 const isEqual = require('date-fns/is_equal');
+const startOfYesterday = require('date-fns/start_of_yesterday');
+const oauth2Module = require('./../index.js');
+const baseConfig = require('./fixtures/module-config');
+const revokeConfig = require('./fixtures/revoke-token-params.json');
+const refreshConfig = require('./fixtures/refresh-token.json');
 const expectedAccessToken = require('./fixtures/access_token');
+const authorizationCodeParams = require('./fixtures/auth-code-params.json');
+const refreshWithAdditionalParamsConfig = require('./fixtures/refresh-token-with-params.json');
 
-const oauth2 = oauth2Module.create(require('./fixtures/module-config'));
+const oauth2 = oauth2Module.create(baseConfig);
 
 const tokenParams = {
   code: 'code',
   redirect_uri: 'http://callback.com',
 };
-
-const refreshConfig = require('./fixtures/refresh-token.json');
-const refreshWithAdditionalParamsConfig = require('./fixtures/refresh-token-with-params.json');
-const authorizationCodeParams = require('./fixtures/auth-code-params.json');
-const revokeConfig = require('./fixtures/revoke-token-params.json');
 
 describe('access token request', () => {
   let request;
