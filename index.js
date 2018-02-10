@@ -6,12 +6,15 @@ const passwordModule = require('./lib/client/password');
 const accessTokenModule = require('./lib/client/access-token');
 const clientCredentialsModule = require('./lib/client/client');
 
+// https://tools.ietf.org/html/draft-ietf-oauth-v2-31#appendix-A.1
+const vsCharRegEx = /^[\x20-\x7E]*$/;
+
 const optionsSchema = Joi
   .object()
   .keys({
     client: Joi.object().keys({
-      id: Joi.string().allow(''),
-      secret: Joi.string().allow(''),
+      id: Joi.string().regex(vsCharRegEx).allow(''),
+      secret: Joi.string().regex(vsCharRegEx).allow(''),
       secretParamName: Joi.string().default('client_secret'),
       idParamName: Joi.string().default('client_id'),
     }).required(),
