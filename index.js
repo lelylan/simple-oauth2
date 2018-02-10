@@ -10,8 +10,8 @@ const optionsSchema = Joi
   .object()
   .keys({
     client: Joi.object().keys({
-      id: Joi.string().required(),
-      secret: Joi.string().required(),
+      id: Joi.string().allow(''),
+      secret: Joi.string().allow(''),
       secretParamName: Joi.string().default('client_secret'),
       idParamName: Joi.string().default('client_id'),
     }).required(),
