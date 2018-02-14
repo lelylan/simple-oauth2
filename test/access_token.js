@@ -26,66 +26,73 @@ describe('access token request', () => {
   let result;
   let token;
 
-  beforeEach(() => {
-    const scopeOptions = {
-      reqheaders: {
-        Accept: 'application/json',
-        Authorization: 'Basic dGhlK2NsaWVudCtpZDp0aGUrY2xpZW50K3NlY3JldA==',
-      },
-    };
+  describe('on token creation', () => {
+    before(() => {
+      const scopeOptions = {
+        reqheaders: {
+          Accept: 'application/json',
+          Authorization: 'Basic dGhlK2NsaWVudCtpZDp0aGUrY2xpZW50K3NlY3JldA==',
+        },
+      };
 
-    scope = nock('https://authorization-server.org:443', scopeOptions)
-      .post('/oauth/token', qs.stringify(authorizationCodeParams))
-      .reply(200, expectedAccessToken);
-  });
-
-  beforeEach(async () => {
-    result = await oauth2.authorizationCode.getToken(tokenParams);
-    token = oauth2.accessToken.create(result);
-  });
-
-  describe('#create', () => {
-    it('creates an access token wrapper object', () => {
-      expect(token).to.have.property('token');
-    });
-  });
-
-  describe('#create with expires_at', () => {
-    it('uses the set expires_at property', () => {
-      token.token.expires_at = startOfYesterday();
-      const expiredToken = oauth2.accessToken.create(token.token);
-
-      expect(isValid(expiredToken.token.expires_at)).to.be.equal(true);
-      expect(isEqual(expiredToken.token.expires_at, token.token.expires_at)).to.be.equal(true);
+      scope = nock('https://authorization-server.org:443', scopeOptions)
+        .post('/oauth/token', qs.stringify(authorizationCodeParams))
+        .reply(200, expectedAccessToken);
     });
 
-    it('parses a set expires_at property', () => {
-      const yesterday = startOfYesterday();
-      token.token.expires_at = yesterday.toString();
-      const expiredToken = oauth2.accessToken.create(token.token);
+    before(async () => {
+      result = await oauth2.authorizationCode.getToken(tokenParams);
+      token = oauth2.accessToken.create(result);
 
-      expect(isValid(expiredToken.token.expires_at)).to.be.equal(true);
-      expect(isEqual(expiredToken.token.expires_at, token.token.expires_at)).to.be.equal(true);
+      scope.done();
     });
 
-    it('create its own date by default', () => {
-      expect(isValid(token.token.expires_at)).to.be.equal(true);
-    });
-  });
-
-  describe('when not expired', () => {
-    it('returns false', () => {
-      expect(token.expired()).to.be.equal(false);
-    });
-  });
-
-  describe('when expired', () => {
-    beforeEach(() => {
-      token.token.expires_at = startOfYesterday();
+    describe('#create', () => {
+      it('creates an access token wrapper object', () => {
+        expect(token).to.have.property('token');
+        expect(token).to.have.property('refresh');
+        expect(token).to.have.property('revoke');
+        expect(token).to.have.property('expired');
+      });
     });
 
-    it('returns false', () => {
-      expect(token.expired()).to.be.equal(true);
+    describe('when checking for token expiration', () => {
+      it('uses the set expires_at property', () => {
+        token.token.expires_at = startOfYesterday();
+        const expiredToken = oauth2.accessToken.create(token.token);
+
+        expect(isValid(expiredToken.token.expires_at)).to.be.equal(true, 'is a valid date');
+        expect(isEqual(expiredToken.token.expires_at, token.token.expires_at)).to.be.equal(true);
+      });
+
+      it('parses a set expires_at property', () => {
+        const yesterday = startOfYesterday();
+        token.token.expires_at = yesterday.toString();
+        const expiredToken = oauth2.accessToken.create(token.token);
+
+        expect(isValid(expiredToken.token.expires_at)).to.be.equal(true, 'is a valid date');
+        expect(isEqual(expiredToken.token.expires_at, token.token.expires_at)).to.be.equal(true);
+      });
+
+      it('create its own date by default', () => {
+        expect(isValid(token.token.expires_at)).to.be.equal(true, 'is a valid date');
+      });
+    });
+
+    describe('when not expired', () => {
+      it('returns false', () => {
+        expect(token.expired()).to.be.equal(false);
+      });
+    });
+
+    describe('when expired', () => {
+      before(() => {
+        token.token.expires_at = startOfYesterday();
+      });
+
+      it('returns false', () => {
+        expect(token.expired()).to.be.equal(true);
+      });
     });
   });
 
@@ -116,6 +123,9 @@ describe('access token request', () => {
     });
   });
 
+  describe('when refreshes token with custom refresh path', () => {
+  });
+
   describe('when refreshes token with additional params', () => {
     beforeEach(() => {
       const scopeOptions = {
@@ -143,7 +153,7 @@ describe('access token request', () => {
     });
   });
 
-  describe('#revoke', () => {
+  describe('when revoking tokens', () => {
     before(() => {
       const scopeOptions = {
         reqheaders: {
@@ -164,5 +174,8 @@ describe('access token request', () => {
     it('performs the http request', () => {
       scope.done();
     });
+  });
+
+  describe('when revoking tokens with custom revoke path', () => {
   });
 });
