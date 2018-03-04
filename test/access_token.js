@@ -250,4 +250,63 @@ describe('on token revoke', () => {
 
     scope.done();
   });
+
+  it('revokes access and refresh tokens', async () => {
+    const accessTokenResponse = chance.accessToken({
+      expireMode: 'expires_in',
+    });
+
+    const refreshTokenRevokeParams = {
+      token: accessTokenResponse.refresh_token,
+      token_type_hint: 'refresh_token',
+    };
+
+    const accessTokenRevokeParams = {
+      token: accessTokenResponse.access_token,
+      token_type_hint: 'access_token',
+    };
+
+    const scope = nock('https://authorization-server.org:443', scopeOptions)
+      .post('/oauth/revoke', qs.stringify(accessTokenRevokeParams))
+      .reply(200)
+      .post('/oauth/revoke', qs.stringify(refreshTokenRevokeParams))
+      .reply(200);
+
+    const accessToken = oauth2.accessToken.create(accessTokenResponse);
+    await accessToken.revokeAll();
+
+    scope.done();
+  });
+
+  it('revokes refresh token only when access token is revoked', async () => {
+    const accessTokenResponse = chance.accessToken({
+      expireMode: 'expires_in',
+    });
+
+    const accessTokenRevokeParams = {
+      token: accessTokenResponse.access_token,
+      token_type_hint: 'access_token',
+    };
+
+    const scope = nock('https://authorization-server.org:443', scopeOptions)
+      .post('/oauth/revoke', qs.stringify(accessTokenRevokeParams))
+      .reply(500);
+
+    const accessToken = oauth2.accessToken.create(accessTokenResponse);
+
+    try {
+      await accessToken.revokeAll();
+
+      expect(false).to.be.equal(true, 'An error was expected');
+    } catch (err) {
+      // we check for a boom internal status code to verify the error produced
+      // is the expected (500) and not one produced for failed requests to nock
+      expect(err).to.be.an('Error');
+      expect(err.isBoom).to.be.equal(true);
+      expect(err.output.statusCode).to.be.equal(500);
+    }
+
+    // If the scope is done, then no additional refresh token request was made
+    scope.done();
+  });
 });
