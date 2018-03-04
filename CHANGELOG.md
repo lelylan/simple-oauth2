@@ -6,6 +6,11 @@
 * Replace bluebird with native promise implementation
 * Replace callback interface with async/await
 
+## v1.5.1
+
+* Add support to specify scopes as array in `getToken` method
+* Add support to empty strings and visual ASCII characters on `clientId`/`clientSecret` options
+
 ## v1.5.0
 
 * Update debug dependency
