@@ -267,7 +267,7 @@ As a convenience method, you can also revoke both tokens in a single call:
 ```javascript
 // Revoke both access and refresh tokens
 try {
-  // Revokes both tokens, refresh token in only revoked if the access_token is properly revoked
+  // Revokes both tokens, refresh token is only revoked if the access_token is properly revoked
   await accessToken.revokeAll();
 } catch (error) {
   console.log('Error revoking token: ', error.message);
