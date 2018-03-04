@@ -133,7 +133,8 @@ res.redirect(authorizationUri);
 // Get the access token object (the authorization code is given from the previous step).
 const tokenConfig = {
   code: '<code>',
-  redirect_uri: 'http://localhost:3000/callback'
+  redirect_uri: 'http://localhost:3000/callback',
+  scope: '<scope>', // also can be an array of multiple scopes, ex. ['<scope1>, '<scope2>', '...']
 };
 
 // Save the access token
@@ -159,7 +160,8 @@ const oauth2 = require('simple-oauth2').create(credentials);
 // Get the access token object.
 const tokenConfig = {
   username: 'username',
-  password: 'password'
+  password: 'password',
+  scope: '<scope>', // also can be an array of multiple scopes, ex. ['<scope1>, '<scope2>', '...']
 };
 
 // Save the access token
@@ -177,7 +179,9 @@ This flow is suitable when client is requesting access to the protected resource
 
 ```javascript
 const oauth2 = require('simple-oauth2').create(credentials);
-const tokenConfig = {};
+const tokenConfig = {
+  scope: '<scope>', // also can be an array of multiple scopes, ex. ['<scope1>, '<scope2>', '...']
+};
 
 // Get the access token object for the client
 try {
