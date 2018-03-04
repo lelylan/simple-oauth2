@@ -1,10 +1,10 @@
+# Simple OAuth2
+
 [![NPM Package Version](https://img.shields.io/npm/v/simple-oauth2.svg?style=flat-square)](https://www.npmjs.com/package/simple-oauth2)
 [![Build Status](https://img.shields.io/travis/lelylan/simple-oauth2.svg?style=flat-square)](https://travis-ci.org/lelylan/simple-oauth2)
 [![Dependency Status](https://img.shields.io/david/lelylan/simple-oauth2.svg?style=flat-square)](https://david-dm.org/lelylan/simple-oauth2)
 
-# Simple OAuth2
-
-Node.js client library for [OAuth2](http://oauth.net/2/) (this library supports both callbacks or promises for async flow).
+Node.js client library for [OAuth2](http://oauth.net/2/).
 
 OAuth2 lets users grant the access to the desired resources to third party applications,
 giving them the possibility to enable and disable those accesses whenever they want.
@@ -21,7 +21,6 @@ Simple OAuth 2.0 come to life thanks to the work I've made in Lelylan, an open s
 
 <a href="https://github.com/lelylan/lelylan">
 <img src="https://raw.githubusercontent.com/lelylan/lelylan/master/public/logo-lelylan.png" data-canonical-src="https://raw.githubusercontent.com/lelylan/lelylan/master/public/logo-lelylan.png" width="300"/></a>
-
 
 ## Table of Contents
 
@@ -50,42 +49,44 @@ Simple OAuth 2.0 come to life thanks to the work I've made in Lelylan, an open s
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## Requirements
-Node client library is tested against the latest minor Node versions: 4, 5 and 6.
 
-To use in older node version, please use [simple-oauth2@0.x](https://github.com/lelylan/simple-oauth2/tree/v0.8.0).
+The node client library is tested against the latest Node 8 LTS and newer versions.
+
+To use in node 4, 5 or 6, please use [simple-oauth2@1.x](https://github.com/lelylan/simple-oauth2/tree/1.5.0). Older node versions are unsupported.
 
 ## Getting started
 
 ### Installation
+
 Install the client library using [npm](http://npmjs.org/):
 
-  ```bash
-    $ npm install --save simple-oauth2
-  ```
+```bash
+npm install --save simple-oauth2
+```
 
 ### Options
+
 Simple OAuth2 accepts an object with the following valid params.
 
 * `client` - required object with the following properties:
-  - `id` - Service registered client id. Required.
-  - `secret` - Service registered client secret. Required.
-  - `secretParamName` - Parameter name used to send the client secret. Default to **client_secret**.
-  - `idParamName` - Parameter name used to send the client id. Default to **client_id**.
+  * `id` - Service registered client id. Required.
+  * `secret` - Service registered client secret. Required.
+  * `secretParamName` - Parameter name used to send the client secret. Default to **client_secret**.
+  * `idParamName` - Parameter name used to send the client id. Default to **client_id**.
 
 * `auth` - required object with the following properties.
-  - `tokenHost` - String used to set the host to request the tokens to. Required.
-  - `tokenPath` - String path to request an access token. Default to **/oauth/token**.
-  - `revokePath` - String path to revoke an access token. Default to **/oauth/revoke**.
-  - `authorizeHost` - String used to set the host to request an "authorization code". Default to the value set on `auth.tokenHost`.
-  - `authorizePath` - String path to request an authorization code. Default to **/oauth/authorize**.
+  * `tokenHost` - String used to set the host to request the tokens to. Required.
+  * `tokenPath` - String path to request an access token. Default to **/oauth/token**.
+  * `revokePath` - String path to revoke an access token. Default to **/oauth/revoke**.
+  * `authorizeHost` - String used to set the host to request an "authorization code". Default to the value set on `auth.tokenHost`.
+  * `authorizePath` - String path to request an authorization code. Default to **/oauth/authorize**.
 
-* `http` optional object used to set global options to the internal http library (request-js).
-  - Any key is allowed here. Default to `headers.Accept = application/json`.
+* `http` optional object used to set global options to the internal http library ([wreck](https://github.com/hapijs/wreck)).
+  * All options except **baseUrl** are allowed. Default to `headers.Accept = application/json`.
 
 * `options` optional object to setup the module.
-  - `bodyFormat` - Format of data sent in the request body. Valid values are `form` or `json`. Defaults to **form**.
-  - `useBodyAuth` - Whether or not the client.id/client.secret params are sent in the request body. Defaults to **true**.
-  - `useBasicAuthorizationHeader` - Whether or not the Basic Authorization header should be sent at the token request.
+  * `bodyFormat` - Format of data sent in the request body. Valid options are `form` or `json`. Defaults to **form**.
+  * `authorizationMethod` - Indicates the method used to send the client.id/client.secret authorization params at the token request. Valid options are `header` or `body`. If set to **body**, the **bodyFormat** option will be used to format the credentials. Defaults to **header**.
 
 ```javascript
 // Set the configuration settings
@@ -104,9 +105,11 @@ const oauth2 = require('simple-oauth2').create(credentials);
 ```
 
 ### Example of Usage
+
 See the [example folder](./example).
 
 ## OAuth2 Supported flows
+
 ### Authorization Code flow
 
 The Authorization Code flow is made up from two parts. At first your application asks to
@@ -133,25 +136,14 @@ const tokenConfig = {
   redirect_uri: 'http://localhost:3000/callback'
 };
 
-// Callbacks
 // Save the access token
-oauth2.authorizationCode.getToken(tokenConfig, (error, result) => {
-  if (error) {
-    return console.log('Access Token Error', error.message);
-  }
-
+try {
+  const result = await oauth2.authorizationCode.getToken(tokenConfig)
   const accessToken = oauth2.accessToken.create(result);
-});
-
-// Promises
-// Save the access token
-oauth2.authorizationCode.getToken(tokenConfig)
-.then((result) => {
-  const accessToken = oauth2.accessToken.create(result);
-})
-.catch((error) => {
+} catch (error) {
   console.log('Access Token Error', error.message);
-});
+}
+
 ```
 
 ### Password Credentials Flow
@@ -167,28 +159,16 @@ const oauth2 = require('simple-oauth2').create(credentials);
 // Get the access token object.
 const tokenConfig = {
   username: 'username',
-  password: 'password' 
+  password: 'password'
 };
 
-// Callbacks
 // Save the access token
-oauth2.ownerPassword.getToken(tokenConfig, (error, result) => {
-  if (error) {
-    return console.log('Access Token Error', error.message);
-  }
-
+try {
+  const result = await oauth2.ownerPassword.getToken(tokenConfig);
   const accessToken = oauth2.accessToken.create(result);
-});
-
-// Promises
-// Save the access token
-oauth2.ownerPassword
-  .getToken(tokenConfig)
-  .then((result) => {
-    const accessToken = oauth2.accessToken.create(result);
-
-    return accessToken;
-  });
+} catch (error) {
+  console.log('Access Token Error', error.message);
+}
 ```
 
 ### Client Credentials Flow
@@ -199,30 +179,17 @@ This flow is suitable when client is requesting access to the protected resource
 const oauth2 = require('simple-oauth2').create(credentials);
 const tokenConfig = {};
 
-// Callbacks
 // Get the access token object for the client
-oauth2.clientCredentials.getToken(tokenConfig, (error, result) => {
-  if (error) {
-    return console.log('Access Token Error', error.message);
-  }
-
+try {
+  const result = await oauth2.clientCredentials.getToken(tokenConfig);
   const accessToken = oauth2.accessToken.create(result);
-});
-
-
-// Promises
-// Get the access token object for the client
-oauth2.clientCredentials
-  .getToken(tokenConfig)
-  .then((result) => {
-    const accessToken = oauth2.accessToken.create(result);
-  })
-  .catch((error) => {
-    console.log('Access Token error', error.message);
-  });
+} catch (error) {
+  console.log('Access Token error', error.message);
+}
 ```
 
 ## Helpers
+
 ### Access Token object
 
 When a token expires we need to refresh it. Simple OAuth2 offers the
@@ -242,16 +209,11 @@ let accessToken = oauth2.accessToken.create(tokenObject);
 
 // Check if the token is expired. If expired it is refreshed.
 if (accessToken.expired()) {
-  // Callbacks
-  accessToken.refresh((error, result) => {
-    accessToken = result;
-  })
-
-  // Promises
-  accessToken.refresh()
-  .then((result) => {
-    accessToken = result;
-  });
+  try {
+    accessToken = await accessToken.refresh();
+  } catch (error) {
+    console.log('Error refreshing access token: ', error.message);
+  }
 }
 ```
 
@@ -275,16 +237,11 @@ const expirationWindowStart = expirationTimeInSeconds - EXPIRATION_WINDOW_IN_SEC
 const nowInSeconds = (new Date()).getTime() / 1000;
 const shouldRefresh = nowInSeconds >= expirationWindowStart;
 if (shouldRefresh) {
-  // Callbacks
-  accessToken.refresh((error, result) => {
-    accessToken = result;
-  })
-
-  // Promises
-  accessToken.refresh()
-  .then((result) => {
-    accessToken = result;
-  });
+  try {
+    accessToken = await accessToken.refresh();
+  } catch (error) {
+    console.log('Error refreshing access token: ', error.message);
+  }
 }
 ```
 
@@ -293,71 +250,58 @@ revoke the access token and refresh token.
 
 ```javascript
 
-// Callbacks
-// Revoke only the access token
-accessToken.revoke('access_token', (error) => {
+// Revoke both access and refresh tokens
+try {
+  // Revoke only the access token
+  await accessToken.revoke('access_token')
+
   // Session ended. But the refresh_token is still valid.
-
-  // Revoke the refresh_token
-  accessToken.revoke('refresh_token', (error) => {
-    console.log('token revoked.');
-  });
-});
-
-// Promises
-// Revoke only the access token
-accessToken.revoke('access_token')
-  .then(() => {
-    // Revoke the refresh token
-    return accessToken.revoke('refresh_token');
-  })
-  .then(() => {
-    console.log('Token revoked');
-  })
-  .catch((error) => {
-    console.log('Error revoking token.', error.message);
-  });
+  // Revoke the refresh token
+  await accessToken.revoke('refresh_token');
+} catch (error) {
+  console.log('Error revoking token: ', error.message);
+}
 ```
 
 ### Errors
 
-Exceptions are raised when a 4xx or 5xx status code is returned.
+Errors are returned when a 4xx or 5xx status code is received.
 
-    HTTPError
+    BoomError
 
-Through the error message attribute you can access the JSON representation
-based on HTTP `status` and error `message`.
+As a standard [boom](https://github.com/hapijs/boom) error you can access any of the boom error properties. The total amount of information varies according to the generated status code.
 
 ```javascript
-// Callbacks
-oauth2.authorizationCode.getToken({}, (error, token) => {
-  if (error) {
-    return console.log(error.message);
-  }
-});
 
-// Promises
-oauth2.authorizationCode
-  .getToken({})
-  .catch((error) => {
-    console.log(error.message);
-  });
+try {
+  await oauth2.authorizationCode.getToken();
+} catch(error) {
+  console.log(error);
+}
 
-// => { "status": "401", "message": "Unauthorized" }
+// => {
+//     "statusCode": 401,
+//     "error": "Unauthorized",
+//     "message": "invalid password"
+// }
 ```
 
 ## Contributing
+
 See [CONTRIBUTING](https://github.com/lelylan/simple-oauth2/blob/master/CONTRIBUTING.md)
 
 ## Authors
+
 [Andrea Reginato](http://twitter.com/lelylan)
 
 ### Contributors
+
 Special thanks to the following people for submitting patches.
 
 * [Jonathan Samines](http://twitter.com/jonathansamines)
 
 ## Changelog
+
 See [CHANGELOG](https://github.com/lelylan/simple-oauth2/blob/master/CHANGELOG.md)
 
 ## License

@@ -1,11 +1,9 @@
 {
+  "rules": {
+    "max-len": "off",
+    "object-curly-newline": "off"
+  },
   "env": {
     "mocha": true
-  },
-  "rules": {
-    "prefer-arrow-callback": "off",
-    "no-unused-vars": "off",
-    "prefer-destructuring": "off",
-    "func-names": "off"
   }
 }

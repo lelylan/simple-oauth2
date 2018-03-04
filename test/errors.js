@@ -2,131 +2,107 @@
 
 const qs = require('querystring');
 const nock = require('nock');
-const chai = require('chai');
-const oauth2Module = require('./../index.js');
+const { expect } = require('chai');
+const baseConfig = require('./fixtures/module-config.json');
+const oauth2Module = require('./../index');
 
-const expect = chai.expect;
-const oauth2 = oauth2Module.create(require('./fixtures/module-config.json'));
+const oauth2 = oauth2Module.create(baseConfig);
 
 const tokenParams = {
   code: 'code',
   redirect_uri: 'http://callback.com',
 };
+
 const oauthParams = {
   code: 'code',
   redirect_uri: 'http://callback.com',
   grant_type: 'authorization_code',
-  client_id: 'the client id',
-  client_secret: 'the client secret',
 };
 
-describe('Simple oauth2 Error', function () {
-  let request;
-  let requestContent;
+describe('Simple oauth2 Error', () => {
+  let scope;
   let result;
-  let resultPromise;
   let error;
-  let errorPromise;
 
-  describe('with status code 401', function () {
-    beforeEach(function () {
-      const options = {
+  describe('with status code 401', () => {
+    before(() => {
+      const scopeOptions = {
         reqheaders: {
           Accept: 'application/json',
           Authorization: 'Basic dGhlK2NsaWVudCtpZDp0aGUrY2xpZW50K3NlY3JldA==',
         },
       };
 
-      request = nock('https://authorization-server.org:443', options)
-        .post('/oauth/token', qs.stringify(oauthParams))
+      scope = nock('https://authorization-server.org:443', scopeOptions)
+        .post('/oauth/token')
         .reply(401);
-
-      requestContent = nock('https://authorization-server.org:443', options)
-        .post('/oauth/token', qs.stringify(oauthParams))
-        .reply(401, {
-          content: 'No authorized',
-        });
     });
 
-    beforeEach(function (done) {
-      oauth2.authorizationCode.getToken(tokenParams, function (e, r) {
-        error = e; result = r; done();
-      });
+    before(async () => {
+      result = undefined;
+
+      try {
+        result = await oauth2.authorizationCode.getToken(tokenParams);
+      } catch (err) {
+        error = err;
+      }
     });
 
-    beforeEach(function () {
-      return oauth2.authorizationCode
-        .getToken(tokenParams)
-        .then(function (r) { resultPromise = r; })
-        .catch(function (e) { errorPromise = e; });
+    it('performs the http request', () => {
+      scope.done();
     });
 
-    it('makes the HTTP request', function () {
-      expect(request.isDone()).to.be.equal(true);
-      expect(requestContent.isDone()).to.be.equal(true);
-    });
+    it('rejects with a boom error', () => {
+      const authorizationError = {
+        error: 'Unauthorized',
+        message: 'Response Error: 401 null',
+        statusCode: 401,
+      };
 
-    it('returns an error object with the httpStatusCode and message as a result of the token request', function () { // eslint-disable-line
-      expect(error.message).to.be.equal('Unauthorized');
-      expect(error.status).to.be.equal(401);
-      expect(error.context).to.be.equal(null);
-
-      expect(errorPromise.message).to.be.equal('Unauthorized');
-      expect(errorPromise.status).to.be.equal(401);
-      expect(errorPromise.context).to.be.deep.equal({
-        content: 'No authorized',
-      });
+      expect(result).to.be.equal(undefined);
+      expect(error.isBoom).to.be.equal(true);
+      expect(error.output.payload).to.be.deep.equal(authorizationError);
     });
   });
 
-  describe('with status code 500', function () {
-    beforeEach(function () {
-      const options = {
+  describe('with status code 500', () => {
+    before(() => {
+      const scopeOptions = {
         reqheaders: {
           Accept: 'application/json',
           Authorization: 'Basic dGhlK2NsaWVudCtpZDp0aGUrY2xpZW50K3NlY3JldA==',
         },
       };
 
-      request = nock('https://authorization-server.org:443', options)
-        .post('/oauth/token', qs.stringify(oauthParams))
-        .reply(500);
-
-      requestContent = nock('https://authorization-server.org:443', options)
+      scope = nock('https://authorization-server.org:443', scopeOptions)
         .post('/oauth/token', qs.stringify(oauthParams))
         .reply(500, {
-          description: 'Error details.',
+          customError: 'An amazing error has occured',
         });
     });
 
-    beforeEach(function (done) {
-      oauth2.authorizationCode.getToken(tokenParams, function (e, r) {
-        error = e; result = r; done();
-      });
+    before(async () => {
+      try {
+        result = await oauth2.authorizationCode.getToken(tokenParams);
+      } catch (err) {
+        error = err;
+      }
     });
 
-    beforeEach(function () {
-      return oauth2.authorizationCode
-        .getToken(tokenParams)
-        .then(function (r) { resultPromise = r; })
-        .catch(function (e) { errorPromise = e; });
+    it('performs the http request', () => {
+      scope.done();
     });
 
-    it('makes the HTTP request', function () {
-      expect(request.isDone()).to.be.equal(true);
-      expect(requestContent.isDone()).to.be.equal(true);
-    });
+    it('rejects with a boom error', () => {
+      const internalServerError = {
+        error: 'Internal Server Error',
+        message: 'An internal server error occurred',
+        statusCode: 500,
+      };
 
-    it('returns an error object with the httpStatusCode and message as a result of the token request', function () { // eslint-disable-line
-      expect(error.message).to.be.equal('Internal Server Error');
-      expect(error.status).to.be.equal(500);
-      expect(error.context).to.be.equal(null);
-
-      expect(errorPromise.message).to.be.equal('Internal Server Error');
-      expect(errorPromise.status).to.be.equal(500);
-      expect(errorPromise.context).to.be.deep.equal({
-        description: 'Error details.',
-      });
+      expect(result).to.be.equal(undefined);
+      expect(error.isBoom).to.be.equal(true);
+      expect(error.output.payload).to.be.deep.equal(internalServerError);
     });
   });
 });
