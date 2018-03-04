@@ -27,7 +27,7 @@ describe('access token request', () => {
   let token;
 
   describe('on token creation', () => {
-    before(() => {
+    beforeEach(() => {
       const scopeOptions = {
         reqheaders: {
           Accept: 'application/json',
@@ -40,7 +40,7 @@ describe('access token request', () => {
         .reply(200, expectedAccessToken);
     });
 
-    before(async () => {
+    beforeEach(async () => {
       result = await oauth2.authorizationCode.getToken(tokenParams);
       token = oauth2.accessToken.create(result);
 
@@ -86,11 +86,9 @@ describe('access token request', () => {
     });
 
     describe('when expired', () => {
-      before(() => {
-        token.token.expires_at = startOfYesterday();
-      });
-
       it('returns false', () => {
+        token.token.expires_at = startOfYesterday();
+
         expect(token.expired()).to.be.equal(true);
       });
     });
