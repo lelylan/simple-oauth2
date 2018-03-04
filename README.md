@@ -120,7 +120,7 @@ const oauth2 = require('simple-oauth2').create(credentials);
 // Authorization oauth2 URI
 const authorizationUri = oauth2.authorizationCode.authorizeURL({
   redirect_uri: 'http://localhost:3000/callback',
-  scope: '<scope>',
+  scope: '<scope>', // also can be an array of multiple scopes, ex. ['<scope1>, '<scope2>', '...']
   state: '<state>'
 });
 
