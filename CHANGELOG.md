@@ -1,10 +1,11 @@
 # Changelog
 
-## Next
+## v2.0.0
 
 * Replace internal request library to wreck
 * Replace bluebird with native promise implementation
 * Replace callback interface with async/await
+* Improve integration tests coverage
 
 ## v1.5.1
 
