@@ -1,1 +1,3 @@
 example
+.nyc_output
+coverage

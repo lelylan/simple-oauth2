@@ -18,29 +18,43 @@ describe('authorization code grant type', () => {
       state: '02afe928b',
     };
 
-    describe('with default configuration', () => {
-      it('returns the authorization URI', () => {
-        const oauth2 = oauth2Module.create(baseConfig);
-        const authorizationURL = oauth2.authorizationCode.authorizeURL(authorizeConfig);
-        const expectedAuthorizationURL = `https://authorization-server.org/oauth/authorize?response_type=code&client_id=the%20client%20id&redirect_uri=${encodeURIComponent('http://localhost:3000/callback')}&scope=user&state=02afe928b`;
+    describe('with default module configuration', () => {
+      describe('when no options are provided', () => {
+        it('returns the authorization URI', () => {
+          const oauth2 = oauth2Module.create(baseConfig);
+          const authorizationURL = oauth2.authorizationCode.authorizeURL();
+          const expectedAuthorizationURL = 'https://authorization-server.org/oauth/authorize?response_type=code&client_id=the%20client%20id';
 
-        expect(authorizationURL).to.be.equal(expectedAuthorizationURL);
+          expect(authorizationURL).to.be.equal(expectedAuthorizationURL);
+        });
+      });
+
+      describe('when options are provided', () => {
+        it('returns the authorization URI', () => {
+          const oauth2 = oauth2Module.create(baseConfig);
+          const authorizationURL = oauth2.authorizationCode.authorizeURL(authorizeConfig);
+          const expectedAuthorizationURL = `https://authorization-server.org/oauth/authorize?response_type=code&client_id=the%20client%20id&redirect_uri=${encodeURIComponent('http://localhost:3000/callback')}&scope=user&state=02afe928b`;
+
+          expect(authorizationURL).to.be.equal(expectedAuthorizationURL);
+        });
+      });
+
+      describe('when multiple scopes are provided as an array', () => {
+        const authConfigMultScopesAry = Object.assign({}, authorizeConfig, {
+          scope: ['user', 'account'],
+        });
+
+        it('returns the authorization URI with scopes joined by commas', () => {
+          const oauth2 = oauth2Module.create(baseConfig);
+          const authorizationURL = oauth2.authorizationCode.authorizeURL(authConfigMultScopesAry);
+          const expectedAuthorizationURL = `https://authorization-server.org/oauth/authorize?response_type=code&client_id=the%20client%20id&redirect_uri=${encodeURIComponent('http://localhost:3000/callback')}&scope=user%2Caccount&state=02afe928b`;
+
+          expect(authorizationURL).to.be.equal(expectedAuthorizationURL);
+        });
       });
     });
 
-    describe('with multiple scopes in configuration provided as an array', () => {
-      const authConfigMultScopesAry = Object.assign({}, authorizeConfig, { scope: ['user', 'account'] });
-
-      it('returns the authorization URI with scopes joined by commas', () => {
-        const oauth2 = oauth2Module.create(baseConfig);
-        const authorizationURL = oauth2.authorizationCode.authorizeURL(authConfigMultScopesAry);
-        const expectedAuthorizationURL = `https://authorization-server.org/oauth/authorize?response_type=code&client_id=the%20client%20id&redirect_uri=${encodeURIComponent('http://localhost:3000/callback')}&scope=user%2Caccount&state=02afe928b`;
-
-        expect(authorizationURL).to.be.equal(expectedAuthorizationURL);
-      });
-    });
-
-    describe('with custom configuration', () => {
+    describe('with custom module configuration', () => {
       it('uses a custom idParamName', () => {
         const oauth2 = oauth2Module.create({
           client: {

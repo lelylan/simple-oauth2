@@ -1,4 +1,8 @@
 {
+  "rules": {
+    "max-len": "off",
+    "object-curly-newline": "off"
+  },
   "env": {
     "mocha": true
   }

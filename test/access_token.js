@@ -1,179 +1,253 @@
 'use strict';
 
 const qs = require('querystring');
+const Chance = require('chance');
 const nock = require('nock');
 const { expect } = require('chai');
-const isValid = require('date-fns/is_valid');
-const isEqual = require('date-fns/is_equal');
-const startOfYesterday = require('date-fns/start_of_yesterday');
+const { defaultsDeep } = require('lodash');
+const { isValid, isEqual, differenceInSeconds, startOfYesterday } = require('date-fns');
+
 const oauth2Module = require('./../index.js');
-const baseConfig = require('./fixtures/module-config');
-const revokeConfig = require('./fixtures/revoke-token-params.json');
-const refreshConfig = require('./fixtures/refresh-token.json');
-const expectedAccessToken = require('./fixtures/access_token');
-const authorizationCodeParams = require('./fixtures/auth-code-params.json');
-const refreshWithAdditionalParamsConfig = require('./fixtures/refresh-token-with-params.json');
+const accessTokenMixin = require('./mixins/access-token');
+const moduleConfig = require('./fixtures/module-config');
 
-const oauth2 = oauth2Module.create(baseConfig);
+const chance = new Chance();
+chance.mixin(accessTokenMixin);
 
-const tokenParams = {
-  code: 'code',
-  redirect_uri: 'http://callback.com',
+const oauth2 = oauth2Module.create(moduleConfig);
+
+const scopeOptions = {
+  reqheaders: {
+    Accept: 'application/json',
+    Authorization: 'Basic dGhlK2NsaWVudCtpZDp0aGUrY2xpZW50K3NlY3JldA==',
+  },
 };
 
-describe('access token request', () => {
-  let scope;
-  let result;
-  let token;
+describe('on access token creation', () => {
+  it('creates a new access token instance', () => {
+    const accessTokenResponse = {
+      access_token: chance.guid(),
+      refresh_token: chance.guid(),
+      token_type: 'bearer',
+      expires_in: chance.second(),
+    };
 
-  describe('on token creation', () => {
-    beforeEach(() => {
-      const scopeOptions = {
-        reqheaders: {
-          Accept: 'application/json',
-          Authorization: 'Basic dGhlK2NsaWVudCtpZDp0aGUrY2xpZW50K3NlY3JldA==',
-        },
-      };
+    const accessToken = oauth2.accessToken.create(accessTokenResponse);
 
-      scope = nock('https://authorization-server.org:443', scopeOptions)
-        .post('/oauth/token', qs.stringify(authorizationCodeParams))
-        .reply(200, expectedAccessToken);
-    });
-
-    beforeEach(async () => {
-      result = await oauth2.authorizationCode.getToken(tokenParams);
-      token = oauth2.accessToken.create(result);
-
-      scope.done();
-    });
-
-    describe('#create', () => {
-      it('creates an access token wrapper object', () => {
-        expect(token).to.have.property('token');
-        expect(token).to.have.property('refresh');
-        expect(token).to.have.property('revoke');
-        expect(token).to.have.property('expired');
-      });
-    });
-
-    describe('when checking for token expiration', () => {
-      it('uses the set expires_at property', () => {
-        token.token.expires_at = startOfYesterday();
-        const expiredToken = oauth2.accessToken.create(token.token);
-
-        expect(isValid(expiredToken.token.expires_at)).to.be.equal(true, 'is a valid date');
-        expect(isEqual(expiredToken.token.expires_at, token.token.expires_at)).to.be.equal(true);
-      });
-
-      it('parses a set expires_at property', () => {
-        const yesterday = startOfYesterday();
-        token.token.expires_at = yesterday.toString();
-        const expiredToken = oauth2.accessToken.create(token.token);
-
-        expect(isValid(expiredToken.token.expires_at)).to.be.equal(true, 'is a valid date');
-        expect(isEqual(expiredToken.token.expires_at, token.token.expires_at)).to.be.equal(true);
-      });
-
-      it('create its own date by default', () => {
-        expect(isValid(token.token.expires_at)).to.be.equal(true, 'is a valid date');
-      });
-    });
-
-    describe('when not expired', () => {
-      it('returns false', () => {
-        expect(token.expired()).to.be.equal(false);
-      });
-    });
-
-    describe('when expired', () => {
-      it('returns false', () => {
-        token.token.expires_at = startOfYesterday();
-
-        expect(token.expired()).to.be.equal(true);
-      });
-    });
+    expect(accessToken).to.have.property('token');
+    expect(accessToken).to.have.property('refresh');
+    expect(accessToken).to.have.property('revoke');
+    expect(accessToken).to.have.property('expired');
   });
 
-  describe('when refreshes token', () => {
-    beforeEach(() => {
-      const scopeOptions = {
-        reqheaders: {
-          Accept: 'application/json',
-          Authorization: 'Basic dGhlK2NsaWVudCtpZDp0aGUrY2xpZW50K3NlY3JldA==',
-        },
-      };
-
-      scope = nock('https://authorization-server.org:443', scopeOptions)
-        .post('/oauth/token', qs.stringify(refreshConfig))
-        .reply(200, expectedAccessToken);
+  it('assigns the access token property when is already a date', () => {
+    const accessTokenResponse = chance.accessToken({
+      expired: true,
+      parseDate: true,
+      expireMode: 'expires_at',
     });
 
-    beforeEach(async () => {
-      result = await token.refresh();
-    });
+    const accessToken = oauth2.accessToken.create(accessTokenResponse);
 
-    it('performs the http request', () => {
-      scope.done();
-    });
-
-    it('returns a new oauth2.accessToken as a result of the token refresh', () => {
-      expect(result.token).to.have.property('access_token');
-    });
+    expect(isValid(accessToken.token.expires_at)).to.be.equal(true);
+    expect(isEqual(accessToken.token.expires_at, startOfYesterday())).to.be.equal(true);
   });
 
-  describe('when refreshes token with custom refresh path', () => {
+  it('parses the expires_at property as date when set', () => {
+    const accessTokenResponse = chance.accessToken({
+      expired: true,
+      parseDate: false,
+      expireMode: 'expires_at',
+    });
+
+    const accessToken = oauth2.accessToken.create(accessTokenResponse);
+
+    expect(isValid(accessToken.token.expires_at)).to.be.equal(true);
+    expect(isEqual(accessToken.token.expires_at, startOfYesterday())).to.be.equal(true);
   });
 
-  describe('when refreshes token with additional params', () => {
-    beforeEach(() => {
-      const scopeOptions = {
-        reqheaders: {
-          Accept: 'application/json',
-          Authorization: 'Basic dGhlK2NsaWVudCtpZDp0aGUrY2xpZW50K3NlY3JldA==',
-        },
-      };
-
-      scope = nock('https://authorization-server.org:443', scopeOptions)
-        .post('/oauth/token', qs.stringify(refreshWithAdditionalParamsConfig))
-        .reply(200, expectedAccessToken);
+  it('computes the expires_at property when only expires_in is present', () => {
+    const accessTokenResponse = chance.accessToken({
+      expireMode: 'expires_in',
     });
 
-    beforeEach(async () => {
-      result = await token.refresh({ scope: 'TESTING_EXAMPLE_SCOPES' });
+    const today = new Date();
+    const accessToken = oauth2.accessToken.create(accessTokenResponse);
+
+    expect(isValid(accessToken.token.expires_at)).to.be.equal(true);
+
+    const diffInSeconds = differenceInSeconds(accessToken.token.expires_at, today);
+    expect(diffInSeconds).to.be.equal(accessTokenResponse.expires_in);
+  });
+});
+
+describe('on token expiration verification', () => {
+  it('returns true when expired', () => {
+    const accessTokenResponse = chance.accessToken({
+      expired: true,
+      expireMode: 'expires_at',
     });
 
-    it('performs the http request', () => {
-      scope.done();
-    });
+    const accessToken = oauth2.accessToken.create(accessTokenResponse);
 
-    it('returns a new oauth2.accessToken as a result of the token refresh', () => {
-      expect(result.token).to.have.property('access_token');
-    });
+    expect(accessToken.expired()).to.be.equal(true);
   });
 
-  describe('when revoking tokens', () => {
-    before(() => {
-      const scopeOptions = {
-        reqheaders: {
-          Accept: 'application/json',
-          Authorization: 'Basic dGhlK2NsaWVudCtpZDp0aGUrY2xpZW50K3NlY3JldA==',
-        },
-      };
-
-      scope = nock('https://authorization-server.org:443', scopeOptions)
-        .post('/oauth/revoke', qs.stringify(revokeConfig))
-        .reply(200);
+  it('returns false when no expired', () => {
+    const accessTokenResponse = chance.accessToken({
+      expired: false,
+      expireMode: 'expires_at',
     });
 
-    before(() => {
-      return token.revoke('refresh_token');
+    const accessToken = oauth2.accessToken.create(accessTokenResponse);
+
+    expect(accessToken.expired()).to.be.equal(false);
+  });
+});
+
+describe('on token refresh', () => {
+  it('creates a new access token with default params', async () => {
+    const accessTokenResponse = chance.accessToken({
+      expireMode: 'expires_in',
     });
 
-    it('performs the http request', () => {
-      scope.done();
-    });
+    const refreshParams = {
+      grant_type: 'refresh_token',
+      refresh_token: accessTokenResponse.refresh_token,
+    };
+
+    const scope = nock('https://authorization-server.org:443', scopeOptions)
+      .post('/oauth/token', qs.stringify(refreshParams))
+      .reply(200, accessTokenResponse);
+
+    const accessToken = oauth2.accessToken.create(accessTokenResponse);
+    const refreshAccessToken = await accessToken.refresh();
+
+    scope.done();
+    expect(refreshAccessToken.token).to.have.property('access_token');
   });
 
-  describe('when revoking tokens with custom revoke path', () => {
+  it('creates a new access token with custom params', async () => {
+    const accessTokenResponse = chance.accessToken({
+      expireMode: 'expires_in',
+    });
+
+    const refreshParams = {
+      scope: 'TESTING_EXAMPLE_SCOPES',
+      grant_type: 'refresh_token',
+      refresh_token: accessTokenResponse.refresh_token,
+    };
+
+    const scope = nock('https://authorization-server.org:443', scopeOptions)
+      .post('/oauth/token', qs.stringify(refreshParams))
+      .reply(200, accessTokenResponse);
+
+    const accessToken = oauth2.accessToken.create(accessTokenResponse);
+    const refreshAccessToken = await accessToken.refresh({
+      scope: 'TESTING_EXAMPLE_SCOPES',
+    });
+
+    scope.done();
+    expect(refreshAccessToken.token).to.have.property('access_token');
+  });
+
+  it('creates a new access token with custom tokenPath', async () => {
+    const customModuleConfig = defaultsDeep({}, moduleConfig, {
+      auth: {
+        tokenPath: '/the-custom/path',
+      },
+    });
+
+    const accessTokenResponse = chance.accessToken({
+      expireMode: 'expires_in',
+    });
+
+    const oauth2WithCustomOptions = oauth2Module.create(customModuleConfig);
+
+    const refreshParams = {
+      scope: 'TESTING_EXAMPLE_SCOPES',
+      grant_type: 'refresh_token',
+      refresh_token: accessTokenResponse.refresh_token,
+    };
+
+    const scope = nock('https://authorization-server.org:443', scopeOptions)
+      .post('/the-custom/path', qs.stringify(refreshParams))
+      .reply(200, accessTokenResponse);
+
+    const accessToken = oauth2WithCustomOptions.accessToken.create(accessTokenResponse);
+    const refreshAccessToken = await accessToken.refresh({ scope: 'TESTING_EXAMPLE_SCOPES' });
+
+    scope.done();
+    expect(refreshAccessToken.token).to.have.property('access_token');
+  });
+});
+
+describe('on token revoke', () => {
+  it('perform an access token revoke', async () => {
+    const accessTokenResponse = chance.accessToken({
+      expireMode: 'expires_in',
+    });
+
+    const revokeParams = {
+      token: accessTokenResponse.access_token,
+      token_type_hint: 'access_token',
+    };
+
+    const scope = nock('https://authorization-server.org:443', scopeOptions)
+      .post('/oauth/revoke', qs.stringify(revokeParams))
+      .reply(200);
+
+    const accessToken = oauth2.accessToken.create(accessTokenResponse);
+    await accessToken.revoke('access_token');
+
+    scope.done();
+  });
+
+  it('perform a refresh token revoke', async () => {
+    const accessTokenResponse = chance.accessToken({
+      expireMode: 'expires_in',
+    });
+
+    const revokeParams = {
+      token: accessTokenResponse.refresh_token,
+      token_type_hint: 'refresh_token',
+    };
+
+    const scope = nock('https://authorization-server.org:443', scopeOptions)
+      .post('/oauth/revoke', qs.stringify(revokeParams))
+      .reply(200);
+
+    const accessToken = oauth2.accessToken.create(accessTokenResponse);
+    await accessToken.revoke('refresh_token');
+
+    scope.done();
+  });
+
+  it('performs a token revoke with custom revokePath', async () => {
+    const customModuleConfig = defaultsDeep({}, moduleConfig, {
+      auth: {
+        revokePath: '/the-custom/revoke-path',
+      },
+    });
+
+    const oauth2WithCustomOptions = oauth2Module.create(customModuleConfig);
+
+    const accessTokenResponse = chance.accessToken({
+      expireMode: 'expires_in',
+    });
+
+    const revokeParams = {
+      token: accessTokenResponse.refresh_token,
+      token_type_hint: 'refresh_token',
+    };
+
+    const scope = nock('https://authorization-server.org:443', scopeOptions)
+      .post('/the-custom/revoke-path', qs.stringify(revokeParams))
+      .reply(200);
+
+    const accessToken = oauth2WithCustomOptions.accessToken.create(accessTokenResponse);
+    await accessToken.revoke('refresh_token');
+
+    scope.done();
   });
 });
