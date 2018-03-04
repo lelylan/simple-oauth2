@@ -136,5 +136,47 @@ describe('owner password gran type', () => {
         expect(result).to.be.deep.equal(expectedAccessToken);
       });
     });
+
+    describe('with additional http configuration', () => {
+      let scope;
+      let result;
+
+      before(() => {
+        const scopeOptions = {
+          reqheaders: {
+            Accept: 'application/json',
+            Authorization: 'Basic dGhlK2NsaWVudCtpZDp0aGUrY2xpZW50K3NlY3JldA==',
+            'X-MYTHICAL-HEADER': 'mythical value',
+            'USER-AGENT': 'hello agent',
+          },
+        };
+
+        scope = nock('https://authorization-server.org:443', scopeOptions)
+          .post('/oauth/token')
+          .reply(200, expectedAccessToken);
+      });
+
+      before(async () => {
+        const config = Object.assign({}, baseConfig, {
+          http: {
+            headers: {
+              'X-MYTHICAL-HEADER': 'mythical value',
+              'USER-AGENT': 'hello agent',
+            },
+          },
+        });
+
+        const oauth2 = oauth2Module.create(config);
+        result = await oauth2.ownerPassword.getToken(tokenOptions);
+      });
+
+      it('performs the http request', () => {
+        scope.done();
+      });
+
+      it('returns an access token as result of the token request', () => {
+        expect(result).to.be.deep.equal(expectedAccessToken);
+      });
+    });
   });
 });

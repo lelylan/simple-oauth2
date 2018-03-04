@@ -25,11 +25,7 @@ const optionsSchema = Joi
       authorizeHost: Joi.string().default(Joi.ref('tokenHost')),
       authorizePath: Joi.string().default('/oauth/authorize'),
     }).required(),
-    http: Joi.object().keys({
-      headers: Joi.object().default({
-        Accept: 'application/json',
-      }),
-    }).default().unknown(true),
+    http: Joi.object().unknown(true),
     options: Joi.object().keys({
       bodyFormat: Joi.any().only('form', 'json').default('form'),
       authorizationMethod: Joi.any().only('header', 'body').default('header'),
