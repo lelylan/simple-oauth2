@@ -1,6 +1,6 @@
 # Changelog
 
-## Next
+## v2.0.1
 
 * Add support to revoke accessToken and refreshToken in a single call with `revokeAll`
 
