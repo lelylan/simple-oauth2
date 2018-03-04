@@ -133,7 +133,8 @@ res.redirect(authorizationUri);
 // Get the access token object (the authorization code is given from the previous step).
 const tokenConfig = {
   code: '<code>',
-  redirect_uri: 'http://localhost:3000/callback'
+  redirect_uri: 'http://localhost:3000/callback',
+  scope: '<scope>', // also can be an array of multiple scopes, ex. ['<scope1>, '<scope2>', '...']
 };
 
 // Save the access token
@@ -159,7 +160,8 @@ const oauth2 = require('simple-oauth2').create(credentials);
 // Get the access token object.
 const tokenConfig = {
   username: 'username',
-  password: 'password'
+  password: 'password',
+  scope: '<scope>', // also can be an array of multiple scopes, ex. ['<scope1>, '<scope2>', '...']
 };
 
 // Save the access token
@@ -177,7 +179,9 @@ This flow is suitable when client is requesting access to the protected resource
 
 ```javascript
 const oauth2 = require('simple-oauth2').create(credentials);
-const tokenConfig = {};
+const tokenConfig = {
+  scope: '<scope>', // also can be an array of multiple scopes, ex. ['<scope1>, '<scope2>', '...']
+};
 
 // Get the access token object for the client
 try {
@@ -249,15 +253,26 @@ When you've done with the token or you want to log out, you can
 revoke the access token and refresh token.
 
 ```javascript
-
 // Revoke both access and refresh tokens
 try {
   // Revoke only the access token
-  await accessToken.revoke('access_token')
+  await accessToken.revoke('access_token');
 
   // Session ended. But the refresh_token is still valid.
   // Revoke the refresh token
   await accessToken.revoke('refresh_token');
+} catch (error) {
+  console.log('Error revoking token: ', error.message);
+}
+```
+
+As a convenience method, you can also revoke both tokens in a single call:
+
+```javascript
+// Revoke both access and refresh tokens
+try {
+  // Revokes both tokens, refresh token is only revoked if the access_token is properly revoked
+  await accessToken.revokeAll();
 } catch (error) {
   console.log('Error revoking token: ', error.message);
 }

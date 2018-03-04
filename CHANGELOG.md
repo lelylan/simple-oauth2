@@ -1,5 +1,9 @@
 # Changelog
 
+## v2.0.1
+
+* Add support to revoke accessToken and refreshToken in a single call with `revokeAll`
+
 ## v2.0.0
 
 * Replace internal request library to wreck

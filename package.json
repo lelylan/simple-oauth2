@@ -1,6 +1,6 @@
 {
   "name": "simple-oauth2",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Node.js client for OAuth2",
   "author": "Andrea Reginato <andrea.reginato@gmail.com>",
   "contributors": [
@@ -50,7 +50,7 @@
     "eslint-config-airbnb-base": "^12.0.0",
     "eslint-plugin-import": "^2.2.0",
     "lodash": "^4.17.5",
-    "mocha": "^4.0.1",
+    "mocha": "^5.0.1",
     "nock": "^9.0.13",
     "nyc": "^11.4.1"
   },
