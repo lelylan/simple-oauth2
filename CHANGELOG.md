@@ -1,5 +1,8 @@
 # Changelog
 
+## v1.5.2
+* Publish new version, to fix the 1.5.1 version which mistakenly included some breaking changes
+
 ## v1.5.1
 * Add support to specify scopes as array in `getToken` method
 * Add support to empty strings and visual ASCII characters on `clientId`/`clientSecret` options
