@@ -75,6 +75,19 @@ describe('on access token creation', () => {
     const diffInSeconds = differenceInSeconds(accessToken.token.expires_at, today);
     expect(diffInSeconds).to.be.equal(accessTokenResponse.expires_in);
   });
+
+  it('ignores the expiration parsing when no expiration property is available', () => {
+    const accessTokenResponse = chance.accessToken({
+      expireMode: 'expires_in',
+    });
+
+    delete accessTokenResponse.expires_in;
+
+    const accessToken = oauth2.accessToken.create(accessTokenResponse);
+
+    expect(accessToken.token.expires_in).to.be.equal(undefined, 'expires_in is not defined');
+    expect(accessToken.token.expires_at).to.be.equal(undefined, 'expires_at is not defined');
+  });
 });
 
 describe('on token expiration verification', () => {
@@ -94,6 +107,18 @@ describe('on token expiration verification', () => {
       expired: false,
       expireMode: 'expires_at',
     });
+
+    const accessToken = oauth2.accessToken.create(accessTokenResponse);
+
+    expect(accessToken.expired()).to.be.equal(false);
+  });
+
+  it('returns false when no expiration property is available', () => {
+    const accessTokenResponse = chance.accessToken({
+      expireMode: 'expires_in',
+    });
+
+    delete accessTokenResponse.expires_in;
 
     const accessToken = oauth2.accessToken.create(accessTokenResponse);
 
