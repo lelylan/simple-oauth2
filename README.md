@@ -133,8 +133,7 @@ res.redirect(authorizationUri);
 // Get the access token object (the authorization code is given from the previous step).
 const tokenConfig = {
   code: '<code>',
-  redirect_uri: 'http://localhost:3000/callback',
-  scope: '<scope>', // also can be an array of multiple scopes, ex. ['<scope1>, '<scope2>', '...']
+  redirect_uri: 'http://localhost:3000/callback'
 };
 
 // Save the access token
