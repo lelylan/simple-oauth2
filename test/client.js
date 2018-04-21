@@ -1,158 +1,118 @@
 'use strict';
 
-const nock = require('nock');
 const qs = require('querystring');
 const { expect } = require('chai');
 const oauth2Module = require('./../index');
 const baseConfig = require('./fixtures/module-config');
 const expectedAccessToken = require('./fixtures/access_token');
+const { stubTokenRequest } = require('./util');
 
-const tokenParams = {
-  random_param: 'random value',
+const tokenRequestParams = {
+  grant_type: 'client_credentials',
+  client_id: 'the client id',
+  client_secret: 'the client secret',
 };
 
 describe('client credentials grant type', () => {
   describe('when requesting an access token', () => {
-    let scope;
-    let result;
-
     describe('with body credentials', () => {
       describe('with json body', () => {
-        before(() => {
-          const scopeOptions = {
-            reqheaders: {
-              Accept: 'application/json',
-              'Content-Type': 'application/json',
-            },
-          };
-
-          const expectedRequestParams = {
-            grant_type: 'client_credentials',
-            client_id: 'the client id',
-            client_secret: 'the client secret',
-            random_param: 'random value',
-          };
-
-          scope = nock('https://authorization-server.org:443', scopeOptions)
-            .post('/oauth/token', expectedRequestParams)
-            .reply(200, expectedAccessToken);
-        });
-
-        before(async () => {
+        before(function () {
           const config = Object.assign({}, baseConfig, {
             options: {
               bodyFormat: 'json',
               authorizationMethod: 'body',
             },
           });
-
-          const oauth2 = oauth2Module.create(config);
-          result = await oauth2.clientCredentials.getToken(tokenParams);
+          this.oauth2 = oauth2Module.create(config);
+          this.headers = {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          };
         });
 
-        it('performs the http request', () => {
+        it('performs the http request', async function () {
+          const scope = stubTokenRequest({ headers: this.headers, requestBody: tokenRequestParams });
+          await this.oauth2.clientCredentials.getToken();
           scope.done();
         });
 
-        it('returns an access token as result of the token request', () => {
+        it('preserves additional request params', async function () {
+          const expectedRequestParams = { ...tokenRequestParams, random_param: 'random value' };
+          stubTokenRequest({ headers: this.headers, requestBody: expectedRequestParams });
+          await this.oauth2.clientCredentials.getToken({ random_param: 'random value' });
+        });
+
+        it('returns an access token as result of the token request', async function () {
+          stubTokenRequest({ headers: this.headers, requestBody: tokenRequestParams });
+          const result = await this.oauth2.clientCredentials.getToken();
           expect(result).to.be.deep.equal(expectedAccessToken);
         });
       });
 
       describe('with form body', () => {
-        before(() => {
-          const scopeOptions = {
-            reqheaders: {
-              Accept: 'application/json',
-              'Content-Type': 'application/x-www-form-urlencoded',
-            },
-          };
-
-          const expectedRequestParams = {
-            random_param: 'random value',
-            grant_type: 'client_credentials',
-            client_id: 'the client id',
-            client_secret: 'the client secret',
-          };
-
-          scope = nock('https://authorization-server.org:443', scopeOptions)
-            .post('/oauth/token', qs.stringify(expectedRequestParams))
-            .reply(200, expectedAccessToken);
-        });
-
-        before(async () => {
+        before(function () {
           const config = Object.assign({}, baseConfig, {
             options: {
               bodyFormat: 'form',
               authorizationMethod: 'body',
             },
           });
-
-          const oauth2 = oauth2Module.create(config);
-          result = await oauth2.clientCredentials.getToken(tokenParams);
+          this.oauth2 = oauth2Module.create(config);
+          this.headers = {
+            Accept: 'application/json',
+            'Content-Type': 'application/x-www-form-urlencoded',
+          };
         });
 
-        it('performs the http request', () => {
+        it('performs the http request', async function () {
+          const scope = stubTokenRequest({ headers: this.headers, requestBody: qs.stringify(tokenRequestParams) });
+          await this.oauth2.clientCredentials.getToken();
           scope.done();
         });
 
-        it('returns an access token as result of the token request', () => {
+        it('preserves additional request params', async function () {
+          stubTokenRequest({ headers: this.headers, requestBody: /random_param=random%20value/ });
+          await this.oauth2.clientCredentials.getToken({ random_param: 'random value' });
+        });
+
+        it('returns an access token as result of the token request', async function () {
+          stubTokenRequest({ headers: this.headers, requestBody: qs.stringify(tokenRequestParams) });
+          const result = await this.oauth2.clientCredentials.getToken();
           expect(result).to.be.deep.equal(expectedAccessToken);
         });
       });
     });
 
     describe('with header credentials', () => {
-      before(() => {
-        const scopeOptions = {
-          reqheaders: {
-            Accept: 'application/json',
-            Authorization: 'Basic dGhlK2NsaWVudCtpZDp0aGUrY2xpZW50K3NlY3JldA==',
-          },
-        };
-
-        scope = nock('https://authorization-server.org:443', scopeOptions)
-          .post('/oauth/token')
-          .reply(200, expectedAccessToken);
-      });
-
-      before(async () => {
+      before(function () {
         const config = Object.assign({}, baseConfig, {
           options: {
             authorizationMethod: 'header',
           },
         });
-
-        const oauth2 = oauth2Module.create(config);
-        result = await oauth2.clientCredentials.getToken(tokenParams);
+        this.oauth2 = oauth2Module.create(config);
+        this.headers = {
+          Accept: 'application/json',
+          Authorization: 'Basic dGhlK2NsaWVudCtpZDp0aGUrY2xpZW50K3NlY3JldA==',
+        };
       });
 
-      it('performs the http request', () => {
+      it('performs the http request', async function () {
+        const scope = stubTokenRequest({ headers: this.headers });
+        await this.oauth2.clientCredentials.getToken();
         scope.done();
       });
 
-      it('returns an access token as result of the token request', () => {
+      it('returns an access token as result of the token request', async function () {
+        stubTokenRequest({ headers: this.headers });
+        const result = await this.oauth2.clientCredentials.getToken();
         expect(result).to.be.deep.equal(expectedAccessToken);
       });
     });
 
     describe('with additional http configuration', () => {
-      before(() => {
-        const scopeOptions = {
-          reqheaders: {
-            Accept: 'application/json',
-            Authorization: 'Basic dGhlK2NsaWVudCtpZDp0aGUrY2xpZW50K3NlY3JldA==',
-            'X-MYTHICAL-HEADER': 'mythical value',
-            'USER-AGENT': 'hello agent',
-          },
-        };
-
-        scope = nock('https://authorization-server.org:443', scopeOptions)
-          .post('/oauth/token')
-          .reply(200, expectedAccessToken);
-      });
-
-      before(async () => {
+      before(function () {
         const config = Object.assign({}, baseConfig, {
           http: {
             headers: {
@@ -161,16 +121,24 @@ describe('client credentials grant type', () => {
             },
           },
         });
-
-        const oauth2 = oauth2Module.create(config);
-        result = await oauth2.clientCredentials.getToken(tokenParams);
+        this.oauth2 = oauth2Module.create(config);
+        this.headers = {
+          Accept: 'application/json',
+          Authorization: 'Basic dGhlK2NsaWVudCtpZDp0aGUrY2xpZW50K3NlY3JldA==',
+          'X-MYTHICAL-HEADER': 'mythical value',
+          'USER-AGENT': 'hello agent',
+        };
       });
 
-      it('performs the http request', () => {
+      it('performs the http request', async function () {
+        const scope = stubTokenRequest({ headers: this.headers });
+        await this.oauth2.clientCredentials.getToken();
         scope.done();
       });
 
-      it('returns an access token as result of the token request', () => {
+      it('returns an access token as result of the token request', async function () {
+        stubTokenRequest({ headers: this.headers });
+        const result = await this.oauth2.clientCredentials.getToken();
         expect(result).to.be.deep.equal(expectedAccessToken);
       });
     });
