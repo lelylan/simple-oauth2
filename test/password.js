@@ -44,6 +44,12 @@ describe('owner password grant type', () => {
           scope.done();
         });
 
+        it('accepts scope as string', async function () {
+          const expectedRequestParams = { ...tokenRequestParams, scope: 'scope-a' };
+          stubTokenRequest({ headers: this.headers, requestBody: expectedRequestParams });
+          await this.oauth2.ownerPassword.getToken({ ...tokenOptions, scope: 'scope-a' });
+        });
+
         it('returns an access token as result of the token request', async function () {
           stubTokenRequest({ headers: this.headers, requestBody: tokenRequestParams });
           const result = await this.oauth2.ownerPassword.getToken(tokenOptions);
@@ -71,6 +77,11 @@ describe('owner password grant type', () => {
           const scope = stubTokenRequest({ headers: this.headers, requestBody: qs.stringify(tokenRequestParams) });
           await this.oauth2.ownerPassword.getToken(tokenOptions);
           scope.done();
+        });
+
+        it('accepts scope as string', async function () {
+          stubTokenRequest({ headers: this.headers, requestBody: /scope=scope-a/ });
+          await this.oauth2.ownerPassword.getToken({ ...tokenOptions, scope: 'scope-a' });
         });
 
         it('returns an access token as result of the token request', async function () {

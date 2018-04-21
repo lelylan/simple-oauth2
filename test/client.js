@@ -43,6 +43,12 @@ describe('client credentials grant type', () => {
           await this.oauth2.clientCredentials.getToken({ random_param: 'random value' });
         });
 
+        it('accepts scope as string', async function () {
+          const expectedRequestParams = { ...tokenRequestParams, scope: 'scope-a' };
+          stubTokenRequest({ headers: this.headers, requestBody: expectedRequestParams });
+          await this.oauth2.clientCredentials.getToken({ scope: 'scope-a' });
+        });
+
         it('returns an access token as result of the token request', async function () {
           stubTokenRequest({ headers: this.headers, requestBody: tokenRequestParams });
           const result = await this.oauth2.clientCredentials.getToken();
@@ -74,6 +80,11 @@ describe('client credentials grant type', () => {
         it('preserves additional request params', async function () {
           stubTokenRequest({ headers: this.headers, requestBody: /random_param=random%20value/ });
           await this.oauth2.clientCredentials.getToken({ random_param: 'random value' });
+        });
+
+        it('accepts scope as string', async function () {
+          stubTokenRequest({ headers: this.headers, requestBody: /scope=scope-a/ });
+          await this.oauth2.clientCredentials.getToken({ scope: 'scope-a' });
         });
 
         it('returns an access token as result of the token request', async function () {
