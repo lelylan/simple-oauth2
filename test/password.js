@@ -50,6 +50,12 @@ describe('owner password grant type', () => {
           await this.oauth2.ownerPassword.getToken({ ...tokenOptions, scope: 'scope-a' });
         });
 
+        it('accepts scope as array', async function () {
+          const expectedRequestParams = { ...tokenRequestParams, scope: 'scope-a scope-b' };
+          stubTokenRequest({ headers: this.headers, requestBody: expectedRequestParams });
+          await this.oauth2.ownerPassword.getToken({ ...tokenOptions, scope: ['scope-a', 'scope-b'] });
+        });
+
         it('returns an access token as result of the token request', async function () {
           stubTokenRequest({ headers: this.headers, requestBody: tokenRequestParams });
           const result = await this.oauth2.ownerPassword.getToken(tokenOptions);
@@ -82,6 +88,11 @@ describe('owner password grant type', () => {
         it('accepts scope as string', async function () {
           stubTokenRequest({ headers: this.headers, requestBody: /scope=scope-a/ });
           await this.oauth2.ownerPassword.getToken({ ...tokenOptions, scope: 'scope-a' });
+        });
+
+        it('accepts scope as array', async function () {
+          stubTokenRequest({ headers: this.headers, requestBody: /scope=scope-a%20scope-b/ });
+          await this.oauth2.ownerPassword.getToken({ ...tokenOptions, scope: ['scope-a', 'scope-b'] });
         });
 
         it('returns an access token as result of the token request', async function () {
