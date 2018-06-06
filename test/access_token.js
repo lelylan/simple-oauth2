@@ -88,7 +88,7 @@ describe('access token request', () => {
     });
   });
 
-  describe.only('#create with expires_at', () => {
+  describe('#create with expires_at', () => {
     it('uses the set expires_at property', () => {
       token.token.expires_at = startOfYesterday();
       const expiredToken = oauth2.accessToken.create(token.token);
