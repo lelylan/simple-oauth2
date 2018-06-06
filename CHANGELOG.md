@@ -1,5 +1,9 @@
 # Changelog
 
+## Next
+
+* Expired tokens ignore backport
+
 ## v1.5.2
 * Publish new version, to fix the 1.5.1 version which mistakenly included some breaking changes
 

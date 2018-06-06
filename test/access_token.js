@@ -65,9 +65,30 @@ describe('access token request', () => {
       expect(token).to.have.property('token');
       expect(tokenPromise).to.have.property('token');
     });
+
+    it('ignores the expiration parsing when no expiration property is available', () => {
+      const accessTokenResponse = {
+        access_token: 'the-token',
+      };
+
+      const accessToken = oauth2.accessToken.create(accessTokenResponse);
+
+      expect(accessToken.token).to.not.have.property('expires_in');
+      expect(accessToken.token).to.not.have.property('expires_at');
+    });
+
+    it('returns false when no expiration property is available', () => {
+      const accessTokenResponse = {
+        access_token: 'the-token',
+      };
+
+      const accessToken = oauth2.accessToken.create(accessTokenResponse);
+
+      expect(accessToken.expired()).to.be.equal(false);
+    });
   });
 
-  describe('#create with expires_at', () => {
+  describe.only('#create with expires_at', () => {
     it('uses the set expires_at property', () => {
       token.token.expires_at = startOfYesterday();
       const expiredToken = oauth2.accessToken.create(token.token);
