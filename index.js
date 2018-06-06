@@ -3,7 +3,7 @@
 const Joi = require('joi');
 const authCodeModule = require('./lib/client/auth-code');
 const passwordModule = require('./lib/client/password');
-const accessTokenModule = require('./lib/client/access-token');
+const accessTokenModule = require('./lib/access-token');
 const clientCredentialsModule = require('./lib/client/client');
 
 // https://tools.ietf.org/html/draft-ietf-oauth-v2-31#appendix-A.1

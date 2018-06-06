@@ -1,18 +1,18 @@
 'use strict';
 
 const qs = require('querystring');
-const Chance = require('chance');
 const nock = require('nock');
+const Chance = require('chance');
+const accessTokenMixin = require('chance-access-token');
 const { expect } = require('chai');
 const { defaultsDeep } = require('lodash');
-const { isValid, isEqual, differenceInSeconds, startOfYesterday } = require('date-fns');
+const { isValid, isDate, differenceInSeconds } = require('date-fns');
 
 const oauth2Module = require('./../index.js');
-const accessTokenMixin = require('./mixins/access-token');
 const moduleConfig = require('./fixtures/module-config');
 
 const chance = new Chance();
-chance.mixin(accessTokenMixin);
+chance.mixin({ accessToken: accessTokenMixin });
 
 const oauth2 = oauth2Module.create(moduleConfig);
 
@@ -25,12 +25,7 @@ const scopeOptions = {
 
 describe('on access token creation', () => {
   it('creates a new access token instance', () => {
-    const accessTokenResponse = {
-      access_token: chance.guid(),
-      refresh_token: chance.guid(),
-      token_type: 'bearer',
-      expires_in: chance.second(),
-    };
+    const accessTokenResponse = chance.accessToken();
 
     const accessToken = oauth2.accessToken.create(accessTokenResponse);
 
@@ -49,8 +44,8 @@ describe('on access token creation', () => {
 
     const accessToken = oauth2.accessToken.create(accessTokenResponse);
 
+    expect(isDate(accessToken.token.expires_at)).to.be.equal(true);
     expect(isValid(accessToken.token.expires_at)).to.be.equal(true);
-    expect(isEqual(accessToken.token.expires_at, startOfYesterday())).to.be.equal(true);
   });
 
   it('parses the expires_at property as date when set', () => {
@@ -62,8 +57,8 @@ describe('on access token creation', () => {
 
     const accessToken = oauth2.accessToken.create(accessTokenResponse);
 
+    expect(isDate(accessToken.token.expires_at)).to.be.equal(true);
     expect(isValid(accessToken.token.expires_at)).to.be.equal(true);
-    expect(isEqual(accessToken.token.expires_at, startOfYesterday())).to.be.equal(true);
   });
 
   it('computes the expires_at property when only expires_in is present', () => {
@@ -74,10 +69,22 @@ describe('on access token creation', () => {
     const today = new Date();
     const accessToken = oauth2.accessToken.create(accessTokenResponse);
 
+    expect(isDate(accessToken.token.expires_at)).to.be.equal(true);
     expect(isValid(accessToken.token.expires_at)).to.be.equal(true);
 
     const diffInSeconds = differenceInSeconds(accessToken.token.expires_at, today);
     expect(diffInSeconds).to.be.equal(accessTokenResponse.expires_in);
+  });
+
+  it('ignores the expiration parsing when no expiration property is available', () => {
+    const accessTokenResponse = chance.accessToken({
+      expireMode: 'no_expiration',
+    });
+
+    const accessToken = oauth2.accessToken.create(accessTokenResponse);
+
+    expect(accessToken.token).to.not.have.property('expires_in');
+    expect(accessToken.token).to.not.have.property('expires_at');
   });
 });
 
@@ -97,6 +104,16 @@ describe('on token expiration verification', () => {
     const accessTokenResponse = chance.accessToken({
       expired: false,
       expireMode: 'expires_at',
+    });
+
+    const accessToken = oauth2.accessToken.create(accessTokenResponse);
+
+    expect(accessToken.expired()).to.be.equal(false);
+  });
+
+  it('returns false when no expiration property is available', () => {
+    const accessTokenResponse = chance.accessToken({
+      expireMode: 'no_expiration',
     });
 
     const accessToken = oauth2.accessToken.create(accessTokenResponse);
