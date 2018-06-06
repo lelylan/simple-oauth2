@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.1.0
+
+* Ignore access token date properties when not available
+
 ## v2.0.1
 
 * Add support to revoke accessToken and refreshToken in a single call with `revokeAll`
