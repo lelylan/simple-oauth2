@@ -1,8 +1,8 @@
 # Changelog
 
-## Next
+## 1.6.0
 
-* Expired tokens ignore backport
+* Ignore access tokens without expiration properties (backport)
 
 ## v1.5.2
 * Publish new version, to fix the 1.5.1 version which mistakenly included some breaking changes
