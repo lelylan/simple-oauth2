@@ -1,66 +1,19 @@
 'use strict';
 
-const express = require('express');
-const simpleOauthModule = require('./../');
+const app = require('express')();
+const port = 3000;
 
-const app = express();
-const oauth2 = simpleOauthModule.create({
-  client: {
-    id: '<CLIENT_ID>',
-    secret: '<CLIENT_SECRET>',
-  },
-  auth: {
-    tokenHost: 'https://github.com',
-    tokenPath: '/login/oauth/access_token',
-    authorizePath: '/login/oauth/authorize',
-  },
-});
+module.exports = (cb) => {
+  const callbackUrl = 'http://localhost:3000/callback';
 
-// Authorization uri definition
-const authorizationUri = oauth2.authorizationCode.authorizeURL({
-  redirect_uri: 'http://localhost:3000/callback',
-  scope: 'notifications',
-  state: '3(#0/!~',
-});
+  app.listen(port, (err) => {
+    if (err) return console.error(err);
 
-// Initial page redirecting to Github
-app.get('/auth', (req, res) => {
-  console.log(authorizationUri);
-  res.redirect(authorizationUri);
-});
+    console.log(`Express server listening at http://localhost:${port}`);
 
-// Callback service parsing the authorization token and asking for the access token
-app.get('/callback', async (req, res) => {
-  const code = req.query.code;
-  const options = {
-    code,
-  };
-
-  try {
-    const result = await oauth2.authorizationCode.getToken(options);
-
-    console.log('The resulting token: ', result);
-
-    const token = oauth2.accessToken.create(result);
-
-    return res.status(200).json(token)
-  } catch(error) {
-    console.error('Access Token Error', error.message);
-    return res.status(500).json('Authentication failed');
-  }
-});
-
-app.get('/success', (req, res) => {
-  res.send('');
-});
-
-app.get('/', (req, res) => {
-  res.send('Hello<br><a href="/auth">Log in with Github</a>');
-});
-
-app.listen(3000, () => {
-  console.log('Express server started on port 3000');
-});
-
-
-// Credits to [@lazybean](https://github.com/lazybean)
+    cb({
+      app,
+      callbackUrl,
+    });
+  });
+};

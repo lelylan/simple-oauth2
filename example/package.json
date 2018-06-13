@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js"
+    "start:github": "node github.js",
+    "start:microsoft": "node microsoft.js"
   },
   "keywords": [],
   "author": "",
