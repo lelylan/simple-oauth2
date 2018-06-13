@@ -1,6 +1,10 @@
 # Changelog
 
-## 2.1.0
+## 2.2.0
+
+* Fix access token expiration properties omission
+
+## 2.1.0 (Not published)
 
 * Ignore access token date properties when not available
 
