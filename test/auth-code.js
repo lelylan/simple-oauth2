@@ -47,7 +47,7 @@ describe('authorization code grant type', () => {
         it('returns the authorization URI with scopes joined by commas', () => {
           const oauth2 = oauth2Module.create(baseConfig);
           const authorizationURL = oauth2.authorizationCode.authorizeURL(authConfigMultScopesAry);
-          const expectedAuthorizationURL = `https://authorization-server.org/oauth/authorize?response_type=code&client_id=the%20client%20id&redirect_uri=${encodeURIComponent('http://localhost:3000/callback')}&scope=user%2Caccount&state=02afe928b`;
+          const expectedAuthorizationURL = `https://authorization-server.org/oauth/authorize?response_type=code&client_id=the%20client%20id&redirect_uri=${encodeURIComponent('http://localhost:3000/callback')}&scope=user%20account&state=02afe928b`;
 
           expect(authorizationURL).to.be.equal(expectedAuthorizationURL);
         });
