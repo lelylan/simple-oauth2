@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.2.1
+
+* Fix Joi schema missusage
+
 ## 2.2.0
 
 * Fix access token expiration properties omission
