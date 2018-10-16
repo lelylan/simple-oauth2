@@ -178,5 +178,43 @@ describe('owner password gran type', () => {
         expect(result).to.be.deep.equal(expectedAccessToken);
       });
     });
+
+    describe('when a non-json response is received', () => {
+      let scope;
+      let result;
+
+      before(() => {
+        const scopeOptions = {
+          reqheaders: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+        };
+
+        scope = nock('https://authorization-server.org:443', scopeOptions)
+          .post('/oauth/token', tokenRequestParams)
+          .reply(200, expectedAccessToken);
+      });
+
+      before(async () => {
+        const config = Object.assign({}, baseConfig, {
+          options: {
+            bodyFormat: 'json',
+            authorizationMethod: 'body',
+          },
+        });
+
+        const oauth2 = oauth2Module.create(config);
+        result = await oauth2.ownerPassword.getToken(tokenOptions);
+      });
+
+      it('performs the http request', () => {
+        scope.done();
+      });
+
+      it('returns an access token as result of the token request', () => {
+        expect(result).to.be.deep.equal(expectedAccessToken);
+      });
+    });
   });
 });

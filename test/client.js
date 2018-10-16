@@ -2,6 +2,7 @@
 
 const nock = require('nock');
 const qs = require('querystring');
+const bounce = require('bounce');
 const { expect } = require('chai');
 const oauth2Module = require('./../index');
 const baseConfig = require('./fixtures/module-config');
@@ -172,6 +173,50 @@ describe('client credentials grant type', () => {
 
       it('returns an access token as result of the token request', () => {
         expect(result).to.be.deep.equal(expectedAccessToken);
+      });
+    });
+
+    describe('when a non-json response is received', () => {
+      before(() => {
+        const scopeOptions = {
+          reqheaders: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+        };
+
+        const expectedRequestParams = {
+          grant_type: 'client_credentials',
+          client_id: 'the client id',
+          client_secret: 'the client secret',
+          random_param: 'random value',
+        };
+
+        scope = nock('https://authorization-server.org:443', scopeOptions)
+          .post('/oauth/token', expectedRequestParams)
+          .reply(200, '<html>Sorry for not responding with a json response</html>', {
+            'Content-Type': 'application/html',
+          });
+      });
+
+      it('rejects the operation', async () => {
+        const config = Object.assign({}, baseConfig, {
+          options: {
+            bodyFormat: 'json',
+            authorizationMethod: 'body',
+          },
+        });
+
+        const oauth2 = oauth2Module.create(config);
+
+        try {
+          await oauth2.clientCredentials.getToken(tokenParams);
+
+          throw new Error('The operation was expected to be rejected');
+        } catch (error) {
+          scope.done();
+          bounce.ignore(error, { isBoom: true, output: { statusCode: 406 } });
+        }
       });
     });
   });
