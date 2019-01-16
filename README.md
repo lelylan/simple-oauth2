@@ -123,7 +123,7 @@ const oauth2 = require('simple-oauth2').create(credentials);
 // Authorization oauth2 URI
 const authorizationUri = oauth2.authorizationCode.authorizeURL({
   redirect_uri: 'http://localhost:3000/callback',
-  scope: '<scope>', // also can be an array of multiple scopes, ex. ['<scope1>, '<scope2>', '...']
+  scope: '<scope>', // for multiple scopes, use a space-delimited string, ex. 'scope-1 scope-2'
   state: '<state>'
 });
 
@@ -134,7 +134,7 @@ res.redirect(authorizationUri);
 const tokenConfig = {
   code: '<code>',
   redirect_uri: 'http://localhost:3000/callback',
-  scope: '<scope>', // also can be an array of multiple scopes, ex. ['<scope1>, '<scope2>', '...']
+  scope: '<scope>', // for multiple scopes, use a space-delimited string, ex. 'scope-1 scope-2'
 };
 
 // Save the access token
@@ -161,7 +161,7 @@ const oauth2 = require('simple-oauth2').create(credentials);
 const tokenConfig = {
   username: 'username',
   password: 'password',
-  scope: '<scope>', // also can be an array of multiple scopes, ex. ['<scope1>, '<scope2>', '...']
+  scope: '<scope>', // for multiple scopes, use a space-delimited string, ex. 'scope-1 scope-2'
 };
 
 // Save the access token
@@ -180,7 +180,7 @@ This flow is suitable when client is requesting access to the protected resource
 ```javascript
 const oauth2 = require('simple-oauth2').create(credentials);
 const tokenConfig = {
-  scope: '<scope>', // also can be an array of multiple scopes, ex. ['<scope1>, '<scope2>', '...']
+  scope: '<scope>', // for multiple scopes, use a space-delimited string, ex. 'scope-1 scope-2'
 };
 
 // Get the access token object for the client
