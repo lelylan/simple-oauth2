@@ -11,9 +11,9 @@ giving them the possibility to enable and disable those accesses whenever they w
 
 Simple OAuth2 supports the following flows.
 
-* [Authorization Code Flow](http://tools.ietf.org/html/draft-ietf-oauth-v2-31#section-4.1) (for apps with servers that can store persistent information).
-* [Password Credentials](http://tools.ietf.org/html/draft-ietf-oauth-v2-31#section-4.3) (when previous flow can't be used or during development).
-* [Client Credentials Flow](http://tools.ietf.org/html/draft-ietf-oauth-v2-31#section-4.4) (the client can request an access token using only its client credentials)
+- [Authorization Code Flow](http://tools.ietf.org/html/draft-ietf-oauth-v2-31#section-4.1) (for apps with servers that can store persistent information).
+- [Password Credentials](http://tools.ietf.org/html/draft-ietf-oauth-v2-31#section-4.3) (when previous flow can't be used or during development).
+- [Client Credentials Flow](http://tools.ietf.org/html/draft-ietf-oauth-v2-31#section-4.4) (the client can request an access token using only its client credentials)
 
 #### Thanks to Open Source
 
@@ -26,7 +26,6 @@ Simple OAuth 2.0 come to life thanks to the work I've made in Lelylan, an open s
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-
 
 - [Requirements](#requirements)
 - [Getting started](#getting-started)
@@ -68,25 +67,28 @@ npm install --save simple-oauth2
 
 Simple OAuth2 accepts an object with the following valid params.
 
-* `client` - required object with the following properties:
-  * `id` - Service registered client id. Required.
-  * `secret` - Service registered client secret. Required.
-  * `secretParamName` - Parameter name used to send the client secret. Default to **client_secret**.
-  * `idParamName` - Parameter name used to send the client id. Default to **client_id**.
+- `client` - required object with the following properties:
 
-* `auth` - required object with the following properties.
-  * `tokenHost` - String used to set the host to request the tokens to. Required.
-  * `tokenPath` - String path to request an access token. Default to **/oauth/token**.
-  * `revokePath` - String path to revoke an access token. Default to **/oauth/revoke**.
-  * `authorizeHost` - String used to set the host to request an "authorization code". Default to the value set on `auth.tokenHost`.
-  * `authorizePath` - String path to request an authorization code. Default to **/oauth/authorize**.
+  - `id` - Service registered client id. Required.
+  - `secret` - Service registered client secret. Required.
+  - `secretParamName` - Parameter name used to send the client secret. Default to **client_secret**.
+  - `idParamName` - Parameter name used to send the client id. Default to **client_id**.
 
-* `http` optional object used to set global options to the internal http library ([wreck](https://github.com/hapijs/wreck)).
-  * All options except **baseUrl** are allowed. Default to `headers.Accept = application/json`.
+- `auth` - required object with the following properties.
 
-* `options` optional object to setup the module.
-  * `bodyFormat` - Format of data sent in the request body. Valid options are `form` or `json`. Defaults to **form**.
-  * `authorizationMethod` - Indicates the method used to send the client.id/client.secret authorization params at the token request. Valid options are `header` or `body`. If set to **body**, the **bodyFormat** option will be used to format the credentials. Defaults to **header**.
+  - `tokenHost` - String used to set the host to request the tokens to. Required.
+  - `tokenPath` - String path to request an access token. Default to **/oauth/token**.
+  - `revokePath` - String path to revoke an access token. Default to **/oauth/revoke**.
+  - `authorizeHost` - String used to set the host to request an "authorization code". Default to the value set on `auth.tokenHost`.
+  - `authorizePath` - String path to request an authorization code. Default to **/oauth/authorize**.
+
+- `http` optional object used to set global options to the internal http library ([wreck](https://github.com/hapijs/wreck)).
+
+  - All options except **baseUrl** are allowed. Default to `headers.Accept = application/json`.
+
+- `options` optional object to setup the module.
+  - `bodyFormat` - Format of data sent in the request body. Valid options are `form` or `json`. Defaults to **form**.
+  - `authorizationMethod` - Indicates the method used to send the client.id/client.secret authorization params at the token request. Valid options are `header` or `body`. If set to **body**, the **bodyFormat** option will be used to format the credentials. Defaults to **header**.
 
 ```javascript
 // Set the configuration settings
@@ -134,17 +136,16 @@ res.redirect(authorizationUri);
 const tokenConfig = {
   code: '<code>',
   redirect_uri: 'http://localhost:3000/callback',
-  scope: '<scope>', // also can be an array of multiple scopes, ex. ['<scope1>, '<scope2>', '...']
+  scope: '<scope>' // also can be an array of multiple scopes, ex. ['<scope1>, '<scope2>', '...']
 };
 
 // Save the access token
 try {
-  const result = await oauth2.authorizationCode.getToken(tokenConfig)
+  const result = await oauth2.authorizationCode.getToken(tokenConfig);
   const accessToken = oauth2.accessToken.create(result);
 } catch (error) {
   console.log('Access Token Error', error.message);
 }
-
 ```
 
 ### Password Credentials Flow
@@ -161,7 +162,7 @@ const oauth2 = require('simple-oauth2').create(credentials);
 const tokenConfig = {
   username: 'username',
   password: 'password',
-  scope: '<scope>', // also can be an array of multiple scopes, ex. ['<scope1>, '<scope2>', '...']
+  scope: '<scope>' // also can be an array of multiple scopes, ex. ['<scope1>, '<scope2>', '...']
 };
 
 // Save the access token
@@ -180,12 +181,33 @@ This flow is suitable when client is requesting access to the protected resource
 ```javascript
 const oauth2 = require('simple-oauth2').create(credentials);
 const tokenConfig = {
-  scope: '<scope>', // also can be an array of multiple scopes, ex. ['<scope1>, '<scope2>', '...']
+  scope: '<scope>' // also can be an array of multiple scopes, ex. ['<scope1>, '<scope2>', '...']
 };
 
 // Get the access token object for the client
 try {
   const result = await oauth2.clientCredentials.getToken(tokenConfig);
+  const accessToken = oauth2.accessToken.create(result);
+} catch (error) {
+  console.log('Access Token error', error.message);
+}
+```
+
+### Custom Grant Flow
+
+This flow is suitable when the service requires a custom grant type which may not be generic.
+
+```javascript
+const oauth2 = require('simple-oauth2').create(credentials);
+const tokenConfig = {
+  grant_type: 'organization_app',
+  organization_id: '<organization_id>', // this may be a different ID depending on the grant type given, ie. member_id for grant_type = member_app
+  scope: '<scope>' // also can be an array of multiple scopes, ex. ['<scope1>, '<scope2>', '...']
+};
+
+// Get the access token for the specified grant
+try {
+  const result = await oauth2.customGrant.getToken(tokenConfig);
   const accessToken = oauth2.accessToken.create(result);
 } catch (error) {
   console.log('Access Token error', error.message);
@@ -203,9 +225,9 @@ access token when it is expired.
 ```javascript
 // Sample of a JSON access token (you got it through previous steps)
 const tokenObject = {
-  'access_token': '<access-token>',
-  'refresh_token': '<refresh-token>',
-  'expires_in': '7200'
+  access_token: '<access-token>',
+  refresh_token: '<refresh-token>',
+  expires_in: '7200'
 };
 
 // Create the access token wrapper
@@ -238,7 +260,7 @@ const expirationTimeInSeconds = token.expires_at.getTime() / 1000;
 const expirationWindowStart = expirationTimeInSeconds - EXPIRATION_WINDOW_IN_SECONDS;
 
 // If the start of the window has passed, refresh the token
-const nowInSeconds = (new Date()).getTime() / 1000;
+const nowInSeconds = new Date().getTime() / 1000;
 const shouldRefresh = nowInSeconds >= expirationWindowStart;
 if (shouldRefresh) {
   try {
@@ -287,10 +309,9 @@ Errors are returned when a 4xx or 5xx status code is received.
 As a standard [boom](https://github.com/hapijs/boom) error you can access any of the boom error properties. The total amount of information varies according to the generated status code.
 
 ```javascript
-
 try {
   await oauth2.authorizationCode.getToken();
-} catch(error) {
+} catch (error) {
   console.log(error);
 }
 
@@ -313,7 +334,7 @@ See [CONTRIBUTING](https://github.com/lelylan/simple-oauth2/blob/master/CONTRIBU
 
 Special thanks to the following people for submitting patches.
 
-* [Jonathan Samines](http://twitter.com/jonathansamines)
+- [Jonathan Samines](http://twitter.com/jonathansamines)
 
 ## Changelog
 
