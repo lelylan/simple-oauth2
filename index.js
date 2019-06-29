@@ -1,6 +1,6 @@
 'use strict';
 
-const Joi = require('joi');
+const Joi = require('@hapi/joi');
 const authCodeModule = require('./lib/client/auth-code');
 const passwordModule = require('./lib/client/password');
 const accessTokenModule = require('./lib/access-token');
