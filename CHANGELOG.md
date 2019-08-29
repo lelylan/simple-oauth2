@@ -1,6 +1,6 @@
 # Changelog
 
-## Next
+## 2.3.0
 ### Dependencies upgrades
 
  * Upgrade debug dependency to v4
