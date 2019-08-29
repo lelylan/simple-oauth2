@@ -1,5 +1,10 @@
 # Changelog
 
+## Next
+### Dependencies upgrades
+
+ * Upgrade debug dependency to v4
+
 ## 2.2.1
 
 * Fix Joi schema missusage
