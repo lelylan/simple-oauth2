@@ -12,8 +12,8 @@ Fork the repo on github and send a pull requests with topic branches to the ```d
 
 * Fork and clone the repository (`develop` branch).
 * Run `npm install` for dependencies.
-* Run `make test` to execute all specs.
-* Run `make test-watch` to auto execute all specs when a file change.
+* Run `npm test` to execute all specs.
+* Run `npm run test-watch` to auto execute all specs when a file change.
 * Run `npm run lint` to verify that all code pass our linting rules.
 
 ## Updating the docs
