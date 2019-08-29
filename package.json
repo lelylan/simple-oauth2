@@ -44,9 +44,9 @@
     "credentials"
   ],
   "dependencies": {
+    "@hapi/joi": "^15.1.1",
     "date-fns": "^1.3.0",
     "debug": "^4.1.1",
-    "joi": "^13.0.2",
     "wreck": "^14.0.2"
   },
   "devDependencies": {
