@@ -1,5 +1,17 @@
 # Changelog
 
+## Next
+### Development dependencies updates
+
+ * Upgrade mocha test runner to v6
+ * Upgrade nyc to v14
+ * Upgrade development dependencies to latest version available
+
+## 2.3.0
+### Dependencies upgrades
+
+ * Upgrade debug dependency to v4
+
 ## 2.2.1
 
 * Fix Joi schema missusage

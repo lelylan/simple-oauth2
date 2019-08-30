@@ -91,6 +91,24 @@ describe('authorization code grant type', () => {
         expect(authorizationURL).to.be.equal(expectedAuthorizationURL);
       });
 
+      it('uses a custom authorizeHost with trailing slashes', () => {
+        const oauth2 = oauth2Module.create({
+          client: {
+            id: 'client-id',
+            secret: 'client-secret',
+          },
+          auth: {
+            tokenHost: 'https://authorization-server.org',
+            authorizeHost: 'https://other-authorization-server.com/root/',
+          },
+        });
+
+        const authorizationURL = oauth2.authorizationCode.authorizeURL(authorizeConfig);
+        const expectedAuthorizationURL = `https://other-authorization-server.com/oauth/authorize?response_type=code&client_id=client-id&redirect_uri=${encodeURIComponent('http://localhost:3000/callback')}&scope=user&state=02afe928b`;
+
+        expect(authorizationURL).to.be.equal(expectedAuthorizationURL);
+      });
+
       it('uses a custom authorizePath', () => {
         const oauth2 = oauth2Module.create({
           client: {
@@ -105,6 +123,25 @@ describe('authorization code grant type', () => {
 
         const authorizationURL = oauth2.authorizationCode.authorizeURL(authorizeConfig);
         const expectedAuthorizationURL = `https://authorization-server.org/authorize-now?response_type=code&client_id=client-id&redirect_uri=${encodeURIComponent('http://localhost:3000/callback')}&scope=user&state=02afe928b`;
+
+        expect(authorizationURL).to.be.equal(expectedAuthorizationURL);
+      });
+
+      it('uses a custom authorizeHost and authorizePath', () => {
+        const oauth2 = oauth2Module.create({
+          client: {
+            id: 'client-id',
+            secret: 'client-secret',
+          },
+          auth: {
+            tokenHost: 'https://authorization-server.org',
+            authorizeHost: 'https://other-authorization-server.com',
+            authorizePath: '/authorize-now',
+          },
+        });
+
+        const authorizationURL = oauth2.authorizationCode.authorizeURL(authorizeConfig);
+        const expectedAuthorizationURL = `https://other-authorization-server.com/authorize-now?response_type=code&client_id=client-id&redirect_uri=${encodeURIComponent('http://localhost:3000/callback')}&scope=user&state=02afe928b`;
 
         expect(authorizationURL).to.be.equal(expectedAuthorizationURL);
       });
@@ -251,6 +288,51 @@ describe('authorization code grant type', () => {
       });
 
       it('resolves the access token', () => {
+        expect(result).to.be.deep.equal(expectedAccessToken);
+      });
+    });
+
+    describe('with custom token host and path', () => {
+      before(() => {
+        const scopeOptions = {
+          reqheaders: {
+            Accept: 'application/json',
+          },
+        };
+
+        const expectedRequestParams = {
+          code: 'code',
+          redirect_uri: 'http://callback.com',
+          grant_type: 'authorization_code',
+        };
+
+        scope = nock('https://authorization-server.org', scopeOptions)
+          .post('/root/oauth/token', expectedRequestParams)
+          .reply(200, expectedAccessToken);
+      });
+
+      before(async () => {
+        const config = Object.assign({}, baseConfig, {
+          auth: {
+            tokenHost: 'https://authorization-server.org:443/root/',
+            tokenPath: '/oauth/token',
+          },
+        });
+
+        const tokenParams = {
+          code: 'code',
+          redirect_uri: 'http://callback.com',
+        };
+
+        const oauth2 = oauth2Module.create(config);
+        result = await oauth2.authorizationCode.getToken(tokenParams);
+      });
+
+      it('performs the http request', () => {
+        scope.done();
+      });
+
+      it('returns an access token as result of the token request', () => {
         expect(result).to.be.deep.equal(expectedAccessToken);
       });
     });
