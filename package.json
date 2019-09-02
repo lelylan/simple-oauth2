@@ -1,6 +1,6 @@
 {
   "name": "simple-oauth2",
-  "version": "2.3.0",
+  "version": "2.4.0",
   "description": "Node.js client for OAuth2",
   "author": "Andrea Reginato <andrea.reginato@gmail.com>",
   "contributors": [
