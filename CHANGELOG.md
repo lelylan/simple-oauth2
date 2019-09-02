@@ -1,6 +1,10 @@
 # Changelog
 
-## Next
+## 2.4.0
+### Dependencies upgrades
+
+ * Upgrade Joi version to v15 (@hapi/joi)
+
 ### Development dependencies updates
 
  * Upgrade mocha test runner to v6
