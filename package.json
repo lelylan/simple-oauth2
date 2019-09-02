@@ -22,8 +22,10 @@
     "lint": "eslint .",
     "fix": "eslint . --fix",
     "test-watch": "mocha --watch --reporter=spec",
+    "test-typescript": "npm run typescript",
     "docs-gen": "doctoc README.md --github --no-title",
-    "clean-install": "rm -rf node_modules && npm install"
+    "clean-install": "rm -rf node_modules && npm install",
+    "typescript": "tsc --project ./tsconfig.json"
   },
   "nyc": {
     "check-coverage": true,
@@ -60,7 +62,8 @@
     "lodash": "^4.17.15",
     "mocha": "^6.2.0",
     "nock": "^10.0.6",
-    "nyc": "^14.1.1"
+    "nyc": "^14.1.1",
+    "typescript": "^3.6.2"
   },
   "license": "Apache-2.0"
 }
