@@ -12,6 +12,16 @@
 * Change json response parsing from `smart` to `strict` (#88)
   + Since the OAuth2 specification indicates only JSON responses are valid, any non-JSON response throws an error instead of resolving into a Buffer
 
+### Development dependencies updates
+
+ * Upgrade mocha test runner to v6
+ * Upgrade nyc to v14
+ * Upgrade development dependencies to latest version available
+
+## 2.3.0
+### Dependencies upgrades
+
+ * Upgrade debug dependency to v4
 
 ## 2.2.1
 
