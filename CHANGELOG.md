@@ -1,6 +1,6 @@
 # Changelog
 
-## Next
+## 2.5.0
 ### Dependencies upgrades
 
  * Upgrade date-fns library to v2
