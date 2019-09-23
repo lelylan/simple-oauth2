@@ -55,7 +55,7 @@
     "eslint-config-airbnb-base": "^12.0.0",
     "eslint-plugin-import": "^2.9.0",
     "lodash": "^4.17.15",
-    "nock": "^10.0.6",
+    "nock": "^11.3.5",
     "nyc": "^14.1.1"
   },
   "license": "Apache-2.0"

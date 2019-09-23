@@ -5,6 +5,7 @@
 
  * Use ava instead of mocha as test runner
  * Use ava built-in assertions library instead of chai
+ * Upgrade nock to v11
 
 ## 2.5.0
 ### Dependencies upgrades
