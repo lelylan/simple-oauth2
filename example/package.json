@@ -11,7 +11,12 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "devDependencies": {
+  "eslintConfig": {
+    "rules": {
+      "no-console": "off"
+    }
+  },
+  "dependencies": {
     "express": "^4.14.0"
   }
 }
