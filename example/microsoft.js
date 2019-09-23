@@ -16,7 +16,7 @@ createApplication(({ app, callbackUrl }) => {
     },
     options: {
       authorizationMethod: 'body',
-    }
+    },
   });
 
   // Authorization uri definition
@@ -33,7 +33,7 @@ createApplication(({ app, callbackUrl }) => {
 
   // Callback service parsing the authorization token and asking for the access token
   app.get('/callback', async (req, res) => {
-    const code = req.query.code;
+    const { code } = req.query;
     const options = {
       code,
       redirect_uri: callbackUrl,
@@ -46,8 +46,8 @@ createApplication(({ app, callbackUrl }) => {
 
       const token = oauth2.accessToken.create(result);
 
-      return res.status(200).json(token)
-    } catch(error) {
+      return res.status(200).json(token);
+    } catch (error) {
       console.error('Access Token Error', error.message);
       return res.status(500).json('Authentication failed');
     }

@@ -317,4 +317,3 @@ test('@revokeAll => revokes the refresh token only if the access token is succes
 
   scope.done();
 });
-
