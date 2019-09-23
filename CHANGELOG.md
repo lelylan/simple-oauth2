@@ -1,5 +1,11 @@
 # Changelog
 
+## Next
+### Dependencies upgrades
+
+ * Use ava instead of mocha as test runner
+ * Use ava built-in assertions library instead of chai
+
 ## 2.5.0
 ### Dependencies upgrades
 

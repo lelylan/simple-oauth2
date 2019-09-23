@@ -17,11 +17,8 @@
   },
   "scripts": {
     "pretest": "npm run lint",
-    "test": "nyc mocha",
-    "posttest": "nyc check-coverage",
+    "test": "nyc ava",
     "lint": "eslint .",
-    "fix": "eslint . --fix",
-    "test-watch": "mocha --watch --reporter=spec",
     "docs-gen": "doctoc README.md --github --no-title",
     "clean-install": "rm -rf node_modules && npm install"
   },
@@ -50,7 +47,7 @@
     "wreck": "^14.0.2"
   },
   "devDependencies": {
-    "chai": "^4.2.0",
+    "ava": "^2.4.0",
     "chance": "^1.0.18",
     "chance-access-token": "^1.0.1",
     "doctoc": "^1.4.0",
@@ -58,7 +55,6 @@
     "eslint-config-airbnb-base": "^13.2.0",
     "eslint-plugin-import": "^2.9.0",
     "lodash": "^4.17.15",
-    "mocha": "^6.2.0",
     "nock": "^10.0.6",
     "nyc": "^14.1.1"
   },
