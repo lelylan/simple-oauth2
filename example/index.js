@@ -1,6 +1,7 @@
 'use strict';
 
 const app = require('express')();
+
 const port = 3000;
 
 module.exports = (cb) => {
@@ -11,7 +12,7 @@ module.exports = (cb) => {
 
     console.log(`Express server listening at http://localhost:${port}`);
 
-    cb({
+    return cb({
       app,
       callbackUrl,
     });
