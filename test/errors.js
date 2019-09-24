@@ -1,8 +1,8 @@
 'use strict';
 
+const test = require('ava');
 const qs = require('querystring');
 const nock = require('nock');
-const { expect } = require('chai');
 const baseConfig = require('./fixtures/module-config.json');
 const oauth2Module = require('./../index');
 
@@ -19,90 +19,56 @@ const oauthParams = {
   grant_type: 'authorization_code',
 };
 
-describe('Simple oauth2 Error', () => {
-  let scope;
-  let result;
-  let error;
+test('@errors => rejects operations on http error (401)', async (t) => {
+  const scopeOptions = {
+    reqheaders: {
+      Accept: 'application/json',
+      Authorization: 'Basic dGhlK2NsaWVudCtpZDp0aGUrY2xpZW50K3NlY3JldA==',
+    },
+  };
 
-  describe('with status code 401', () => {
-    before(() => {
-      const scopeOptions = {
-        reqheaders: {
-          Accept: 'application/json',
-          Authorization: 'Basic dGhlK2NsaWVudCtpZDp0aGUrY2xpZW50K3NlY3JldA==',
-        },
-      };
+  const scope = nock('https://authorization-server.org:443', scopeOptions)
+    .post('/oauth/token')
+    .reply(401);
 
-      scope = nock('https://authorization-server.org:443', scopeOptions)
-        .post('/oauth/token')
-        .reply(401);
+  const error = await t.throwsAsync(() => oauth2.authorizationCode.getToken(tokenParams), Error);
+
+  scope.done();
+
+  const authorizationError = {
+    error: 'Unauthorized',
+    message: 'Response Error: 401 null',
+    statusCode: 401,
+  };
+
+  t.true(error.isBoom);
+  t.deepEqual(error.output.payload, authorizationError);
+});
+
+test('@errors => rejects operations on http error (500)', async (t) => {
+  const scopeOptions = {
+    reqheaders: {
+      Accept: 'application/json',
+      Authorization: 'Basic dGhlK2NsaWVudCtpZDp0aGUrY2xpZW50K3NlY3JldA==',
+    },
+  };
+
+  const scope = nock('https://authorization-server.org:443', scopeOptions)
+    .post('/oauth/token', qs.stringify(oauthParams))
+    .reply(500, {
+      customError: 'An amazing error has occured',
     });
 
-    before(async () => {
-      result = undefined;
+  const error = await t.throwsAsync(() => oauth2.authorizationCode.getToken(tokenParams), Error);
 
-      try {
-        result = await oauth2.authorizationCode.getToken(tokenParams);
-      } catch (err) {
-        error = err;
-      }
-    });
+  scope.done();
 
-    it('performs the http request', () => {
-      scope.done();
-    });
+  const internalServerError = {
+    error: 'Internal Server Error',
+    message: 'An internal server error occurred',
+    statusCode: 500,
+  };
 
-    it('rejects with a boom error', () => {
-      const authorizationError = {
-        error: 'Unauthorized',
-        message: 'Response Error: 401 null',
-        statusCode: 401,
-      };
-
-      expect(result).to.be.equal(undefined);
-      expect(error.isBoom).to.be.equal(true);
-      expect(error.output.payload).to.be.deep.equal(authorizationError);
-    });
-  });
-
-  describe('with status code 500', () => {
-    before(() => {
-      const scopeOptions = {
-        reqheaders: {
-          Accept: 'application/json',
-          Authorization: 'Basic dGhlK2NsaWVudCtpZDp0aGUrY2xpZW50K3NlY3JldA==',
-        },
-      };
-
-      scope = nock('https://authorization-server.org:443', scopeOptions)
-        .post('/oauth/token', qs.stringify(oauthParams))
-        .reply(500, {
-          customError: 'An amazing error has occured',
-        });
-    });
-
-    before(async () => {
-      try {
-        result = await oauth2.authorizationCode.getToken(tokenParams);
-      } catch (err) {
-        error = err;
-      }
-    });
-
-    it('performs the http request', () => {
-      scope.done();
-    });
-
-    it('rejects with a boom error', () => {
-      const internalServerError = {
-        error: 'Internal Server Error',
-        message: 'An internal server error occurred',
-        statusCode: 500,
-      };
-
-      expect(result).to.be.equal(undefined);
-      expect(error.isBoom).to.be.equal(true);
-      expect(error.output.payload).to.be.deep.equal(internalServerError);
-    });
-  });
+  t.true(error.isBoom);
+  t.deepEqual(error.output.payload, internalServerError);
 });

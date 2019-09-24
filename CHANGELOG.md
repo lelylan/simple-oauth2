@@ -1,5 +1,18 @@
 # Changelog
 
+## Next
+### Dependencies upgrades
+
+ * Use ava instead of mocha as test runner
+ * Use ava built-in assertions library instead of chai
+ * Upgrade nock to v11
+ * Upgrade to eslint v6 and airbnb-base eslint configuration v14
+
+## 2.5.0
+### Dependencies upgrades
+
+ * Upgrade date-fns library to v2
+
 ## 2.4.0
 ### Dependencies upgrades
 
