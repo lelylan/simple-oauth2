@@ -4,7 +4,7 @@
 
 ### Breaking changes
 
-* Change default scope encoding from using comma to spaces (#187)
+* Change default scope encoding from using comma to spaces (#200)
 * Change json response parsing from `smart` to `strict` (#88)
   + Since the OAuth2 specification indicates only JSON responses are valid, any non-JSON response throws an error instead of resolving into a Buffer
 
