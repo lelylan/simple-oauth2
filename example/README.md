@@ -25,3 +25,11 @@ See the `./github.js` module as a reference implementation or execute the exampl
 ```bash
 npm run start:github
 ```
+
+### Dropbox
+
+See the `./dropbox.js` module as a reference implementation or execute the example with:
+
+```bash
+npm run start:dropbox
+```
