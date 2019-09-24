@@ -325,6 +325,49 @@ test('@getToken => resolves to an access token with custom module configuration 
   t.deepEqual(token, expectedAccessToken);
 });
 
+test('@getToken => resolves to an access token while following redirections', async (t) => {
+  const scopeOptions = {
+    reqheaders: {
+      Accept: 'application/json',
+      Authorization: 'Basic dGhlK2NsaWVudCtpZDp0aGUrY2xpZW50K3NlY3JldA==',
+    },
+  };
+
+  const expectedRequestParams = {
+    code: 'code',
+    redirect_uri: 'http://callback.com',
+    grant_type: 'authorization_code',
+  };
+
+  const redirectionsScope = nock('https://authorization-server.org', scopeOptions)
+    .post('/oauth/token', expectedRequestParams)
+    .times(19)
+    .reply(301, null, {
+      Location: 'https://authorization-server.org/oauth/token',
+    })
+    .post('/oauth/token', expectedRequestParams)
+    .reply(301, null, {
+      Location: 'https://origin-authorization-server.org/oauth/token',
+    });
+
+  const originScope = nock('https://origin-authorization-server.org', scopeOptions)
+    .post('/oauth/token', expectedRequestParams)
+    .reply(200, expectedAccessToken);
+
+  const tokenParams = {
+    code: 'code',
+    redirect_uri: 'http://callback.com',
+  };
+
+  const oauth2 = oauth2Module.create(baseConfig);
+  const token = await oauth2.authorizationCode.getToken(tokenParams);
+
+  redirectionsScope.done();
+  originScope.done();
+
+  t.deepEqual(token, expectedAccessToken);
+});
+
 test('@getToken => rejects the operation when a non json response is received', async (t) => {
   const scopeOptions = {
     reqheaders: {
