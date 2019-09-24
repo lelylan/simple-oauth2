@@ -143,9 +143,9 @@ test('@getToken => resolves to an access token (body credentials and JSON format
   };
 
   const expectedRequestParams = {
+    grant_type: 'authorization_code',
     code: 'code',
     redirect_uri: 'http://callback.com',
-    grant_type: 'authorization_code',
     client_id: 'the client id',
     client_secret: 'the client secret',
   };
@@ -182,9 +182,9 @@ test('@getToken => resolves to an access token (body credentials and form format
   };
 
   const expectedRequestParams = {
+    grant_type: 'authorization_code',
     code: 'code',
     redirect_uri: 'http://callback.com',
-    grant_type: 'authorization_code',
     client_id: 'the client id',
     client_secret: 'the client secret',
   };
@@ -221,9 +221,9 @@ test('@getToken => resolves to an access token (header credentials)', async (t) 
   };
 
   const expectedRequestParams = {
+    grant_type: 'authorization_code',
     code: 'code',
     redirect_uri: 'http://callback.com',
-    grant_type: 'authorization_code',
   };
 
   const scope = nock('https://authorization-server.org', scopeOptions)
@@ -256,9 +256,9 @@ test('@getToken => resolves to an access token with custom module configuration 
   };
 
   const expectedRequestParams = {
+    grant_type: 'authorization_code',
     code: 'code',
     redirect_uri: 'http://callback.com',
-    grant_type: 'authorization_code',
   };
 
   const scope = nock('https://authorization-server.org', scopeOptions)
@@ -295,9 +295,9 @@ test('@getToken => resolves to an access token with custom module configuration 
   };
 
   const expectedRequestParams = {
+    grant_type: 'authorization_code',
     code: 'code',
     redirect_uri: 'http://callback.com',
-    grant_type: 'authorization_code',
   };
 
   const scope = nock('https://authorization-server.org', scopeOptions)
@@ -334,9 +334,9 @@ test('@getToken => resolves to an access token while following redirections', as
   };
 
   const expectedRequestParams = {
+    grant_type: 'authorization_code',
     code: 'code',
     redirect_uri: 'http://callback.com',
-    grant_type: 'authorization_code',
   };
 
   const redirectionsScope = nock('https://authorization-server.org', scopeOptions)
@@ -368,6 +368,70 @@ test('@getToken => resolves to an access token while following redirections', as
   t.deepEqual(token, expectedAccessToken);
 });
 
+test('@getToken => resolves to an access token while requesting multiple scopes', async (t) => {
+  const scopeOptions = {
+    reqheaders: {
+      Accept: 'application/json',
+      Authorization: 'Basic dGhlK2NsaWVudCtpZDp0aGUrY2xpZW50K3NlY3JldA==',
+    },
+  };
+
+  const expectedRequestParams = {
+    grant_type: 'authorization_code',
+    code: 'code',
+    redirect_uri: 'http://callback.com',
+    scope: 'scope-a scope-b',
+  };
+
+  const scope = nock('https://authorization-server.org', scopeOptions)
+    .post('/oauth/token', expectedRequestParams)
+    .reply(200, expectedAccessToken);
+
+  const tokenParams = {
+    code: 'code',
+    redirect_uri: 'http://callback.com',
+    scope: ['scope-a', 'scope-b'],
+  };
+
+  const oauth2 = oauth2Module.create(baseConfig);
+  const token = await oauth2.authorizationCode.getToken(tokenParams);
+
+  scope.done();
+  t.deepEqual(token, expectedAccessToken);
+});
+
+test('@getToken => resolves to an access token with a custom grant type', async (t) => {
+  const scopeOptions = {
+    reqheaders: {
+      Accept: 'application/json',
+      Authorization: 'Basic dGhlK2NsaWVudCtpZDp0aGUrY2xpZW50K3NlY3JldA==',
+    },
+  };
+
+  const expectedRequestParams = {
+    code: 'code',
+    redirect_uri: 'http://callback.com',
+    grant_type: 'my_grant',
+  };
+
+  const scope = nock('https://authorization-server.org', scopeOptions)
+    .post('/oauth/token', expectedRequestParams)
+    .reply(200, expectedAccessToken);
+
+  const tokenParams = {
+    code: 'code',
+    redirect_uri: 'http://callback.com',
+    grant_type: 'my_grant',
+  };
+
+  const oauth2 = oauth2Module.create(baseConfig);
+  const token = await oauth2.authorizationCode.getToken(tokenParams);
+
+  scope.done();
+  t.deepEqual(token, expectedAccessToken);
+});
+
+
 test('@getToken => rejects the operation when a non json response is received', async (t) => {
   const scopeOptions = {
     reqheaders: {
@@ -377,9 +441,9 @@ test('@getToken => rejects the operation when a non json response is received', 
   };
 
   const expectedRequestParams = {
+    grant_type: 'authorization_code',
     code: 'code',
     redirect_uri: 'http://callback.com',
-    grant_type: 'authorization_code',
     client_id: 'the client id',
     client_secret: 'the client secret',
   };
