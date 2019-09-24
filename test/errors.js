@@ -14,9 +14,9 @@ const tokenParams = {
 };
 
 const oauthParams = {
+  grant_type: 'authorization_code',
   code: 'code',
   redirect_uri: 'http://callback.com',
-  grant_type: 'authorization_code',
 };
 
 test('@errors => rejects operations on http error (401)', async (t) => {

@@ -4,6 +4,9 @@
 
 ### Breaking changes
 
+* Allow to override the grant type on each flow (#254)
+* Don't mutate params on getToken method (#254)
+* Properly encode multiple scopes when specified as an array (#254)
 * Follow up to 20 redirects by default (#255)
 * Change default scope encoding from using comma to spaces (#200)
 * Change json response parsing from `smart` to `strict` (#88)

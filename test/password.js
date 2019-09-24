@@ -7,25 +7,20 @@ const oauth2Module = require('./../index');
 const baseConfig = require('./fixtures/module-config');
 const expectedAccessToken = require('./fixtures/access_token');
 
-const tokenOptions = {
-  username: 'alice',
-  password: 'secret',
-};
-
-const tokenRequestParams = {
-  username: 'alice',
-  password: 'secret',
-  grant_type: 'password',
-  client_id: 'the client id',
-  client_secret: 'the client secret',
-};
-
 test('@getToken => resolves to an access token (body credentials and JSON format)', async (t) => {
   const scopeOptions = {
     reqheaders: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
     },
+  };
+
+  const tokenRequestParams = {
+    grant_type: 'password',
+    username: 'alice',
+    password: 'secret',
+    client_id: 'the client id',
+    client_secret: 'the client secret',
   };
 
   const scope = nock('https://authorization-server.org:443', scopeOptions)
@@ -39,8 +34,13 @@ test('@getToken => resolves to an access token (body credentials and JSON format
     },
   });
 
+  const tokenParams = {
+    username: 'alice',
+    password: 'secret',
+  };
+
   const oauth2 = oauth2Module.create(config);
-  const token = await oauth2.ownerPassword.getToken(tokenOptions);
+  const token = await oauth2.ownerPassword.getToken(tokenParams);
 
   scope.done();
   t.deepEqual(token, expectedAccessToken);
@@ -54,6 +54,14 @@ test('@getToken => resolves to an access token (body credentials and form format
     },
   };
 
+  const tokenRequestParams = {
+    grant_type: 'password',
+    username: 'alice',
+    password: 'secret',
+    client_id: 'the client id',
+    client_secret: 'the client secret',
+  };
+
   const scope = nock('https://authorization-server.org:443', scopeOptions)
     .post('/oauth/token', qs.stringify(tokenRequestParams))
     .reply(200, expectedAccessToken);
@@ -65,8 +73,13 @@ test('@getToken => resolves to an access token (body credentials and form format
     },
   });
 
+  const tokenParams = {
+    username: 'alice',
+    password: 'secret',
+  };
+
   const oauth2 = oauth2Module.create(config);
-  const token = await oauth2.ownerPassword.getToken(tokenOptions);
+  const token = await oauth2.ownerPassword.getToken(tokenParams);
 
   scope.done();
   t.deepEqual(token, expectedAccessToken);
@@ -80,8 +93,14 @@ test('@getToken => resolves to an access token (header credentials)', async (t) 
     },
   };
 
+  const tokenRequestParams = {
+    grant_type: 'password',
+    username: 'alice',
+    password: 'secret',
+  };
+
   const scope = nock('https://authorization-server.org:443', scopeOptions)
-    .post('/oauth/token')
+    .post('/oauth/token', tokenRequestParams)
     .reply(200, expectedAccessToken);
 
   const config = Object.assign({}, baseConfig, {
@@ -90,8 +109,13 @@ test('@getToken => resolves to an access token (header credentials)', async (t) 
     },
   });
 
+  const tokenParams = {
+    username: 'alice',
+    password: 'secret',
+  };
+
   const oauth2 = oauth2Module.create(config);
-  const token = await oauth2.ownerPassword.getToken(tokenOptions);
+  const token = await oauth2.ownerPassword.getToken(tokenParams);
 
   scope.done();
   t.deepEqual(token, expectedAccessToken);
@@ -105,8 +129,14 @@ test('@getToken => resolves to an access token with custom module configuration 
     },
   };
 
+  const tokenRequestParams = {
+    grant_type: 'password',
+    username: 'alice',
+    password: 'secret',
+  };
+
   const scope = nock('https://authorization-server.org:443', scopeOptions)
-    .post('/root/oauth/token')
+    .post('/root/oauth/token', tokenRequestParams)
     .reply(200, expectedAccessToken);
 
   const config = Object.assign({}, baseConfig, {
@@ -116,8 +146,13 @@ test('@getToken => resolves to an access token with custom module configuration 
     },
   });
 
+  const tokenParams = {
+    username: 'alice',
+    password: 'secret',
+  };
+
   const oauth2 = oauth2Module.create(config);
-  const token = await oauth2.ownerPassword.getToken(tokenOptions);
+  const token = await oauth2.ownerPassword.getToken(tokenParams);
 
   scope.done();
   t.deepEqual(token, expectedAccessToken);
@@ -133,8 +168,14 @@ test('@getToken => resolves to an access token with custom module configuration 
     },
   };
 
+  const tokenRequestParams = {
+    grant_type: 'password',
+    username: 'alice',
+    password: 'secret',
+  };
+
   const scope = nock('https://authorization-server.org:443', scopeOptions)
-    .post('/oauth/token')
+    .post('/oauth/token', tokenRequestParams)
     .reply(200, expectedAccessToken);
 
   const config = Object.assign({}, baseConfig, {
@@ -146,8 +187,13 @@ test('@getToken => resolves to an access token with custom module configuration 
     },
   });
 
+  const tokenParams = {
+    username: 'alice',
+    password: 'secret',
+  };
+
   const oauth2 = oauth2Module.create(config);
-  const token = await oauth2.ownerPassword.getToken(tokenOptions);
+  const token = await oauth2.ownerPassword.getToken(tokenParams);
 
   scope.done();
   t.deepEqual(token, expectedAccessToken);
@@ -161,27 +207,101 @@ test('@getToken => resolves to an access token while following redirections', as
     },
   };
 
+  const tokenRequestParams = {
+    grant_type: 'password',
+    username: 'alice',
+    password: 'secret',
+  };
+
   const redirectionsScope = nock('https://authorization-server.org', scopeOptions)
-    .post('/oauth/token')
+    .post('/oauth/token', tokenRequestParams)
     .times(19)
     .reply(301, null, {
       Location: 'https://authorization-server.org/oauth/token',
     })
-    .post('/oauth/token')
+    .post('/oauth/token', tokenRequestParams)
     .reply(301, null, {
       Location: 'https://origin-authorization-server.org/oauth/token',
     });
 
   const originScope = nock('https://origin-authorization-server.org', scopeOptions)
-    .post('/oauth/token')
+    .post('/oauth/token', tokenRequestParams)
     .reply(200, expectedAccessToken);
 
+  const tokenParams = {
+    username: 'alice',
+    password: 'secret',
+  };
+
   const oauth2 = oauth2Module.create(baseConfig);
-  const token = await oauth2.ownerPassword.getToken(tokenOptions);
+  const token = await oauth2.ownerPassword.getToken(tokenParams);
 
   redirectionsScope.done();
   originScope.done();
 
+  t.deepEqual(token, expectedAccessToken);
+});
+
+test('@getToken => resolves to an access token while requesting multiple scopes', async (t) => {
+  const scopeOptions = {
+    reqheaders: {
+      Accept: 'application/json',
+      Authorization: 'Basic dGhlK2NsaWVudCtpZDp0aGUrY2xpZW50K3NlY3JldA==',
+    },
+  };
+
+  const tokenRequestParams = {
+    grant_type: 'password',
+    username: 'alice',
+    password: 'secret',
+    scope: 'scope-a scope-b',
+  };
+
+  const scope = nock('https://authorization-server.org:443', scopeOptions)
+    .post('/oauth/token', tokenRequestParams)
+    .reply(200, expectedAccessToken);
+
+  const tokenParams = {
+    username: 'alice',
+    password: 'secret',
+    scope: ['scope-a', 'scope-b'],
+  };
+
+  const oauth2 = oauth2Module.create(baseConfig);
+  const token = await oauth2.ownerPassword.getToken(tokenParams);
+
+  scope.done();
+  t.deepEqual(token, expectedAccessToken);
+});
+
+test('@getToken => resolves to an access token with a custom grant type', async (t) => {
+  const scopeOptions = {
+    reqheaders: {
+      Accept: 'application/json',
+      Authorization: 'Basic dGhlK2NsaWVudCtpZDp0aGUrY2xpZW50K3NlY3JldA==',
+    },
+  };
+
+  const tokenRequestParams = {
+    grant_type: 'my_grant',
+    username: 'alice',
+    password: 'secret',
+  };
+
+  const scope = nock('https://authorization-server.org:443', scopeOptions)
+    .post('/oauth/token', tokenRequestParams)
+    .reply(200, expectedAccessToken);
+
+  const tokenParams = {
+    grant_type: 'my_grant',
+    username: 'alice',
+    password: 'secret',
+  };
+
+  const oauth2 = oauth2Module.create(baseConfig);
+  const token = await oauth2.ownerPassword.getToken(tokenParams);
+
+  scope.done();
   t.deepEqual(token, expectedAccessToken);
 });
 
@@ -191,6 +311,14 @@ test('@getToken => rejects the operation when a non json response is received', 
       Accept: 'application/json',
       'Content-Type': 'application/json',
     },
+  };
+
+  const tokenRequestParams = {
+    grant_type: 'password',
+    username: 'alice',
+    password: 'secret',
+    client_id: 'the client id',
+    client_secret: 'the client secret',
   };
 
   const scope = nock('https://authorization-server.org:443', scopeOptions)
@@ -206,8 +334,13 @@ test('@getToken => rejects the operation when a non json response is received', 
     },
   });
 
+  const tokenParams = {
+    username: 'alice',
+    password: 'secret',
+  };
+
   const oauth2 = oauth2Module.create(config);
-  const error = await t.throwsAsync(() => oauth2.ownerPassword.getToken(tokenOptions));
+  const error = await t.throwsAsync(() => oauth2.ownerPassword.getToken(tokenParams));
 
   scope.done();
 
