@@ -152,3 +152,33 @@ test('@getToken => resolves to an access token with custom module configuration 
   scope.done();
   t.deepEqual(token, expectedAccessToken);
 });
+
+test('@getToken => rejects the operation when a non json response is received', async (t) => {
+  const scopeOptions = {
+    reqheaders: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+  };
+
+  const scope = nock('https://authorization-server.org:443', scopeOptions)
+    .post('/oauth/token', tokenRequestParams)
+    .reply(200, '<html>Sorry for not responding with a json response</html>', {
+      'Content-Type': 'application/html',
+    });
+
+  const config = Object.assign({}, baseConfig, {
+    options: {
+      bodyFormat: 'json',
+      authorizationMethod: 'body',
+    },
+  });
+
+  const oauth2 = oauth2Module.create(config);
+  const error = await t.throwsAsync(() => oauth2.ownerPassword.getToken(tokenOptions));
+
+  scope.done();
+
+  t.true(error.isBoom);
+  t.is(error.output.statusCode, 406);
+});
