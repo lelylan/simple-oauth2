@@ -13,7 +13,7 @@ createApplication(({ app, callbackUrl }) => {
       tokenHost: 'https://api.dropbox.com',
       authorizeHost: 'https://dropbox.com',
       tokenPath: '/oauth2/token',
-      authorizePath: '/oauth2/authorize'
+      authorizePath: '/oauth2/authorize',
     },
     options: {
       authorizationMethod: 'body',
@@ -22,7 +22,7 @@ createApplication(({ app, callbackUrl }) => {
 
   // Authorization uri definition
   const authorizationUri = oauth2.authorizationCode.authorizeURL({
-    redirect_uri: 'http://localhost:3000/callback',
+    redirect_uri: callbackUrl,
     state: '3(#0/!~',
   });
 
@@ -34,10 +34,10 @@ createApplication(({ app, callbackUrl }) => {
 
   // Callback service parsing the authorization token and asking for the access token
   app.get('/callback', async (req, res) => {
-    const code = req.query.code;
+    const { code } = req.query;
     const options = {
       code,
-      redirect_uri: 'http://localhost:3000/callback',
+      redirect_uri: callbackUrl,
     };
 
     try {
@@ -47,8 +47,8 @@ createApplication(({ app, callbackUrl }) => {
 
       const token = oauth2.accessToken.create(result);
 
-      return res.status(200).json(token)
-    } catch(error) {
+      return res.status(200).json(token);
+    } catch (error) {
       console.error('Access Token Error', error.message);
       return res.status(500).json('Authentication failed');
     }
