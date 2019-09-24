@@ -28,23 +28,26 @@ Simple OAuth 2.0 come to life thanks to the work I've made in Lelylan, an open s
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
 
-- [Requirements](#requirements)
-- [Getting started](#getting-started)
-  - [Installation](#installation)
-  - [Options](#options)
-  - [Example of Usage](#example-of-usage)
-- [OAuth2 Supported flows](#oauth2-supported-flows)
-  - [Authorization Code flow](#authorization-code-flow)
-  - [Password Credentials Flow](#password-credentials-flow)
-  - [Client Credentials Flow](#client-credentials-flow)
-- [Helpers](#helpers)
-  - [Access Token object](#access-token-object)
-  - [Errors](#errors)
-- [Contributing](#contributing)
-- [Authors](#authors)
-  - [Contributors](#contributors)
-- [Changelog](#changelog)
-- [License](#license)
+- [Simple OAuth2](#simple-oauth2)
+      - [Thanks to Open Source](#thanks-to-open-source)
+  - [Table of Contents](#table-of-contents)
+  - [Requirements](#requirements)
+  - [Getting started](#getting-started)
+    - [Installation](#installation)
+    - [Options](#options)
+    - [Example of Usage](#example-of-usage)
+  - [OAuth2 Supported flows](#oauth2-supported-flows)
+    - [Authorization Code flow](#authorization-code-flow)
+    - [Password Credentials Flow](#password-credentials-flow)
+    - [Client Credentials Flow](#client-credentials-flow)
+  - [Helpers](#helpers)
+    - [Access Token object](#access-token-object)
+    - [Errors](#errors)
+  - [Contributing](#contributing)
+  - [Authors](#authors)
+    - [Contributors](#contributors)
+  - [Changelog](#changelog)
+  - [License](#license)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -214,7 +217,11 @@ let accessToken = oauth2.accessToken.create(tokenObject);
 // Check if the token is expired. If expired it is refreshed.
 if (accessToken.expired()) {
   try {
-    accessToken = await accessToken.refresh();
+    const params = {
+      scope: '<scope>', // also can be an array of multiple scopes, ex. ['<scope1>, '<scope2>', '...']
+    };
+
+    accessToken = await accessToken.refresh(params);
   } catch (error) {
     console.log('Error refreshing access token: ', error.message);
   }

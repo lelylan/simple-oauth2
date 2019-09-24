@@ -467,7 +467,6 @@ test('@getToken => rejects the operation when a non json response is received', 
   };
 
   const oauth2 = oauth2Module.create(config);
-
   const error = await t.throwsAsync(() => oauth2.authorizationCode.getToken(tokenParams));
 
   scope.done();

@@ -141,14 +141,61 @@ test('@refresh => creates a new access token with default params', async (t) => 
   t.true(has(refreshAccessToken.token, 'access_token'));
 });
 
+test('@refresh => creates a new access token with a custom grant type', async (t) => {
+  const accessTokenResponse = chance.accessToken({
+    expireMode: 'expires_in',
+  });
+
+  const refreshParams = {
+    grant_type: 'my_grant',
+    refresh_token: accessTokenResponse.refresh_token,
+  };
+
+  const scope = nock('https://authorization-server.org:443', scopeOptions)
+    .post('/oauth/token', qs.stringify(refreshParams))
+    .reply(200, accessTokenResponse);
+
+  const accessToken = oauth2.accessToken.create(accessTokenResponse);
+  const refreshAccessToken = await accessToken.refresh({
+    grant_type: 'my_grant',
+  });
+
+  scope.done();
+  t.true(has(refreshAccessToken.token, 'access_token'));
+});
+
+test('@refresh => creates a new access token with multiple scopes', async (t) => {
+  const accessTokenResponse = chance.accessToken({
+    expireMode: 'expires_in',
+  });
+
+  const refreshParams = {
+    grant_type: 'refresh_token',
+    scope: 'scope-a scope-b',
+    refresh_token: accessTokenResponse.refresh_token,
+  };
+
+  const scope = nock('https://authorization-server.org:443', scopeOptions)
+    .post('/oauth/token', qs.stringify(refreshParams))
+    .reply(200, accessTokenResponse);
+
+  const accessToken = oauth2.accessToken.create(accessTokenResponse);
+  const refreshAccessToken = await accessToken.refresh({
+    scope: ['scope-a', 'scope-b'],
+  });
+
+  scope.done();
+  t.true(has(refreshAccessToken.token, 'access_token'));
+});
+
 test('@refresh => creates a new access token with custom params', async (t) => {
   const accessTokenResponse = chance.accessToken({
     expireMode: 'expires_in',
   });
 
   const refreshParams = {
-    scope: 'TESTING_EXAMPLE_SCOPES',
     grant_type: 'refresh_token',
+    scope: 'TESTING_EXAMPLE_SCOPES',
     refresh_token: accessTokenResponse.refresh_token,
   };
 
@@ -179,8 +226,8 @@ test('@refresh => creates a new access token with a custom token path', async (t
   const oauth2WithCustomOptions = oauth2Module.create(customModuleConfig);
 
   const refreshParams = {
-    scope: 'TESTING_EXAMPLE_SCOPES',
     grant_type: 'refresh_token',
+    scope: 'TESTING_EXAMPLE_SCOPES',
     refresh_token: accessTokenResponse.refresh_token,
   };
 
