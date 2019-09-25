@@ -2,9 +2,8 @@
 
 const test = require('ava');
 const nock = require('nock');
-const qs = require('querystring');
 const oauth2Module = require('./../index');
-const baseConfig = require('./fixtures/module-config');
+const { createModuleConfig } = require('./_module-config');
 const expectedAccessToken = require('./fixtures/access_token');
 
 test('@getToken => resolves to an access token (body credentials and JSON format)', async (t) => {
@@ -26,7 +25,7 @@ test('@getToken => resolves to an access token (body credentials and JSON format
     .post('/oauth/token', expectedRequestParams)
     .reply(200, expectedAccessToken);
 
-  const config = Object.assign({}, baseConfig, {
+  const config = createModuleConfig({
     options: {
       bodyFormat: 'json',
       authorizationMethod: 'body',
@@ -60,10 +59,10 @@ test('@getToken => resolves to an access token (body credentials and form format
   };
 
   const scope = nock('https://authorization-server.org:443', scopeOptions)
-    .post('/oauth/token', qs.stringify(expectedRequestParams))
+    .post('/oauth/token', expectedRequestParams)
     .reply(200, expectedAccessToken);
 
-  const config = Object.assign({}, baseConfig, {
+  const config = createModuleConfig({
     options: {
       bodyFormat: 'form',
       authorizationMethod: 'body',
@@ -98,7 +97,7 @@ test('@getToken => resolves to an access token (header credentials)', async (t) 
     .post('/oauth/token', expectedRequestParams)
     .reply(200, expectedAccessToken);
 
-  const config = Object.assign({}, baseConfig, {
+  const config = createModuleConfig({
     options: {
       authorizationMethod: 'header',
     },
@@ -132,7 +131,7 @@ test('@getToken => resolves to an access token with custom module configuration 
     .post('/root/oauth/token', expectedRequestParams)
     .reply(200, expectedAccessToken);
 
-  const config = Object.assign({}, baseConfig, {
+  const config = createModuleConfig({
     auth: {
       tokenHost: 'https://authorization-server.org:443/root/',
       tokenPath: '/oauth/token',
@@ -169,7 +168,7 @@ test('@getToken => resolves to an access token with custom module configuration 
     .post('/oauth/token', expectedRequestParams)
     .reply(200, expectedAccessToken);
 
-  const config = Object.assign({}, baseConfig, {
+  const config = createModuleConfig({
     http: {
       headers: {
         'X-MYTHICAL-HEADER': 'mythical value',
@@ -221,7 +220,9 @@ test('@getToken => resolves to an access token while following redirections', as
     random_param: 'random value',
   };
 
-  const oauth2 = oauth2Module.create(baseConfig);
+  const config = createModuleConfig();
+  const oauth2 = oauth2Module.create(config);
+
   const token = await oauth2.clientCredentials.getToken(tokenParams);
 
   redirectionsScope.done();
@@ -251,7 +252,9 @@ test('@getToken => resolves to an access token while requesting multiple scopes'
     scope: ['scope-a', 'scope-b'],
   };
 
-  const oauth2 = oauth2Module.create(baseConfig);
+  const config = createModuleConfig();
+  const oauth2 = oauth2Module.create(config);
+
   const token = await oauth2.clientCredentials.getToken(tokenParams);
 
   scope.done();
@@ -278,7 +281,8 @@ test('@getToken => resolves to an access token with a custom grant type', async 
     grant_type: 'my_grant',
   };
 
-  const oauth2 = oauth2Module.create(baseConfig);
+  const config = createModuleConfig();
+  const oauth2 = oauth2Module.create(config);
   const token = await oauth2.clientCredentials.getToken(tokenParams);
 
   scope.done();
@@ -306,7 +310,7 @@ test('@getToken => rejects the operation when a non json response is received', 
       'Content-Type': 'application/html',
     });
 
-  const config = Object.assign({}, baseConfig, {
+  const config = createModuleConfig({
     options: {
       bodyFormat: 'json',
       authorizationMethod: 'body',

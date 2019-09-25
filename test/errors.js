@@ -1,12 +1,9 @@
 'use strict';
 
 const test = require('ava');
-const qs = require('querystring');
 const nock = require('nock');
-const baseConfig = require('./fixtures/module-config.json');
+const { createModuleConfig } = require('./_module-config');
 const oauth2Module = require('./../index');
-
-const oauth2 = oauth2Module.create(baseConfig);
 
 const tokenParams = {
   code: 'code',
@@ -31,6 +28,9 @@ test('@errors => rejects operations on http error (401)', async (t) => {
     .post('/oauth/token')
     .reply(401);
 
+  const config = createModuleConfig();
+  const oauth2 = oauth2Module.create(config);
+
   const error = await t.throwsAsync(() => oauth2.authorizationCode.getToken(tokenParams), Error);
 
   scope.done();
@@ -54,10 +54,13 @@ test('@errors => rejects operations on http error (500)', async (t) => {
   };
 
   const scope = nock('https://authorization-server.org:443', scopeOptions)
-    .post('/oauth/token', qs.stringify(oauthParams))
+    .post('/oauth/token', oauthParams)
     .reply(500, {
       customError: 'An amazing error has occured',
     });
+
+  const config = createModuleConfig();
+  const oauth2 = oauth2Module.create(config);
 
   const error = await t.throwsAsync(() => oauth2.authorizationCode.getToken(tokenParams), Error);
 

@@ -3,7 +3,7 @@
 const test = require('ava');
 
 const oauth2Module = require('./../index.js');
-const moduleConfig = require('./fixtures/module-config');
+const { createModuleConfig } = require('./_module-config');
 
 test('@create => throws a validation error when no configuration is provided', (t) => {
   const createModule = () => oauth2Module.create();
@@ -12,7 +12,8 @@ test('@create => throws a validation error when no configuration is provided', (
 });
 
 test('@create => creates a new instance', (t) => {
-  const createModule = () => oauth2Module.create(moduleConfig);
+  const config = createModuleConfig();
+  const createModule = () => oauth2Module.create(config);
 
   t.notThrows(createModule);
 });

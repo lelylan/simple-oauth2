@@ -2,49 +2,54 @@
 
 const test = require('ava');
 const nock = require('nock');
-const qs = require('querystring');
 const oauth2Module = require('./../index');
-const baseConfig = require('./fixtures/module-config');
 const expectedAccessToken = require('./fixtures/access_token');
+const { createModuleConfig } = require('./_module-config');
 
 test('@authorizeURL => returns the authorization URL with no options and default module configuration', (t) => {
-  const oauth2 = oauth2Module.create(baseConfig);
-  const authorizationURL = oauth2.authorizationCode.authorizeURL();
-  const expectedAuthorizationURL = 'https://authorization-server.org/oauth/authorize?response_type=code&client_id=the%20client%20id';
+  const config = createModuleConfig();
+  const oauth2 = oauth2Module.create(config);
 
-  t.is(authorizationURL, expectedAuthorizationURL);
+  const actual = oauth2.authorizationCode.authorizeURL();
+  const expected = 'https://authorization-server.org/oauth/authorize?response_type=code&client_id=the%20client%20id';
+
+  t.is(actual, expected);
 });
 
 test('@authorizeURL => returns the authorization URL with options and default module configuration', (t) => {
-  const authorizeConfig = {
+  const authorizeParams = {
     redirect_uri: 'http://localhost:3000/callback',
     scope: 'user',
     state: '02afe928b',
   };
 
-  const oauth2 = oauth2Module.create(baseConfig);
-  const authorizationURL = oauth2.authorizationCode.authorizeURL(authorizeConfig);
-  const expectedAuthorizationURL = `https://authorization-server.org/oauth/authorize?response_type=code&client_id=the%20client%20id&redirect_uri=${encodeURIComponent('http://localhost:3000/callback')}&scope=user&state=02afe928b`;
+  const config = createModuleConfig();
+  const oauth2 = oauth2Module.create(config);
 
-  t.is(authorizationURL, expectedAuthorizationURL);
+  const actual = oauth2.authorizationCode.authorizeURL(authorizeParams);
+  const expected = `https://authorization-server.org/oauth/authorize?response_type=code&client_id=the%20client%20id&redirect_uri=${encodeURIComponent('http://localhost:3000/callback')}&scope=user&state=02afe928b`;
+
+  t.is(actual, expected);
 });
 
 test('@authorizeURL => returns the authorization URL with an scope array and default module configuration', (t) => {
-  const authorizeConfig = {
+  const authorizeParams = {
     redirect_uri: 'http://localhost:3000/callback',
     state: '02afe928b',
     scope: ['user', 'account'],
   };
 
-  const oauth2 = oauth2Module.create(baseConfig);
-  const authorizationURL = oauth2.authorizationCode.authorizeURL(authorizeConfig);
-  const expectedAuthorizationURL = `https://authorization-server.org/oauth/authorize?response_type=code&client_id=the%20client%20id&redirect_uri=${encodeURIComponent('http://localhost:3000/callback')}&state=02afe928b&scope=user%20account`;
+  const config = createModuleConfig();
+  const oauth2 = oauth2Module.create(config);
 
-  t.is(authorizationURL, expectedAuthorizationURL);
+  const actual = oauth2.authorizationCode.authorizeURL(authorizeParams);
+  const expected = `https://authorization-server.org/oauth/authorize?response_type=code&client_id=the%20client%20id&redirect_uri=${encodeURIComponent('http://localhost:3000/callback')}&state=02afe928b&scope=user%20account`;
+
+  t.is(actual, expected);
 });
 
 test('@authorizeURL => returns the authorization URL with a custom module configuration (client id param name)', (t) => {
-  const oauth2 = oauth2Module.create({
+  const config = createModuleConfig({
     client: {
       id: 'client-id',
       secret: 'client-secret',
@@ -55,14 +60,16 @@ test('@authorizeURL => returns the authorization URL with a custom module config
     },
   });
 
-  const authorizationURL = oauth2.authorizationCode.authorizeURL();
-  const expectedAuthorizationURL = 'https://authorization-server.org/oauth/authorize?response_type=code&incredible-param-name=client-id';
+  const oauth2 = oauth2Module.create(config);
 
-  t.is(authorizationURL, expectedAuthorizationURL);
+  const actual = oauth2.authorizationCode.authorizeURL();
+  const expected = 'https://authorization-server.org/oauth/authorize?response_type=code&incredible-param-name=client-id';
+
+  t.is(actual, expected);
 });
 
 test('@authorizeURL => returns the authorization URL with a custom module configuration (authorize host)', (t) => {
-  const oauth2 = oauth2Module.create({
+  const config = createModuleConfig({
     client: {
       id: 'client-id',
       secret: 'client-secret',
@@ -73,14 +80,16 @@ test('@authorizeURL => returns the authorization URL with a custom module config
     },
   });
 
-  const authorizationURL = oauth2.authorizationCode.authorizeURL();
-  const expectedAuthorizationURL = 'https://other-authorization-server.com/oauth/authorize?response_type=code&client_id=client-id';
+  const oauth2 = oauth2Module.create(config);
 
-  t.is(authorizationURL, expectedAuthorizationURL);
+  const actual = oauth2.authorizationCode.authorizeURL();
+  const expected = 'https://other-authorization-server.com/oauth/authorize?response_type=code&client_id=client-id';
+
+  t.is(actual, expected);
 });
 
 test('@authorizeURL => returns the authorization URL with a custom module configuration (authorize host with trailing slashes)', (t) => {
-  const oauth2 = oauth2Module.create({
+  const config = createModuleConfig({
     client: {
       id: 'client-id',
       secret: 'client-secret',
@@ -91,14 +100,16 @@ test('@authorizeURL => returns the authorization URL with a custom module config
     },
   });
 
-  const authorizationURL = oauth2.authorizationCode.authorizeURL();
-  const expectedAuthorizationURL = 'https://other-authorization-server.com/oauth/authorize?response_type=code&client_id=client-id';
+  const oauth2 = oauth2Module.create(config);
 
-  t.is(authorizationURL, expectedAuthorizationURL);
+  const actual = oauth2.authorizationCode.authorizeURL();
+  const expected = 'https://other-authorization-server.com/oauth/authorize?response_type=code&client_id=client-id';
+
+  t.is(actual, expected);
 });
 
 test('@authorizeURL => returns the authorization URL with a custom module configuration (authorize path)', (t) => {
-  const oauth2 = oauth2Module.create({
+  const config = createModuleConfig({
     client: {
       id: 'client-id',
       secret: 'client-secret',
@@ -109,10 +120,12 @@ test('@authorizeURL => returns the authorization URL with a custom module config
     },
   });
 
-  const authorizationURL = oauth2.authorizationCode.authorizeURL();
-  const expectedAuthorizationURL = 'https://authorization-server.org/authorize-now?response_type=code&client_id=client-id';
+  const oauth2 = oauth2Module.create(config);
 
-  t.is(authorizationURL, expectedAuthorizationURL);
+  const actual = oauth2.authorizationCode.authorizeURL();
+  const expected = 'https://authorization-server.org/authorize-now?response_type=code&client_id=client-id';
+
+  t.is(actual, expected);
 });
 
 test('@authorizeURL => returns the authorization URL with a custom module configuration (authorize host and path)', (t) => {
@@ -128,10 +141,10 @@ test('@authorizeURL => returns the authorization URL with a custom module config
     },
   });
 
-  const authorizationURL = oauth2.authorizationCode.authorizeURL();
-  const expectedAuthorizationURL = 'https://other-authorization-server.com/authorize-now?response_type=code&client_id=client-id';
+  const actual = oauth2.authorizationCode.authorizeURL();
+  const expected = 'https://other-authorization-server.com/authorize-now?response_type=code&client_id=client-id';
 
-  t.is(authorizationURL, expectedAuthorizationURL);
+  t.is(actual, expected);
 });
 
 test('@getToken => resolves to an access token (body credentials and JSON format)', async (t) => {
@@ -154,7 +167,7 @@ test('@getToken => resolves to an access token (body credentials and JSON format
     .post('/oauth/token', expectedRequestParams)
     .reply(200, expectedAccessToken);
 
-  const config = Object.assign({}, baseConfig, {
+  const config = createModuleConfig({
     options: {
       bodyFormat: 'json',
       authorizationMethod: 'body',
@@ -190,10 +203,10 @@ test('@getToken => resolves to an access token (body credentials and form format
   };
 
   const scope = nock('https://authorization-server.org', scopeOptions)
-    .post('/oauth/token', qs.stringify(expectedRequestParams))
+    .post('/oauth/token', expectedRequestParams)
     .reply(200, expectedAccessToken);
 
-  const config = Object.assign({}, baseConfig, {
+  const config = createModuleConfig({
     options: {
       bodyFormat: 'form',
       authorizationMethod: 'body',
@@ -230,7 +243,7 @@ test('@getToken => resolves to an access token (header credentials)', async (t) 
     .post('/oauth/token', expectedRequestParams)
     .reply(200, expectedAccessToken);
 
-  const config = Object.assign({}, baseConfig, {
+  const config = createModuleConfig({
     options: {
       authorizationMethod: 'header',
     },
@@ -265,7 +278,7 @@ test('@getToken => resolves to an access token with custom module configuration 
     .post('/root/oauth/token', expectedRequestParams)
     .reply(200, expectedAccessToken);
 
-  const config = Object.assign({}, baseConfig, {
+  const config = createModuleConfig({
     auth: {
       tokenHost: 'https://authorization-server.org:443/root/',
       tokenPath: '/oauth/token',
@@ -304,7 +317,7 @@ test('@getToken => resolves to an access token with custom module configuration 
     .post('/oauth/token', expectedRequestParams)
     .reply(200, expectedAccessToken);
 
-  const config = Object.assign({}, baseConfig, {
+  const config = createModuleConfig({
     http: {
       headers: {
         'X-MYTHICAL-HEADER': 'mythical value',
@@ -359,7 +372,9 @@ test('@getToken => resolves to an access token while following redirections', as
     redirect_uri: 'http://callback.com',
   };
 
-  const oauth2 = oauth2Module.create(baseConfig);
+  const config = createModuleConfig();
+  const oauth2 = oauth2Module.create(config);
+
   const token = await oauth2.authorizationCode.getToken(tokenParams);
 
   redirectionsScope.done();
@@ -393,7 +408,9 @@ test('@getToken => resolves to an access token while requesting multiple scopes'
     scope: ['scope-a', 'scope-b'],
   };
 
-  const oauth2 = oauth2Module.create(baseConfig);
+  const config = createModuleConfig();
+  const oauth2 = oauth2Module.create(config);
+
   const token = await oauth2.authorizationCode.getToken(tokenParams);
 
   scope.done();
@@ -424,7 +441,9 @@ test('@getToken => resolves to an access token with a custom grant type', async 
     grant_type: 'my_grant',
   };
 
-  const oauth2 = oauth2Module.create(baseConfig);
+  const config = createModuleConfig();
+  const oauth2 = oauth2Module.create(config);
+
   const token = await oauth2.authorizationCode.getToken(tokenParams);
 
   scope.done();
@@ -454,7 +473,7 @@ test('@getToken => rejects the operation when a non json response is received', 
       'Content-Type': 'application/html',
     });
 
-  const config = Object.assign({}, baseConfig, {
+  const config = createModuleConfig({
     options: {
       bodyFormat: 'json',
       authorizationMethod: 'body',

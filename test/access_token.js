@@ -1,20 +1,17 @@
 'use strict';
 
 const test = require('ava');
-const qs = require('querystring');
 const nock = require('nock');
 const Chance = require('chance');
 const accessTokenMixin = require('chance-access-token');
-const { defaultsDeep, has, hasIn } = require('lodash');
+const { has, hasIn } = require('lodash');
 const { isValid, isDate, differenceInSeconds } = require('date-fns');
 
 const oauth2Module = require('./../index.js');
-const moduleConfig = require('./fixtures/module-config');
+const { createModuleConfig } = require('./_module-config');
 
 const chance = new Chance();
 chance.mixin({ accessToken: accessTokenMixin });
-
-const oauth2 = oauth2Module.create(moduleConfig);
 
 const scopeOptions = {
   reqheaders: {
@@ -24,6 +21,9 @@ const scopeOptions = {
 };
 
 test('@create => creates a new access token instance', (t) => {
+  const config = createModuleConfig();
+  const oauth2 = oauth2Module.create(config);
+
   const accessTokenResponse = chance.accessToken();
   const accessToken = oauth2.accessToken.create(accessTokenResponse);
 
@@ -35,6 +35,9 @@ test('@create => creates a new access token instance', (t) => {
 });
 
 test('@create => do not reassigns the expires at property when is already a date', (t) => {
+  const config = createModuleConfig();
+  const oauth2 = oauth2Module.create(config);
+
   const accessTokenResponse = chance.accessToken({
     expired: true,
     parseDate: true,
@@ -48,6 +51,9 @@ test('@create => do not reassigns the expires at property when is already a date
 });
 
 test('@create => parses the expires at property when is not a date', (t) => {
+  const config = createModuleConfig();
+  const oauth2 = oauth2Module.create(config);
+
   const accessTokenResponse = chance.accessToken({
     expired: true,
     parseDate: false,
@@ -61,6 +67,9 @@ test('@create => parses the expires at property when is not a date', (t) => {
 });
 
 test('@create => computes the expires at property when only expires in is present', (t) => {
+  const config = createModuleConfig();
+  const oauth2 = oauth2Module.create(config);
+
   const accessTokenResponse = chance.accessToken({
     expireMode: 'expires_in',
   });
@@ -77,18 +86,23 @@ test('@create => computes the expires at property when only expires in is presen
 });
 
 test('@create => ignores the expiration parsing when no expiration property is present', (t) => {
+  const config = createModuleConfig();
+  const oauth2 = oauth2Module.create(config);
+
   const accessTokenResponse = chance.accessToken({
     expireMode: 'no_expiration',
   });
 
   const accessToken = oauth2.accessToken.create(accessTokenResponse);
 
-
   t.not(has(accessToken.token, 'expires_in'));
   t.not(has(accessToken.token, 'expires_at'));
 });
 
 test('@expired => returns true when expired', (t) => {
+  const config = createModuleConfig();
+  const oauth2 = oauth2Module.create(config);
+
   const accessTokenResponse = chance.accessToken({
     expired: true,
     expireMode: 'expires_at',
@@ -100,6 +114,9 @@ test('@expired => returns true when expired', (t) => {
 });
 
 test('@expired => returns false when not expired', (t) => {
+  const config = createModuleConfig();
+  const oauth2 = oauth2Module.create(config);
+
   const accessTokenResponse = chance.accessToken({
     expired: false,
     expireMode: 'expires_at',
@@ -111,6 +128,9 @@ test('@expired => returns false when not expired', (t) => {
 });
 
 test('@expired => returns false when no expiration property is present', (t) => {
+  const config = createModuleConfig();
+  const oauth2 = oauth2Module.create(config);
+
   const accessTokenResponse = chance.accessToken({
     expireMode: 'no_expiration',
   });
@@ -121,6 +141,9 @@ test('@expired => returns false when no expiration property is present', (t) => 
 });
 
 test('@refresh => creates a new access token with default params', async (t) => {
+  const config = createModuleConfig();
+  const oauth2 = oauth2Module.create(config);
+
   const accessTokenResponse = chance.accessToken({
     expireMode: 'expires_in',
   });
@@ -131,7 +154,7 @@ test('@refresh => creates a new access token with default params', async (t) => 
   };
 
   const scope = nock('https://authorization-server.org:443', scopeOptions)
-    .post('/oauth/token', qs.stringify(refreshParams))
+    .post('/oauth/token', refreshParams)
     .reply(200, accessTokenResponse);
 
   const accessToken = oauth2.accessToken.create(accessTokenResponse);
@@ -142,6 +165,9 @@ test('@refresh => creates a new access token with default params', async (t) => 
 });
 
 test('@refresh => creates a new access token with a custom grant type', async (t) => {
+  const config = createModuleConfig();
+  const oauth2 = oauth2Module.create(config);
+
   const accessTokenResponse = chance.accessToken({
     expireMode: 'expires_in',
   });
@@ -152,7 +178,7 @@ test('@refresh => creates a new access token with a custom grant type', async (t
   };
 
   const scope = nock('https://authorization-server.org:443', scopeOptions)
-    .post('/oauth/token', qs.stringify(refreshParams))
+    .post('/oauth/token', refreshParams)
     .reply(200, accessTokenResponse);
 
   const accessToken = oauth2.accessToken.create(accessTokenResponse);
@@ -165,6 +191,9 @@ test('@refresh => creates a new access token with a custom grant type', async (t
 });
 
 test('@refresh => creates a new access token with multiple scopes', async (t) => {
+  const config = createModuleConfig();
+  const oauth2 = oauth2Module.create(config);
+
   const accessTokenResponse = chance.accessToken({
     expireMode: 'expires_in',
   });
@@ -176,7 +205,7 @@ test('@refresh => creates a new access token with multiple scopes', async (t) =>
   };
 
   const scope = nock('https://authorization-server.org:443', scopeOptions)
-    .post('/oauth/token', qs.stringify(refreshParams))
+    .post('/oauth/token', refreshParams)
     .reply(200, accessTokenResponse);
 
   const accessToken = oauth2.accessToken.create(accessTokenResponse);
@@ -189,6 +218,9 @@ test('@refresh => creates a new access token with multiple scopes', async (t) =>
 });
 
 test('@refresh => creates a new access token with custom params', async (t) => {
+  const config = createModuleConfig();
+  const oauth2 = oauth2Module.create(config);
+
   const accessTokenResponse = chance.accessToken({
     expireMode: 'expires_in',
   });
@@ -200,7 +232,7 @@ test('@refresh => creates a new access token with custom params', async (t) => {
   };
 
   const scope = nock('https://authorization-server.org:443', scopeOptions)
-    .post('/oauth/token', qs.stringify(refreshParams))
+    .post('/oauth/token', refreshParams)
     .reply(200, accessTokenResponse);
 
   const accessToken = oauth2.accessToken.create(accessTokenResponse);
@@ -213,7 +245,7 @@ test('@refresh => creates a new access token with custom params', async (t) => {
 });
 
 test('@refresh => creates a new access token with a custom token path', async (t) => {
-  const customModuleConfig = defaultsDeep({}, moduleConfig, {
+  const config = createModuleConfig({
     auth: {
       tokenPath: '/the-custom/path',
     },
@@ -223,7 +255,7 @@ test('@refresh => creates a new access token with a custom token path', async (t
     expireMode: 'expires_in',
   });
 
-  const oauth2WithCustomOptions = oauth2Module.create(customModuleConfig);
+  const oauth2 = oauth2Module.create(config);
 
   const refreshParams = {
     grant_type: 'refresh_token',
@@ -232,10 +264,10 @@ test('@refresh => creates a new access token with a custom token path', async (t
   };
 
   const scope = nock('https://authorization-server.org:443', scopeOptions)
-    .post('/the-custom/path', qs.stringify(refreshParams))
+    .post('/the-custom/path', refreshParams)
     .reply(200, accessTokenResponse);
 
-  const accessToken = oauth2WithCustomOptions.accessToken.create(accessTokenResponse);
+  const accessToken = oauth2.accessToken.create(accessTokenResponse);
   const refreshAccessToken = await accessToken.refresh({ scope: 'TESTING_EXAMPLE_SCOPES' });
 
   scope.done();
@@ -243,6 +275,9 @@ test('@refresh => creates a new access token with a custom token path', async (t
 });
 
 test('@revoke => performs the access token revoke', async (t) => {
+  const config = createModuleConfig();
+  const oauth2 = oauth2Module.create(config);
+
   const accessTokenResponse = chance.accessToken({
     expireMode: 'expires_in',
   });
@@ -253,7 +288,7 @@ test('@revoke => performs the access token revoke', async (t) => {
   };
 
   const scope = nock('https://authorization-server.org:443', scopeOptions)
-    .post('/oauth/revoke', qs.stringify(revokeParams))
+    .post('/oauth/revoke', revokeParams)
     .reply(200);
 
   const accessToken = oauth2.accessToken.create(accessTokenResponse);
@@ -264,6 +299,9 @@ test('@revoke => performs the access token revoke', async (t) => {
 });
 
 test('@revoke => performs the refresh token revoke', async (t) => {
+  const config = createModuleConfig();
+  const oauth2 = oauth2Module.create(config);
+
   const accessTokenResponse = chance.accessToken({
     expireMode: 'expires_in',
   });
@@ -274,7 +312,7 @@ test('@revoke => performs the refresh token revoke', async (t) => {
   };
 
   const scope = nock('https://authorization-server.org:443', scopeOptions)
-    .post('/oauth/revoke', qs.stringify(revokeParams))
+    .post('/oauth/revoke', revokeParams)
     .reply(200);
 
   const accessToken = oauth2.accessToken.create(accessTokenResponse);
@@ -285,13 +323,13 @@ test('@revoke => performs the refresh token revoke', async (t) => {
 });
 
 test('@revoke => performs a token revoke with a custom revoke path', async (t) => {
-  const customModuleConfig = defaultsDeep({}, moduleConfig, {
+  const config = createModuleConfig({
     auth: {
       revokePath: '/the-custom/revoke-path',
     },
   });
 
-  const oauth2WithCustomOptions = oauth2Module.create(customModuleConfig);
+  const oauth2 = oauth2Module.create(config);
 
   const accessTokenResponse = chance.accessToken({
     expireMode: 'expires_in',
@@ -303,10 +341,10 @@ test('@revoke => performs a token revoke with a custom revoke path', async (t) =
   };
 
   const scope = nock('https://authorization-server.org:443', scopeOptions)
-    .post('/the-custom/revoke-path', qs.stringify(revokeParams))
+    .post('/the-custom/revoke-path', revokeParams)
     .reply(200);
 
-  const accessToken = oauth2WithCustomOptions.accessToken.create(accessTokenResponse);
+  const accessToken = oauth2.accessToken.create(accessTokenResponse);
 
   await t.notThrowsAsync(() => accessToken.revoke('refresh_token'));
 
@@ -314,6 +352,9 @@ test('@revoke => performs a token revoke with a custom revoke path', async (t) =
 });
 
 test('@revokeAll => revokes both the access and refresh tokens', async (t) => {
+  const config = createModuleConfig();
+  const oauth2 = oauth2Module.create(config);
+
   const accessTokenResponse = chance.accessToken({
     expireMode: 'expires_in',
   });
@@ -329,9 +370,9 @@ test('@revokeAll => revokes both the access and refresh tokens', async (t) => {
   };
 
   const scope = nock('https://authorization-server.org:443', scopeOptions)
-    .post('/oauth/revoke', qs.stringify(accessTokenRevokeParams))
+    .post('/oauth/revoke', accessTokenRevokeParams)
     .reply(200)
-    .post('/oauth/revoke', qs.stringify(refreshTokenRevokeParams))
+    .post('/oauth/revoke', refreshTokenRevokeParams)
     .reply(200);
 
   const accessToken = oauth2.accessToken.create(accessTokenResponse);
@@ -342,6 +383,9 @@ test('@revokeAll => revokes both the access and refresh tokens', async (t) => {
 });
 
 test('@revokeAll => revokes the refresh token only if the access token is successfully revoked', async (t) => {
+  const config = createModuleConfig();
+  const oauth2 = oauth2Module.create(config);
+
   const accessTokenResponse = chance.accessToken({
     expireMode: 'expires_in',
   });
@@ -352,7 +396,7 @@ test('@revokeAll => revokes the refresh token only if the access token is succes
   };
 
   const scope = nock('https://authorization-server.org:443', scopeOptions)
-    .post('/oauth/revoke', qs.stringify(accessTokenRevokeParams))
+    .post('/oauth/revoke', accessTokenRevokeParams)
     .reply(500);
 
   const accessToken = oauth2.accessToken.create(accessTokenResponse);
