@@ -1,10 +1,9 @@
 'use strict';
 
 const test = require('ava');
-const nock = require('nock');
 const oauth2Module = require('./../index');
 const { createModuleConfig } = require('./_module-config');
-const expectedAccessToken = require('./fixtures/access_token');
+const createAuthorizationServer = require('./_authorization-server-mock');
 
 test('@getToken => resolves to an access token (body credentials and JSON format)', async (t) => {
   const scopeOptions = {
@@ -21,9 +20,8 @@ test('@getToken => resolves to an access token (body credentials and JSON format
     random_param: 'random value',
   };
 
-  const scope = nock('https://authorization-server.org:443', scopeOptions)
-    .post('/oauth/token', expectedRequestParams)
-    .reply(200, expectedAccessToken);
+  const server = createAuthorizationServer('https://authorization-server.org:443');
+  const scope = server.tokenSuccess(scopeOptions, expectedRequestParams);
 
   const config = createModuleConfig({
     options: {
@@ -40,7 +38,7 @@ test('@getToken => resolves to an access token (body credentials and JSON format
   const token = await oauth2.clientCredentials.getToken(tokenParams);
 
   scope.done();
-  t.deepEqual(token, expectedAccessToken);
+  t.deepEqual(token, server.getAccessToken());
 });
 
 test('@getToken => resolves to an access token (body credentials and form format)', async (t) => {
@@ -58,9 +56,8 @@ test('@getToken => resolves to an access token (body credentials and form format
     client_secret: 'the client secret',
   };
 
-  const scope = nock('https://authorization-server.org:443', scopeOptions)
-    .post('/oauth/token', expectedRequestParams)
-    .reply(200, expectedAccessToken);
+  const server = createAuthorizationServer('https://authorization-server.org:443');
+  const scope = server.tokenSuccess(scopeOptions, expectedRequestParams);
 
   const config = createModuleConfig({
     options: {
@@ -77,7 +74,7 @@ test('@getToken => resolves to an access token (body credentials and form format
   const token = await oauth2.clientCredentials.getToken(tokenParams);
 
   scope.done();
-  t.deepEqual(token, expectedAccessToken);
+  t.deepEqual(token, server.getAccessToken());
 });
 
 test('@getToken => resolves to an access token (header credentials)', async (t) => {
@@ -93,9 +90,8 @@ test('@getToken => resolves to an access token (header credentials)', async (t) 
     random_param: 'random value',
   };
 
-  const scope = nock('https://authorization-server.org:443', scopeOptions)
-    .post('/oauth/token', expectedRequestParams)
-    .reply(200, expectedAccessToken);
+  const server = createAuthorizationServer('https://authorization-server.org:443');
+  const scope = server.tokenSuccess(scopeOptions, expectedRequestParams);
 
   const config = createModuleConfig({
     options: {
@@ -111,7 +107,7 @@ test('@getToken => resolves to an access token (header credentials)', async (t) 
   const token = await oauth2.clientCredentials.getToken(tokenParams);
 
   scope.done();
-  t.deepEqual(token, expectedAccessToken);
+  t.deepEqual(token, server.getAccessToken());
 });
 
 test('@getToken => resolves to an access token with custom module configuration (access token host and path)', async (t) => {
@@ -127,9 +123,8 @@ test('@getToken => resolves to an access token with custom module configuration 
     random_param: 'random value',
   };
 
-  const scope = nock('https://authorization-server.org:443', scopeOptions)
-    .post('/root/oauth/token', expectedRequestParams)
-    .reply(200, expectedAccessToken);
+  const server = createAuthorizationServer('https://authorization-server.org:443');
+  const scope = server.tokenSuccessWithCustomPath('/root/oauth/token', scopeOptions, expectedRequestParams);
 
   const config = createModuleConfig({
     auth: {
@@ -146,7 +141,7 @@ test('@getToken => resolves to an access token with custom module configuration 
   const token = await oauth2.clientCredentials.getToken(tokenParams);
 
   scope.done();
-  t.deepEqual(token, expectedAccessToken);
+  t.deepEqual(token, server.getAccessToken());
 });
 
 test('@getToken => resolves to an access token with custom module configuration (http options)', async (t) => {
@@ -164,9 +159,8 @@ test('@getToken => resolves to an access token with custom module configuration 
     random_param: 'random value',
   };
 
-  const scope = nock('https://authorization-server.org:443', scopeOptions)
-    .post('/oauth/token', expectedRequestParams)
-    .reply(200, expectedAccessToken);
+  const server = createAuthorizationServer('https://authorization-server.org:443');
+  const scope = server.tokenSuccess(scopeOptions, expectedRequestParams);
 
   const config = createModuleConfig({
     http: {
@@ -185,7 +179,7 @@ test('@getToken => resolves to an access token with custom module configuration 
   const token = await oauth2.clientCredentials.getToken(tokenParams);
 
   scope.done();
-  t.deepEqual(token, expectedAccessToken);
+  t.deepEqual(token, server.getAccessToken());
 });
 
 test('@getToken => resolves to an access token while following redirections', async (t) => {
@@ -201,20 +195,10 @@ test('@getToken => resolves to an access token while following redirections', as
     random_param: 'random value',
   };
 
-  const redirectionsScope = nock('https://authorization-server.org', scopeOptions)
-    .post('/oauth/token', expectedRequestParams)
-    .times(19)
-    .reply(301, null, {
-      Location: 'https://authorization-server.org/oauth/token',
-    })
-    .post('/oauth/token', expectedRequestParams)
-    .reply(301, null, {
-      Location: 'https://origin-authorization-server.org/oauth/token',
-    });
-
-  const originScope = nock('https://origin-authorization-server.org', scopeOptions)
-    .post('/oauth/token', expectedRequestParams)
-    .reply(200, expectedAccessToken);
+  const server = createAuthorizationServer('https://authorization-server.org');
+  const originServer = createAuthorizationServer('https://origin-authorization-server.org');
+  const redirectionsScope = server.tokenSuccessWithRedirections('https://origin-authorization-server.org', scopeOptions, expectedRequestParams);
+  const originScope = originServer.tokenSuccess(scopeOptions, expectedRequestParams);
 
   const tokenParams = {
     random_param: 'random value',
@@ -228,7 +212,7 @@ test('@getToken => resolves to an access token while following redirections', as
   redirectionsScope.done();
   originScope.done();
 
-  t.deepEqual(token, expectedAccessToken);
+  t.deepEqual(token, originServer.getAccessToken());
 });
 
 test('@getToken => resolves to an access token while requesting multiple scopes', async (t) => {
@@ -244,9 +228,8 @@ test('@getToken => resolves to an access token while requesting multiple scopes'
     scope: 'scope-a scope-b',
   };
 
-  const scope = nock('https://authorization-server.org:443', scopeOptions)
-    .post('/oauth/token', expectedRequestParams)
-    .reply(200, expectedAccessToken);
+  const server = createAuthorizationServer('https://authorization-server.org:443');
+  const scope = server.tokenSuccess(scopeOptions, expectedRequestParams);
 
   const tokenParams = {
     scope: ['scope-a', 'scope-b'],
@@ -258,7 +241,7 @@ test('@getToken => resolves to an access token while requesting multiple scopes'
   const token = await oauth2.clientCredentials.getToken(tokenParams);
 
   scope.done();
-  t.deepEqual(token, expectedAccessToken);
+  t.deepEqual(token, server.getAccessToken());
 });
 
 test('@getToken => resolves to an access token with a custom grant type', async (t) => {
@@ -273,9 +256,8 @@ test('@getToken => resolves to an access token with a custom grant type', async 
     grant_type: 'my_grant',
   };
 
-  const scope = nock('https://authorization-server.org:443', scopeOptions)
-    .post('/oauth/token', expectedRequestParams)
-    .reply(200, expectedAccessToken);
+  const server = createAuthorizationServer('https://authorization-server.org:443');
+  const scope = server.tokenSuccess(scopeOptions, expectedRequestParams);
 
   const tokenParams = {
     grant_type: 'my_grant',
@@ -283,10 +265,11 @@ test('@getToken => resolves to an access token with a custom grant type', async 
 
   const config = createModuleConfig();
   const oauth2 = oauth2Module.create(config);
+
   const token = await oauth2.clientCredentials.getToken(tokenParams);
 
   scope.done();
-  t.deepEqual(token, expectedAccessToken);
+  t.deepEqual(token, server.getAccessToken());
 });
 
 test('@getToken => rejects the operation when a non json response is received', async (t) => {
@@ -304,11 +287,8 @@ test('@getToken => rejects the operation when a non json response is received', 
     random_param: 'random value',
   };
 
-  const scope = nock('https://authorization-server.org:443', scopeOptions)
-    .post('/oauth/token', expectedRequestParams)
-    .reply(200, '<html>Sorry for not responding with a json response</html>', {
-      'Content-Type': 'application/html',
-    });
+  const server = createAuthorizationServer('https://authorization-server.org:443');
+  const scope = server.tokenSuccessWithNonJSONContent(scopeOptions, expectedRequestParams);
 
   const config = createModuleConfig({
     options: {

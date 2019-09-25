@@ -1,8 +1,8 @@
 'use strict';
 
 const test = require('ava');
-const nock = require('nock');
 const { createModuleConfig } = require('./_module-config');
+const createAuthorizationServer = require('./_authorization-server-mock');
 const oauth2Module = require('./../index');
 
 const tokenParams = {
@@ -24,9 +24,8 @@ test('@errors => rejects operations on http error (401)', async (t) => {
     },
   };
 
-  const scope = nock('https://authorization-server.org:443', scopeOptions)
-    .post('/oauth/token')
-    .reply(401);
+  const server = createAuthorizationServer('https://authorization-server.org:443');
+  const scope = server.tokenAuthorizationError(scopeOptions, oauthParams);
 
   const config = createModuleConfig();
   const oauth2 = oauth2Module.create(config);
@@ -53,11 +52,8 @@ test('@errors => rejects operations on http error (500)', async (t) => {
     },
   };
 
-  const scope = nock('https://authorization-server.org:443', scopeOptions)
-    .post('/oauth/token', oauthParams)
-    .reply(500, {
-      customError: 'An amazing error has occured',
-    });
+  const server = createAuthorizationServer('https://authorization-server.org:443');
+  const scope = server.tokenError(scopeOptions, oauthParams);
 
   const config = createModuleConfig();
   const oauth2 = oauth2Module.create(config);

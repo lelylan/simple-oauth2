@@ -1,7 +1,6 @@
 'use strict';
 
 const test = require('ava');
-const nock = require('nock');
 const Chance = require('chance');
 const accessTokenMixin = require('chance-access-token');
 const { has, hasIn } = require('lodash');
@@ -9,6 +8,7 @@ const { isValid, isDate, differenceInSeconds } = require('date-fns');
 
 const oauth2Module = require('./../index.js');
 const { createModuleConfig } = require('./_module-config');
+const createAuthorizationServer = require('./_authorization-server-mock');
 
 const chance = new Chance();
 chance.mixin({ accessToken: accessTokenMixin });
@@ -153,9 +153,8 @@ test('@refresh => creates a new access token with default params', async (t) => 
     refresh_token: accessTokenResponse.refresh_token,
   };
 
-  const scope = nock('https://authorization-server.org:443', scopeOptions)
-    .post('/oauth/token', refreshParams)
-    .reply(200, accessTokenResponse);
+  const server = createAuthorizationServer('https://authorization-server.org:443');
+  const scope = server.tokenSuccess(scopeOptions, refreshParams);
 
   const accessToken = oauth2.accessToken.create(accessTokenResponse);
   const refreshAccessToken = await accessToken.refresh();
@@ -177,9 +176,8 @@ test('@refresh => creates a new access token with a custom grant type', async (t
     refresh_token: accessTokenResponse.refresh_token,
   };
 
-  const scope = nock('https://authorization-server.org:443', scopeOptions)
-    .post('/oauth/token', refreshParams)
-    .reply(200, accessTokenResponse);
+  const server = createAuthorizationServer('https://authorization-server.org:443');
+  const scope = server.tokenSuccess(scopeOptions, refreshParams);
 
   const accessToken = oauth2.accessToken.create(accessTokenResponse);
   const refreshAccessToken = await accessToken.refresh({
@@ -204,9 +202,8 @@ test('@refresh => creates a new access token with multiple scopes', async (t) =>
     refresh_token: accessTokenResponse.refresh_token,
   };
 
-  const scope = nock('https://authorization-server.org:443', scopeOptions)
-    .post('/oauth/token', refreshParams)
-    .reply(200, accessTokenResponse);
+  const server = createAuthorizationServer('https://authorization-server.org:443');
+  const scope = server.tokenSuccess(scopeOptions, refreshParams);
 
   const accessToken = oauth2.accessToken.create(accessTokenResponse);
   const refreshAccessToken = await accessToken.refresh({
@@ -231,9 +228,8 @@ test('@refresh => creates a new access token with custom params', async (t) => {
     refresh_token: accessTokenResponse.refresh_token,
   };
 
-  const scope = nock('https://authorization-server.org:443', scopeOptions)
-    .post('/oauth/token', refreshParams)
-    .reply(200, accessTokenResponse);
+  const server = createAuthorizationServer('https://authorization-server.org:443');
+  const scope = server.tokenSuccess(scopeOptions, refreshParams);
 
   const accessToken = oauth2.accessToken.create(accessTokenResponse);
   const refreshAccessToken = await accessToken.refresh({
@@ -263,9 +259,8 @@ test('@refresh => creates a new access token with a custom token path', async (t
     refresh_token: accessTokenResponse.refresh_token,
   };
 
-  const scope = nock('https://authorization-server.org:443', scopeOptions)
-    .post('/the-custom/path', refreshParams)
-    .reply(200, accessTokenResponse);
+  const server = createAuthorizationServer('https://authorization-server.org:443');
+  const scope = server.tokenSuccessWithCustomPath('/the-custom/path', scopeOptions, refreshParams);
 
   const accessToken = oauth2.accessToken.create(accessTokenResponse);
   const refreshAccessToken = await accessToken.refresh({ scope: 'TESTING_EXAMPLE_SCOPES' });
@@ -287,9 +282,8 @@ test('@revoke => performs the access token revoke', async (t) => {
     token_type_hint: 'access_token',
   };
 
-  const scope = nock('https://authorization-server.org:443', scopeOptions)
-    .post('/oauth/revoke', revokeParams)
-    .reply(200);
+  const server = createAuthorizationServer('https://authorization-server.org:443');
+  const scope = server.tokenRevokeSuccess(scopeOptions, revokeParams);
 
   const accessToken = oauth2.accessToken.create(accessTokenResponse);
 
@@ -311,9 +305,8 @@ test('@revoke => performs the refresh token revoke', async (t) => {
     token_type_hint: 'refresh_token',
   };
 
-  const scope = nock('https://authorization-server.org:443', scopeOptions)
-    .post('/oauth/revoke', revokeParams)
-    .reply(200);
+  const server = createAuthorizationServer('https://authorization-server.org:443');
+  const scope = server.tokenRevokeSuccess(scopeOptions, revokeParams);
 
   const accessToken = oauth2.accessToken.create(accessTokenResponse);
 
@@ -340,9 +333,8 @@ test('@revoke => performs a token revoke with a custom revoke path', async (t) =
     token_type_hint: 'refresh_token',
   };
 
-  const scope = nock('https://authorization-server.org:443', scopeOptions)
-    .post('/the-custom/revoke-path', revokeParams)
-    .reply(200);
+  const server = createAuthorizationServer('https://authorization-server.org:443');
+  const scope = server.tokenRevokeSuccessWithCustomPath('/the-custom/revoke-path', scopeOptions, revokeParams);
 
   const accessToken = oauth2.accessToken.create(accessTokenResponse);
 
@@ -369,11 +361,8 @@ test('@revokeAll => revokes both the access and refresh tokens', async (t) => {
     token_type_hint: 'access_token',
   };
 
-  const scope = nock('https://authorization-server.org:443', scopeOptions)
-    .post('/oauth/revoke', accessTokenRevokeParams)
-    .reply(200)
-    .post('/oauth/revoke', refreshTokenRevokeParams)
-    .reply(200);
+  const server = createAuthorizationServer('https://authorization-server.org:443');
+  const scope = server.tokenRevokeAllSuccess(scopeOptions, accessTokenRevokeParams, refreshTokenRevokeParams);
 
   const accessToken = oauth2.accessToken.create(accessTokenResponse);
 
@@ -395,9 +384,8 @@ test('@revokeAll => revokes the refresh token only if the access token is succes
     token_type_hint: 'access_token',
   };
 
-  const scope = nock('https://authorization-server.org:443', scopeOptions)
-    .post('/oauth/revoke', accessTokenRevokeParams)
-    .reply(500);
+  const server = createAuthorizationServer('https://authorization-server.org:443');
+  const scope = server.tokenRevokeError(scopeOptions, accessTokenRevokeParams);
 
   const accessToken = oauth2.accessToken.create(accessTokenResponse);
 
