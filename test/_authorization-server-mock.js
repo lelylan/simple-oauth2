@@ -10,7 +10,7 @@ const accessToken = {
   expires_in: '240000',
 };
 
-module.exports = function createAuthorizationServer(authorizationServerUrl) {
+function createAuthorizationServer(authorizationServerUrl) {
   function tokenSuccessWithCustomPath(path, scopeOptions, params) {
     return nock(authorizationServerUrl, scopeOptions)
       .post(path, params)
@@ -82,12 +82,7 @@ module.exports = function createAuthorizationServer(authorizationServerUrl) {
       });
   }
 
-  function getAccessToken() {
-    return accessToken;
-  }
-
   return {
-    getAccessToken,
     tokenError,
     tokenAuthorizationError,
     tokenRevokeError,
@@ -99,4 +94,13 @@ module.exports = function createAuthorizationServer(authorizationServerUrl) {
     tokenSuccessWithCustomPath,
     tokenSuccess,
   };
+}
+
+function getAccessToken() {
+  return accessToken;
+}
+
+module.exports = {
+  getAccessToken,
+  createAuthorizationServer,
 };

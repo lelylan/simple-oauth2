@@ -3,7 +3,7 @@
 const test = require('ava');
 const oauth2Module = require('./../index');
 const { createModuleConfig } = require('./_module-config');
-const createAuthorizationServer = require('./_authorization-server-mock');
+const { createAuthorizationServer, getAccessToken } = require('./_authorization-server-mock');
 
 test('@getToken => resolves to an access token (body credentials and JSON format)', async (t) => {
   const scopeOptions = {
@@ -40,7 +40,7 @@ test('@getToken => resolves to an access token (body credentials and JSON format
   const token = await oauth2.ownerPassword.getToken(tokenParams);
 
   scope.done();
-  t.deepEqual(token, server.getAccessToken());
+  t.deepEqual(token, getAccessToken());
 });
 
 test('@getToken => resolves to an access token (body credentials and form format)', async (t) => {
@@ -78,7 +78,7 @@ test('@getToken => resolves to an access token (body credentials and form format
   const token = await oauth2.ownerPassword.getToken(tokenParams);
 
   scope.done();
-  t.deepEqual(token, server.getAccessToken());
+  t.deepEqual(token, getAccessToken());
 });
 
 test('@getToken => resolves to an access token (header credentials)', async (t) => {
@@ -113,7 +113,7 @@ test('@getToken => resolves to an access token (header credentials)', async (t) 
   const token = await oauth2.ownerPassword.getToken(tokenParams);
 
   scope.done();
-  t.deepEqual(token, server.getAccessToken());
+  t.deepEqual(token, getAccessToken());
 });
 
 test('@getToken => resolves to an access token with custom module configuration (access token host and path)', async (t) => {
@@ -149,7 +149,7 @@ test('@getToken => resolves to an access token with custom module configuration 
   const token = await oauth2.ownerPassword.getToken(tokenParams);
 
   scope.done();
-  t.deepEqual(token, server.getAccessToken());
+  t.deepEqual(token, getAccessToken());
 });
 
 test('@getToken => resolves to an access token with custom module configuration (http options)', async (t) => {
@@ -189,7 +189,7 @@ test('@getToken => resolves to an access token with custom module configuration 
   const token = await oauth2.ownerPassword.getToken(tokenParams);
 
   scope.done();
-  t.deepEqual(token, server.getAccessToken());
+  t.deepEqual(token, getAccessToken());
 });
 
 test('@getToken => resolves to an access token while following redirections', async (t) => {
@@ -224,7 +224,7 @@ test('@getToken => resolves to an access token while following redirections', as
   redirectionsScope.done();
   originScope.done();
 
-  t.deepEqual(token, originServer.getAccessToken());
+  t.deepEqual(token, getAccessToken());
 });
 
 test('@getToken => resolves to an access token while requesting multiple scopes', async (t) => {
@@ -257,7 +257,7 @@ test('@getToken => resolves to an access token while requesting multiple scopes'
   const token = await oauth2.ownerPassword.getToken(tokenParams);
 
   scope.done();
-  t.deepEqual(token, server.getAccessToken());
+  t.deepEqual(token, getAccessToken());
 });
 
 test('@getToken => resolves to an access token with a custom grant type', async (t) => {
@@ -289,7 +289,7 @@ test('@getToken => resolves to an access token with a custom grant type', async 
   const token = await oauth2.ownerPassword.getToken(tokenParams);
 
   scope.done();
-  t.deepEqual(token, server.getAccessToken());
+  t.deepEqual(token, getAccessToken());
 });
 
 test('@getToken => rejects the operation when a non json response is received', async (t) => {

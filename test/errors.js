@@ -1,9 +1,9 @@
 'use strict';
 
 const test = require('ava');
-const { createModuleConfig } = require('./_module-config');
-const createAuthorizationServer = require('./_authorization-server-mock');
 const oauth2Module = require('./../index');
+const { createModuleConfig } = require('./_module-config');
+const { createAuthorizationServer } = require('./_authorization-server-mock');
 
 const tokenParams = {
   code: 'code',

@@ -8,7 +8,7 @@ const { isValid, isDate, differenceInSeconds } = require('date-fns');
 
 const oauth2Module = require('./../index.js');
 const { createModuleConfig } = require('./_module-config');
-const createAuthorizationServer = require('./_authorization-server-mock');
+const { createAuthorizationServer } = require('./_authorization-server-mock');
 
 const chance = new Chance();
 chance.mixin({ accessToken: accessTokenMixin });
