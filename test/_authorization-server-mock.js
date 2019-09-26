@@ -2,6 +2,7 @@
 
 const url = require('url');
 const nock = require('nock');
+const merge = require('lodash/merge');
 
 const accessToken = {
   access_token: '5683E74C-7514-4426-B64F-CF0C24223F69',
@@ -74,9 +75,9 @@ function createAuthorizationServer(authorizationServerUrl) {
       .reply(200);
   }
 
-  function tokenSuccessWithNonJSONContent(scopeOptions, expectedRequestParams) {
+  function tokenSuccessWithNonJSONContent(scopeOptions, params) {
     return nock(authorizationServerUrl, scopeOptions)
-      .post('/oauth/token', expectedRequestParams)
+      .post('/oauth/token', params)
       .reply(200, '<html>Sorry for not responding with a json response</html>', {
         'Content-Type': 'application/html',
       });
@@ -100,7 +101,37 @@ function getAccessToken() {
   return accessToken;
 }
 
+function getJSONEncodingScopeOptions(options) {
+  return merge({
+    reqheaders: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+  }, options);
+}
+
+function getFormEncodingScopeOptions(options) {
+  return merge({
+    reqheaders: {
+      Accept: 'application/json',
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+  }, options);
+}
+
+function getHeaderCredentialsScopeOptions(options) {
+  return merge({
+    reqheaders: {
+      Accept: 'application/json',
+      Authorization: 'Basic dGhlK2NsaWVudCtpZDp0aGUrY2xpZW50K3NlY3JldA==',
+    },
+  }, options);
+}
+
 module.exports = {
   getAccessToken,
   createAuthorizationServer,
+  getJSONEncodingScopeOptions,
+  getFormEncodingScopeOptions,
+  getHeaderCredentialsScopeOptions,
 };

@@ -3,7 +3,13 @@
 const test = require('ava');
 const oauth2Module = require('./../index');
 const { createModuleConfig } = require('./_module-config');
-const { createAuthorizationServer, getAccessToken } = require('./_authorization-server-mock');
+const {
+  getAccessToken,
+  createAuthorizationServer,
+  getJSONEncodingScopeOptions,
+  getFormEncodingScopeOptions,
+  getHeaderCredentialsScopeOptions,
+} = require('./_authorization-server-mock');
 
 test('@authorizeURL => returns the authorization URL with no options and default module configuration', (t) => {
   const config = createModuleConfig();
@@ -147,13 +153,6 @@ test('@authorizeURL => returns the authorization URL with a custom module config
 });
 
 test('@getToken => resolves to an access token (body credentials and JSON format)', async (t) => {
-  const scopeOptions = {
-    reqheaders: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-  };
-
   const expectedRequestParams = {
     grant_type: 'authorization_code',
     code: 'code',
@@ -162,6 +161,7 @@ test('@getToken => resolves to an access token (body credentials and JSON format
     client_secret: 'the client secret',
   };
 
+  const scopeOptions = getJSONEncodingScopeOptions();
   const server = createAuthorizationServer('https://authorization-server.org:443');
   const scope = server.tokenSuccess(scopeOptions, expectedRequestParams);
 
@@ -185,13 +185,6 @@ test('@getToken => resolves to an access token (body credentials and JSON format
 });
 
 test('@getToken => resolves to an access token (body credentials and form format)', async (t) => {
-  const scopeOptions = {
-    reqheaders: {
-      Accept: 'application/json',
-      'Content-Type': 'application/x-www-form-urlencoded',
-    },
-  };
-
   const expectedRequestParams = {
     grant_type: 'authorization_code',
     code: 'code',
@@ -200,6 +193,7 @@ test('@getToken => resolves to an access token (body credentials and form format
     client_secret: 'the client secret',
   };
 
+  const scopeOptions = getFormEncodingScopeOptions();
   const server = createAuthorizationServer('https://authorization-server.org:443');
   const scope = server.tokenSuccess(scopeOptions, expectedRequestParams);
 
@@ -223,19 +217,13 @@ test('@getToken => resolves to an access token (body credentials and form format
 });
 
 test('@getToken => resolves to an access token (header credentials)', async (t) => {
-  const scopeOptions = {
-    reqheaders: {
-      Accept: 'application/json',
-      Authorization: 'Basic dGhlK2NsaWVudCtpZDp0aGUrY2xpZW50K3NlY3JldA==',
-    },
-  };
-
   const expectedRequestParams = {
     grant_type: 'authorization_code',
     code: 'code',
     redirect_uri: 'http://callback.com',
   };
 
+  const scopeOptions = getHeaderCredentialsScopeOptions();
   const server = createAuthorizationServer('https://authorization-server.org:443');
   const scope = server.tokenSuccess(scopeOptions, expectedRequestParams);
 
@@ -258,18 +246,13 @@ test('@getToken => resolves to an access token (header credentials)', async (t) 
 });
 
 test('@getToken => resolves to an access token with custom module configuration (access token host and path)', async (t) => {
-  const scopeOptions = {
-    reqheaders: {
-      Accept: 'application/json',
-    },
-  };
-
   const expectedRequestParams = {
     grant_type: 'authorization_code',
     code: 'code',
     redirect_uri: 'http://callback.com',
   };
 
+  const scopeOptions = getHeaderCredentialsScopeOptions();
   const server = createAuthorizationServer('https://authorization-server.org:443');
   const scope = server.tokenSuccessWithCustomPath('/root/oauth/token', scopeOptions, expectedRequestParams);
 
@@ -293,20 +276,18 @@ test('@getToken => resolves to an access token with custom module configuration 
 });
 
 test('@getToken => resolves to an access token with custom module configuration (http options)', async (t) => {
-  const scopeOptions = {
-    reqheaders: {
-      Accept: 'application/json',
-      Authorization: 'Basic dGhlK2NsaWVudCtpZDp0aGUrY2xpZW50K3NlY3JldA==',
-      'X-MYTHICAL-HEADER': 'mythical value',
-      'USER-AGENT': 'hello agent',
-    },
-  };
-
   const expectedRequestParams = {
     grant_type: 'authorization_code',
     code: 'code',
     redirect_uri: 'http://callback.com',
   };
+
+  const scopeOptions = getHeaderCredentialsScopeOptions({
+    reqheaders: {
+      'X-MYTHICAL-HEADER': 'mythical value',
+      'USER-AGENT': 'hello agent',
+    },
+  });
 
   const server = createAuthorizationServer('https://authorization-server.org:443');
   const scope = server.tokenSuccess(scopeOptions, expectedRequestParams);
@@ -333,19 +314,13 @@ test('@getToken => resolves to an access token with custom module configuration 
 });
 
 test('@getToken => resolves to an access token while following redirections', async (t) => {
-  const scopeOptions = {
-    reqheaders: {
-      Accept: 'application/json',
-      Authorization: 'Basic dGhlK2NsaWVudCtpZDp0aGUrY2xpZW50K3NlY3JldA==',
-    },
-  };
-
   const expectedRequestParams = {
     grant_type: 'authorization_code',
     code: 'code',
     redirect_uri: 'http://callback.com',
   };
 
+  const scopeOptions = getHeaderCredentialsScopeOptions();
   const server = createAuthorizationServer('https://authorization-server.org');
   const redirectionsScope = server.tokenSuccessWithRedirections('https://origin-authorization-server.org', scopeOptions, expectedRequestParams);
 
@@ -369,13 +344,6 @@ test('@getToken => resolves to an access token while following redirections', as
 });
 
 test('@getToken => resolves to an access token while requesting multiple scopes', async (t) => {
-  const scopeOptions = {
-    reqheaders: {
-      Accept: 'application/json',
-      Authorization: 'Basic dGhlK2NsaWVudCtpZDp0aGUrY2xpZW50K3NlY3JldA==',
-    },
-  };
-
   const expectedRequestParams = {
     grant_type: 'authorization_code',
     code: 'code',
@@ -383,6 +351,7 @@ test('@getToken => resolves to an access token while requesting multiple scopes'
     scope: 'scope-a scope-b',
   };
 
+  const scopeOptions = getHeaderCredentialsScopeOptions();
   const server = createAuthorizationServer('https://authorization-server.org:443');
   const scope = server.tokenSuccess(scopeOptions, expectedRequestParams);
 
@@ -402,19 +371,13 @@ test('@getToken => resolves to an access token while requesting multiple scopes'
 });
 
 test('@getToken => resolves to an access token with a custom grant type', async (t) => {
-  const scopeOptions = {
-    reqheaders: {
-      Accept: 'application/json',
-      Authorization: 'Basic dGhlK2NsaWVudCtpZDp0aGUrY2xpZW50K3NlY3JldA==',
-    },
-  };
-
   const expectedRequestParams = {
     code: 'code',
     redirect_uri: 'http://callback.com',
     grant_type: 'my_grant',
   };
 
+  const scopeOptions = getHeaderCredentialsScopeOptions();
   const server = createAuthorizationServer('https://authorization-server.org:443');
   const scope = server.tokenSuccess(scopeOptions, expectedRequestParams);
 
@@ -433,15 +396,7 @@ test('@getToken => resolves to an access token with a custom grant type', async 
   t.deepEqual(token, getAccessToken());
 });
 
-
 test('@getToken => rejects the operation when a non json response is received', async (t) => {
-  const scopeOptions = {
-    reqheaders: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-  };
-
   const expectedRequestParams = {
     grant_type: 'authorization_code',
     code: 'code',
@@ -450,6 +405,7 @@ test('@getToken => rejects the operation when a non json response is received', 
     client_secret: 'the client secret',
   };
 
+  const scopeOptions = getJSONEncodingScopeOptions();
   const server = createAuthorizationServer('https://authorization-server.org:443');
   const scope = server.tokenSuccessWithNonJSONContent(scopeOptions, expectedRequestParams);
 

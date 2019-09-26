@@ -3,7 +3,7 @@
 const test = require('ava');
 const oauth2Module = require('./../index');
 const { createModuleConfig } = require('./_module-config');
-const { createAuthorizationServer } = require('./_authorization-server-mock');
+const { createAuthorizationServer, getHeaderCredentialsScopeOptions } = require('./_authorization-server-mock');
 
 const tokenParams = {
   code: 'code',
@@ -17,13 +17,7 @@ const oauthParams = {
 };
 
 test('@errors => rejects operations on http error (401)', async (t) => {
-  const scopeOptions = {
-    reqheaders: {
-      Accept: 'application/json',
-      Authorization: 'Basic dGhlK2NsaWVudCtpZDp0aGUrY2xpZW50K3NlY3JldA==',
-    },
-  };
-
+  const scopeOptions = getHeaderCredentialsScopeOptions();
   const server = createAuthorizationServer('https://authorization-server.org:443');
   const scope = server.tokenAuthorizationError(scopeOptions, oauthParams);
 
@@ -45,13 +39,7 @@ test('@errors => rejects operations on http error (401)', async (t) => {
 });
 
 test('@errors => rejects operations on http error (500)', async (t) => {
-  const scopeOptions = {
-    reqheaders: {
-      Accept: 'application/json',
-      Authorization: 'Basic dGhlK2NsaWVudCtpZDp0aGUrY2xpZW50K3NlY3JldA==',
-    },
-  };
-
+  const scopeOptions = getHeaderCredentialsScopeOptions();
   const server = createAuthorizationServer('https://authorization-server.org:443');
   const scope = server.tokenError(scopeOptions, oauthParams);
 
