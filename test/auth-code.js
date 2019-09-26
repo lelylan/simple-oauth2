@@ -152,7 +152,7 @@ test('@authorizeURL => returns the authorization URL with a custom module config
   t.is(actual, expected);
 });
 
-test('@getToken => resolves to an access token (body credentials and JSON format)', async (t) => {
+test.serial('@getToken => resolves to an access token (body credentials and JSON format)', async (t) => {
   const expectedRequestParams = {
     grant_type: 'authorization_code',
     code: 'code',
@@ -184,7 +184,7 @@ test('@getToken => resolves to an access token (body credentials and JSON format
   t.deepEqual(token, getAccessToken());
 });
 
-test('@getToken => resolves to an access token (body credentials and form format)', async (t) => {
+test.serial('@getToken => resolves to an access token (body credentials and form format)', async (t) => {
   const expectedRequestParams = {
     grant_type: 'authorization_code',
     code: 'code',
@@ -216,7 +216,7 @@ test('@getToken => resolves to an access token (body credentials and form format
   t.deepEqual(token, getAccessToken());
 });
 
-test('@getToken => resolves to an access token (header credentials)', async (t) => {
+test.serial('@getToken => resolves to an access token (header credentials)', async (t) => {
   const expectedRequestParams = {
     grant_type: 'authorization_code',
     code: 'code',
@@ -245,7 +245,7 @@ test('@getToken => resolves to an access token (header credentials)', async (t) 
   t.deepEqual(token, getAccessToken());
 });
 
-test('@getToken => resolves to an access token with custom module configuration (access token host and path)', async (t) => {
+test.serial('@getToken => resolves to an access token with custom module configuration (access token host and path)', async (t) => {
   const expectedRequestParams = {
     grant_type: 'authorization_code',
     code: 'code',
@@ -275,7 +275,7 @@ test('@getToken => resolves to an access token with custom module configuration 
   t.deepEqual(token, getAccessToken());
 });
 
-test('@getToken => resolves to an access token with custom module configuration (http options)', async (t) => {
+test.serial('@getToken => resolves to an access token with custom module configuration (http options)', async (t) => {
   const expectedRequestParams = {
     grant_type: 'authorization_code',
     code: 'code',
@@ -313,7 +313,7 @@ test('@getToken => resolves to an access token with custom module configuration 
   t.deepEqual(token, getAccessToken());
 });
 
-test('@getToken => resolves to an access token while following redirections', async (t) => {
+test.serial('@getToken => resolves to an access token while following redirections', async (t) => {
   const expectedRequestParams = {
     grant_type: 'authorization_code',
     code: 'code',
@@ -343,7 +343,7 @@ test('@getToken => resolves to an access token while following redirections', as
   t.deepEqual(token, getAccessToken());
 });
 
-test('@getToken => resolves to an access token while requesting multiple scopes', async (t) => {
+test.serial('@getToken => resolves to an access token while requesting multiple scopes', async (t) => {
   const expectedRequestParams = {
     grant_type: 'authorization_code',
     code: 'code',
@@ -370,7 +370,7 @@ test('@getToken => resolves to an access token while requesting multiple scopes'
   t.deepEqual(token, getAccessToken());
 });
 
-test('@getToken => resolves to an access token with a custom grant type', async (t) => {
+test.serial('@getToken => resolves to an access token with a custom grant type', async (t) => {
   const expectedRequestParams = {
     code: 'code',
     redirect_uri: 'http://callback.com',
@@ -396,7 +396,7 @@ test('@getToken => resolves to an access token with a custom grant type', async 
   t.deepEqual(token, getAccessToken());
 });
 
-test('@getToken => rejects the operation when a non json response is received', async (t) => {
+test.serial('@getToken => rejects the operation when a non json response is received', async (t) => {
   const expectedRequestParams = {
     grant_type: 'authorization_code',
     code: 'code',

@@ -140,7 +140,7 @@ test('@expired => returns false when no expiration property is present', (t) => 
   t.false(accessToken.expired());
 });
 
-test('@refresh => creates a new access token with default params', async (t) => {
+test.serial('@refresh => creates a new access token with default params', async (t) => {
   const config = createModuleConfig();
   const oauth2 = oauth2Module.create(config);
 
@@ -163,7 +163,7 @@ test('@refresh => creates a new access token with default params', async (t) => 
   t.true(has(refreshAccessToken.token, 'access_token'));
 });
 
-test('@refresh => creates a new access token with a custom grant type', async (t) => {
+test.serial('@refresh => creates a new access token with a custom grant type', async (t) => {
   const config = createModuleConfig();
   const oauth2 = oauth2Module.create(config);
 
@@ -188,7 +188,7 @@ test('@refresh => creates a new access token with a custom grant type', async (t
   t.true(has(refreshAccessToken.token, 'access_token'));
 });
 
-test('@refresh => creates a new access token with multiple scopes', async (t) => {
+test.serial('@refresh => creates a new access token with multiple scopes', async (t) => {
   const config = createModuleConfig();
   const oauth2 = oauth2Module.create(config);
 
@@ -214,7 +214,7 @@ test('@refresh => creates a new access token with multiple scopes', async (t) =>
   t.true(has(refreshAccessToken.token, 'access_token'));
 });
 
-test('@refresh => creates a new access token with custom params', async (t) => {
+test.serial('@refresh => creates a new access token with custom params', async (t) => {
   const config = createModuleConfig();
   const oauth2 = oauth2Module.create(config);
 
@@ -240,7 +240,7 @@ test('@refresh => creates a new access token with custom params', async (t) => {
   t.true(has(refreshAccessToken.token, 'access_token'));
 });
 
-test('@refresh => creates a new access token with a custom token path', async (t) => {
+test.serial('@refresh => creates a new access token with a custom token path', async (t) => {
   const config = createModuleConfig({
     auth: {
       tokenPath: '/the-custom/path',
@@ -269,7 +269,7 @@ test('@refresh => creates a new access token with a custom token path', async (t
   t.true(has(refreshAccessToken.token, 'access_token'));
 });
 
-test('@revoke => performs the access token revoke', async (t) => {
+test.serial('@revoke => performs the access token revoke', async (t) => {
   const config = createModuleConfig();
   const oauth2 = oauth2Module.create(config);
 
@@ -292,7 +292,7 @@ test('@revoke => performs the access token revoke', async (t) => {
   scope.done();
 });
 
-test('@revoke => performs the refresh token revoke', async (t) => {
+test.serial('@revoke => performs the refresh token revoke', async (t) => {
   const config = createModuleConfig();
   const oauth2 = oauth2Module.create(config);
 
@@ -315,7 +315,7 @@ test('@revoke => performs the refresh token revoke', async (t) => {
   scope.done();
 });
 
-test('@revoke => performs a token revoke with a custom revoke path', async (t) => {
+test.serial('@revoke => performs a token revoke with a custom revoke path', async (t) => {
   const config = createModuleConfig({
     auth: {
       revokePath: '/the-custom/revoke-path',
@@ -343,7 +343,7 @@ test('@revoke => performs a token revoke with a custom revoke path', async (t) =
   scope.done();
 });
 
-test('@revokeAll => revokes both the access and refresh tokens', async (t) => {
+test.serial('@revokeAll => revokes both the access and refresh tokens', async (t) => {
   const config = createModuleConfig();
   const oauth2 = oauth2Module.create(config);
 
@@ -371,7 +371,7 @@ test('@revokeAll => revokes both the access and refresh tokens', async (t) => {
   scope.done();
 });
 
-test('@revokeAll => revokes the refresh token only if the access token is successfully revoked', async (t) => {
+test.serial('@revokeAll => revokes the refresh token only if the access token is successfully revoked', async (t) => {
   const config = createModuleConfig();
   const oauth2 = oauth2Module.create(config);
 

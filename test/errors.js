@@ -16,7 +16,7 @@ const oauthParams = {
   redirect_uri: 'http://callback.com',
 };
 
-test('@errors => rejects operations on http error (401)', async (t) => {
+test.serial('@errors => rejects operations on http error (401)', async (t) => {
   const scopeOptions = getHeaderCredentialsScopeOptions();
   const server = createAuthorizationServer('https://authorization-server.org:443');
   const scope = server.tokenAuthorizationError(scopeOptions, oauthParams);
@@ -38,7 +38,7 @@ test('@errors => rejects operations on http error (401)', async (t) => {
   t.deepEqual(error.output.payload, authorizationError);
 });
 
-test('@errors => rejects operations on http error (500)', async (t) => {
+test.serial('@errors => rejects operations on http error (500)', async (t) => {
   const scopeOptions = getHeaderCredentialsScopeOptions();
   const server = createAuthorizationServer('https://authorization-server.org:443');
   const scope = server.tokenError(scopeOptions, oauthParams);
