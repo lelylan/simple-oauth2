@@ -113,7 +113,7 @@ test.serial('@getToken => resolves to an access token with custom module configu
 
   const scopeOptions = getHeaderCredentialsScopeOptions();
   const server = createAuthorizationServer('https://authorization-server.org:443');
-  const scope = server.tokenSuccessWithCustomPath('/root/oauth/token', scopeOptions, tokenRequestParams);
+  const scope = server.tokenSuccessWithCustomPath('/oauth/token', scopeOptions, tokenRequestParams);
 
   const config = createModuleConfig({
     auth: {

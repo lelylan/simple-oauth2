@@ -42,11 +42,12 @@
   ],
   "dependencies": {
     "@hapi/joi": "^15.1.1",
+    "@hapi/wreck": "^15.1.0",
     "date-fns": "^2.2.1",
-    "debug": "^4.1.1",
-    "wreck": "^14.0.2"
+    "debug": "^4.1.1"
   },
   "devDependencies": {
+    "@hapi/boom": "^7.4.10",
     "ava": "^2.4.0",
     "chance": "^1.0.18",
     "chance-access-token": "^1.0.1",

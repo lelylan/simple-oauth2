@@ -4,6 +4,7 @@
 
 ### Breaking changes
 
+* Use @hapi/wreck v15. Use Node.js WHATWG URL API (#260)
 * Allow to override the grant type on each flow (#256)
 * Don't mutate params on getToken method (#256)
 * Properly encode multiple scopes when specified as an array (#256)
