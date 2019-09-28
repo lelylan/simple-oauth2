@@ -8,6 +8,9 @@
   ],
   "homepage": "https://github.com/lelylan/simple-oauth2",
   "main": "index.js",
+  "files": [
+    "lib"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/lelylan/simple-oauth2"
