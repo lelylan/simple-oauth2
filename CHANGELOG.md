@@ -1,33 +1,37 @@
 # Changelog
 
-## Next
-### Dependencies upgrades
+## 2.5.1
+### New examples
 
- * Use ava instead of mocha as test runner
- * Use ava built-in assertions library instead of chai
- * Upgrade nock to v11
- * Upgrade to eslint v6 and airbnb-base eslint configuration v14
+ * [#249](https://github.com/lelylan/simple-oauth2/pull/249) Add dropbox usage example
+
+### Development dependencies upgradess
+
+ * [#254](https://github.com/lelylan/simple-oauth2/pull/254) Upgrade codebase to eslint v6 and airbnb-base-eslint configuration v14
+ * [#253](https://github.com/lelylan/simple-oauth2/pull/253) Upgrade nock to v11
+ * [#252](https://github.com/lelylan/simple-oauth2/pull/252) Use ava instead of mocha as test runner
+ * [#252](https://github.com/lelylan/simple-oauth2/pull/252) Use ava built-in assertions library instead of chai
 
 ## 2.5.0
 ### Dependencies upgrades
 
- * Upgrade date-fns library to v2
+ * [#250](https://github.com/lelylan/simple-oauth2/pull/250) Upgrade date-fns library to v2
 
 ## 2.4.0
 ### Dependencies upgrades
 
- * Upgrade Joi version to v15 (@hapi/joi)
+ * [#235](https://github.com/lelylan/simple-oauth2/pull/235) Upgrade Joi version to v15 (@hapi/joi)
 
 ### Development dependencies updates
 
- * Upgrade mocha test runner to v6
- * Upgrade nyc to v14
- * Upgrade development dependencies to latest version available
+ * [#244](https://github.com/lelylan/simple-oauth2/pull/244) Upgrade mocha test runner to v6
+ * [#244](https://github.com/lelylan/simple-oauth2/pull/244) Upgrade nyc to v14
+ * [#244](https://github.com/lelylan/simple-oauth2/pull/244) Upgrade development dependencies to latest version available
 
 ## 2.3.0
 ### Dependencies upgrades
 
- * Upgrade debug dependency to v4
+ * [#242](https://github.com/lelylan/simple-oauth2/pull/242) Upgrade debug dependency to v4
 
 ## 2.2.1
 
