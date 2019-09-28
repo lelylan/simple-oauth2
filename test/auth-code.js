@@ -141,7 +141,7 @@ test('@authorizeURL => returns the authorization URL with a custom module config
     },
     auth: {
       tokenHost: 'https://authorization-server.org',
-      authorizeHost: 'https://other-authorization-server.com',
+      authorizeHost: 'https://other-authorization-server.com/api/',
       authorizePath: '/authorize-now',
     },
   });
@@ -254,7 +254,7 @@ test.serial('@getToken => resolves to an access token with custom module configu
 
   const scopeOptions = getHeaderCredentialsScopeOptions();
   const server = createAuthorizationServer('https://authorization-server.org:443');
-  const scope = server.tokenSuccessWithCustomPath('/root/oauth/token', scopeOptions, expectedRequestParams);
+  const scope = server.tokenSuccessWithCustomPath('/oauth/token', scopeOptions, expectedRequestParams);
 
   const config = createModuleConfig({
     auth: {

@@ -1,8 +1,9 @@
 'use strict';
 
-const url = require('url');
+const { URL } = require('url');
 const nock = require('nock');
 const merge = require('lodash/merge');
+const Boom = require('@hapi/boom');
 
 const accessToken = {
   access_token: '5683E74C-7514-4426-B64F-CF0C24223F69',
@@ -15,7 +16,9 @@ function createAuthorizationServer(authorizationServerUrl) {
   function tokenSuccessWithCustomPath(path, scopeOptions, params) {
     return nock(authorizationServerUrl, scopeOptions)
       .post(path, params)
-      .reply(200, accessToken);
+      .reply(200, accessToken, {
+        'Content-Type': 'application/json',
+      });
   }
 
   function tokenSuccessWithRedirections(redirectionHost, scopeOptions, params) {
@@ -23,56 +26,72 @@ function createAuthorizationServer(authorizationServerUrl) {
       .post('/oauth/token', params)
       .times(19)
       .reply(301, null, {
-        Location: url.resolve(authorizationServerUrl, '/oauth/token'),
+        Location: new URL('/oauth/token', authorizationServerUrl),
       })
       .post('/oauth/token', params)
       .reply(301, null, {
-        Location: url.resolve(redirectionHost, '/oauth/token'),
+        Location: new URL('/oauth/token', redirectionHost),
       });
   }
 
   function tokenSuccess(scopeOptions, params) {
     return nock(authorizationServerUrl, scopeOptions)
       .post('/oauth/token', params)
-      .reply(200, accessToken);
+      .reply(200, accessToken, {
+        'Content-Type': 'application/json',
+      });
   }
 
   function tokenError(scopeOptions, params) {
     return nock(authorizationServerUrl, scopeOptions)
       .post('/oauth/token', params)
-      .reply(500);
+      .reply(500, Boom.badImplementation(), {
+        'Content-Type': 'application/json',
+      });
   }
 
   function tokenAuthorizationError(scopeOptions, params) {
     return nock(authorizationServerUrl, scopeOptions)
       .post('/oauth/token', params)
-      .reply(401);
+      .reply(401, Boom.unauthorized(), {
+        'Content-Type': 'application/json',
+      });
   }
 
   function tokenRevokeSuccess(scopeOptions, params) {
     return nock(authorizationServerUrl, scopeOptions)
       .post('/oauth/revoke', params)
-      .reply(200);
+      .reply(240, null, {
+        'Content-Type': 'application/json',
+      });
   }
 
   function tokenRevokeSuccessWithCustomPath(path, scopeOptions, params) {
     return nock(authorizationServerUrl, scopeOptions)
       .post(path, params)
-      .reply(200);
+      .reply(204, null, {
+        'Content-Type': 'application/json',
+      });
   }
 
   function tokenRevokeError(scopeOptions, params) {
     return nock(authorizationServerUrl, scopeOptions)
       .post('/oauth/revoke', params)
-      .reply(500);
+      .reply(500, Boom.badImplementation(), {
+        'Content-Type': 'application/json',
+      });
   }
 
   function tokenRevokeAllSuccess(scopeOptions, accessTokenParams, refreshTokenParams) {
     return nock(authorizationServerUrl, scopeOptions)
       .post('/oauth/revoke', accessTokenParams)
-      .reply(200)
+      .reply(204, null, {
+        'Content-Type': 'application/json',
+      })
       .post('/oauth/revoke', refreshTokenParams)
-      .reply(200);
+      .reply(204, null, {
+        'Content-Type': 'application/json',
+      });
   }
 
   function tokenSuccessWithNonJSONContent(scopeOptions, params) {
