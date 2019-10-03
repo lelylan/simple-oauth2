@@ -117,7 +117,7 @@ test('@getToken => resolves to an access token with custom module configuration 
   const config = Object.assign({}, baseConfig, {
     auth: {
       tokenHost: 'https://authorization-server.org:443/root/',
-      tokenPath: '/oauth/token',
+      tokenPath: 'oauth/token',
     },
   });
 
