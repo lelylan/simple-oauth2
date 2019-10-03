@@ -28,23 +28,26 @@ Simple OAuth 2.0 come to life thanks to the work I've made in Lelylan, an open s
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
 
-- [Requirements](#requirements)
-- [Getting started](#getting-started)
-  - [Installation](#installation)
-  - [Options](#options)
-  - [Example of Usage](#example-of-usage)
-- [OAuth2 Supported flows](#oauth2-supported-flows)
-  - [Authorization Code flow](#authorization-code-flow)
-  - [Password Credentials Flow](#password-credentials-flow)
-  - [Client Credentials Flow](#client-credentials-flow)
-- [Helpers](#helpers)
-  - [Access Token object](#access-token-object)
-  - [Errors](#errors)
-- [Contributing](#contributing)
-- [Authors](#authors)
-  - [Contributors](#contributors)
-- [Changelog](#changelog)
-- [License](#license)
+- [Simple OAuth2](#simple-oauth2)
+      - [Thanks to Open Source](#thanks-to-open-source)
+  - [Table of Contents](#table-of-contents)
+  - [Requirements](#requirements)
+  - [Getting started](#getting-started)
+    - [Installation](#installation)
+    - [Options](#options)
+    - [Example of Usage](#example-of-usage)
+  - [OAuth2 Supported flows](#oauth2-supported-flows)
+    - [Authorization Code flow](#authorization-code-flow)
+    - [Password Credentials Flow](#password-credentials-flow)
+    - [Client Credentials Flow](#client-credentials-flow)
+  - [Helpers](#helpers)
+    - [Access Token object](#access-token-object)
+    - [Errors](#errors)
+  - [Contributing](#contributing)
+  - [Authors](#authors)
+    - [Contributors](#contributors)
+  - [Changelog](#changelog)
+  - [License](#license)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -69,8 +72,8 @@ npm install --save simple-oauth2
 Simple OAuth2 accepts an object with the following valid params.
 
 * `client` - required object with the following properties:
-  * `id` - Service registered client id. Required.
-  * `secret` - Service registered client secret. Required.
+  * `id` - Service registered client id. When required by the [spec](https://tools.ietf.org/html/rfc6749#appendix-B) this value will be automatically encoded. Required.
+  * `secret` - Service registered client secret. When required by the [spec](https://tools.ietf.org/html/rfc6749#appendix-B) this value will be automatically encoded. Required.
   * `secretParamName` - Parameter name used to send the client secret. Default to **client_secret**.
   * `idParamName` - Parameter name used to send the client id. Default to **client_id**.
 
@@ -82,7 +85,7 @@ Simple OAuth2 accepts an object with the following valid params.
   * `authorizePath` - String path to request an authorization code. Default to **/oauth/authorize**.
 
 * `http` optional object used to set global options to the internal http library ([wreck](https://github.com/hapijs/wreck)).
-  * All options except **baseUrl** are allowed. Default to `headers.Accept = application/json`.
+  * All options except **baseUrl** are allowed. `headers.authorization` will always be overriden by the library to properly send the required credentials on each scenario. Default to `headers.Accept = application/json`.
 
 * `options` optional object to setup the module.
   * `bodyFormat` - Format of data sent in the request body. Valid options are `form` or `json`. Defaults to **form**.
