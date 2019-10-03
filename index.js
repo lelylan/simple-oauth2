@@ -13,8 +13,8 @@ const optionsSchema = Joi
   .object()
   .keys({
     client: Joi.object().keys({
-      id: Joi.string().regex(vsCharRegEx).allow(''),
-      secret: Joi.string().regex(vsCharRegEx).allow(''),
+      id: Joi.string().pattern(vsCharRegEx).allow(''),
+      secret: Joi.string().pattern(vsCharRegEx).allow(''),
       secretParamName: Joi.string().default('client_secret'),
       idParamName: Joi.string().default('client_id'),
     }).required(),
@@ -22,13 +22,13 @@ const optionsSchema = Joi
       tokenHost: Joi.string().required().uri({ scheme: ['http', 'https'] }),
       tokenPath: Joi.string().default('/oauth/token'),
       revokePath: Joi.string().default('/oauth/revoke'),
-      authorizeHost: Joi.string().default(Joi.ref('tokenHost')),
+      authorizeHost: Joi.string().uri({ scheme: ['http', 'https'] }).default(Joi.ref('tokenHost')),
       authorizePath: Joi.string().default('/oauth/authorize'),
     }).required(),
     http: Joi.object().unknown(true),
     options: Joi.object().keys({
-      bodyFormat: Joi.any().only('form', 'json').default('form'),
-      authorizationMethod: Joi.any().only('header', 'body').default('header'),
+      bodyFormat: Joi.any().valid('form', 'json').default('form'),
+      authorizationMethod: Joi.any().valid('header', 'body').default('header'),
     }).default(),
   });
 

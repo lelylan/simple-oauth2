@@ -41,18 +41,18 @@
     "credentials"
   ],
   "dependencies": {
-    "@hapi/joi": "^15.1.1",
+    "@hapi/joi": "^16.1.5",
     "@hapi/wreck": "^15.1.0",
-    "date-fns": "^2.2.1",
+    "date-fns": "^2.4.1",
     "debug": "^4.1.1"
   },
   "devDependencies": {
-    "@hapi/boom": "^7.4.10",
+    "@hapi/boom": "^7.4.11",
     "ava": "^2.4.0",
-    "chance": "^1.0.18",
+    "chance": "^1.1.0",
     "chance-access-token": "^1.0.1",
     "doctoc": "^1.4.0",
-    "eslint": "^6.4.0",
+    "eslint": "^6.5.1",
     "eslint-config-airbnb-base": "^14.0.0",
     "eslint-plugin-import": "^2.9.0",
     "lodash": "^4.17.15",
