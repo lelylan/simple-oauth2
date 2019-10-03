@@ -4,42 +4,47 @@
 
 ### Breaking changes
 
-* Use @hapi/wreck v15. Use Node.js WHATWG URL API (#260)
-* Allow to override the grant type on each flow (#256)
-* Don't mutate params on getToken method (#256)
-* Properly encode multiple scopes when specified as an array (#256)
-* Follow up to 20 redirects by default (#255)
-* Change default scope encoding from using comma to spaces (#200)
-* Change json response parsing from `smart` to `strict` (#88)
-  + Since the OAuth2 specification indicates only JSON responses are valid, any non-JSON response throws an error instead of resolving into a Buffer
+* [#260](https://github.com/lelylan/simple-oauth2/pull/260) Use @hapi/wreck v15. See [@hapi/wreck](https://github.com/hapijs/wreck/issues/244) breaking changes to better understand potential issues that may arise
+* [#260](https://github.com/lelylan/simple-oauth2/pull/260) Use new Node.js WHATWG URL api instead of the already deprecated url module
+* [#256](https://github.com/lelylan/simple-oauth2/pull/256) Allow to override grant_type parameter on all token exchange flows
+* [#256](https://github.com/lelylan/simple-oauth2/pull/256) Token exchange methods no longer mutate provided arguments
+* [#256](https://github.com/lelylan/simple-oauth2/pull/256) Properly encode multiple scopes when specified as an array on all token exchange methods
+* [#255](https://github.com/lelylan/simple-oauth2/pull/255) Follow up to 20 redirects by default
+* [#200](https://github.com/lelylan/simple-oauth2/pull/200) Change default multiple scope encoding from using comma to spaces
+* [#88](https://github.com/lelylan/simple-oauth2/pull/88) Change JSON response parsing mode from `smart` to `strict`. Since the OAuth2 specification indicates only JSON responses are valid, any non-JSON response throws an error instead of resolving into a Buffer. Use `http.json = true` to restore the previous behavior.
 
-### Dependencies upgrades
+## 2.5.1
+### New examples
 
- * Use ava instead of mocha as test runner
- * Use ava built-in assertions library instead of chai
- * Upgrade nock to v11
- * Upgrade to eslint v6 and airbnb-base eslint configuration v14
+ * [#249](https://github.com/lelylan/simple-oauth2/pull/249) Add dropbox usage example
+
+### Development dependencies upgradess
+
+ * [#254](https://github.com/lelylan/simple-oauth2/pull/254) Upgrade codebase to eslint v6 and airbnb-base-eslint configuration v14
+ * [#253](https://github.com/lelylan/simple-oauth2/pull/253) Upgrade nock to v11
+ * [#252](https://github.com/lelylan/simple-oauth2/pull/252) Use ava instead of mocha as test runner
+ * [#252](https://github.com/lelylan/simple-oauth2/pull/252) Use ava built-in assertions library instead of chai
 
 ## 2.5.0
 ### Dependencies upgrades
 
- * Upgrade date-fns library to v2
+ * [#250](https://github.com/lelylan/simple-oauth2/pull/250) Upgrade date-fns library to v2
 
 ## 2.4.0
 ### Dependencies upgrades
 
- * Upgrade Joi version to v15 (@hapi/joi)
+ * [#235](https://github.com/lelylan/simple-oauth2/pull/235) Upgrade Joi version to v15 (@hapi/joi)
 
 ### Development dependencies updates
 
- * Upgrade mocha test runner to v6
- * Upgrade nyc to v14
- * Upgrade development dependencies to latest version available
+ * [#244](https://github.com/lelylan/simple-oauth2/pull/244) Upgrade mocha test runner to v6
+ * [#244](https://github.com/lelylan/simple-oauth2/pull/244) Upgrade nyc to v14
+ * [#244](https://github.com/lelylan/simple-oauth2/pull/244) Upgrade development dependencies to latest version available
 
 ## 2.3.0
 ### Dependencies upgrades
 
- * Upgrade debug dependency to v4
+ * [#242](https://github.com/lelylan/simple-oauth2/pull/242) Upgrade debug dependency to v4
 
 ## 2.2.1
 
