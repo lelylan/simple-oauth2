@@ -396,6 +396,24 @@ test.serial('@getToken => resolves to an access token with a custom grant type',
   t.deepEqual(token, getAccessToken());
 });
 
+test.serial('@getToken => resolves to an access token with no params', async (t) => {
+  const expectedRequestParams = {
+    grant_type: 'authorization_code',
+  };
+
+  const scopeOptions = getHeaderCredentialsScopeOptions();
+  const server = createAuthorizationServer('https://authorization-server.org:443');
+  const scope = server.tokenSuccess(scopeOptions, expectedRequestParams);
+
+  const config = createModuleConfig();
+  const oauth2 = oauth2Module.create(config);
+
+  const token = await oauth2.authorizationCode.getToken();
+
+  scope.done();
+  t.deepEqual(token, getAccessToken());
+});
+
 test.serial('@getToken => rejects the operation when a non json response is received', async (t) => {
   const expectedRequestParams = {
     grant_type: 'authorization_code',
