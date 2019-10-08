@@ -1,7 +1,6 @@
 # Changelog
 
 ## Next
-
 ### Breaking changes
 
 * [#260](https://github.com/lelylan/simple-oauth2/pull/260) Use @hapi/wreck v15. See [@hapi/wreck](https://github.com/hapijs/wreck/issues/244) breaking changes to better understand potential issues that may arise
@@ -12,6 +11,16 @@
 * [#255](https://github.com/lelylan/simple-oauth2/pull/255) Follow up to 20 redirects by default
 * [#200](https://github.com/lelylan/simple-oauth2/pull/200) Change default multiple scope encoding from using comma to spaces
 * [#88](https://github.com/lelylan/simple-oauth2/pull/88) Change JSON response parsing mode from `smart` to `strict`. Since the OAuth2 specification indicates only JSON responses are valid, any non-JSON response throws an error instead of resolving into a Buffer. Use `http.json = true` to restore the previous behavior.
+
+## 2.5.2
+
+### Publishing changes
+
+* [#262](https://github.com/lelylan/simple-oauth2/pull/262) Use files package option instead of .npmignore
+
+### Documentation improvements
+
+* [#267](https://github.com/lelylan/simple-oauth2/pull/267) Better document encoding of values for the token exchange process
 
 ## 2.5.1
 ### New examples

@@ -72,8 +72,8 @@ npm install --save simple-oauth2
 Simple OAuth2 accepts an object with the following valid params.
 
 * `client` - required object with the following properties:
-  * `id` - Service registered client id. Required.
-  * `secret` - Service registered client secret. Required.
+  * `id` - Service registered client id. When required by the [spec](https://tools.ietf.org/html/rfc6749#appendix-B) this value will be automatically encoded. Required.
+  * `secret` - Service registered client secret. When required by the [spec](https://tools.ietf.org/html/rfc6749#appendix-B) this value will be automatically encoded. Required.
   * `secretParamName` - Parameter name used to send the client secret. Default to **client_secret**.
   * `idParamName` - Parameter name used to send the client id. Default to **client_id**.
 
@@ -85,7 +85,7 @@ Simple OAuth2 accepts an object with the following valid params.
   * `authorizePath` - String path to request an authorization code. Default to **/oauth/authorize**.
 
 * `http` optional object used to set global options to the internal http library ([wreck](https://github.com/hapijs/wreck)).
-  * All options except **baseUrl** are allowed. Default to `headers.Accept = application/json`.
+  * All options except **baseUrl** are allowed. `headers.authorization` will always be overriden by the library to properly send the required credentials on each scenario. Default to `headers.Accept = application/json`.
 
 * `options` optional object to setup the module.
   * `bodyFormat` - Format of data sent in the request body. Valid options are `form` or `json`. Defaults to **form**.
