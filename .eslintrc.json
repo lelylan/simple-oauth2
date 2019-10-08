@@ -4,6 +4,10 @@
     "sourceType": "script"
   },
   "rules": {
+    "max-len": ["error", {
+      "code": 120,
+      "ignoreComments": true
+    }],
     "strict": ["error", "safe"],
     "prefer-object-spread": "off",
     "comma-dangle": ["error", {

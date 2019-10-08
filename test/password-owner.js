@@ -1,7 +1,7 @@
 'use strict';
 
 const test = require('ava');
-const oauth2Module = require('./../index');
+const oauth2Module = require('../index');
 const { createModuleConfig } = require('./_module-config');
 const {
   getAccessToken,
@@ -12,16 +12,17 @@ const {
 } = require('./_authorization-server-mock');
 
 test.serial('@getToken => resolves to an access token (body credentials and JSON format)', async (t) => {
-  const expectedRequestParams = {
-    grant_type: 'client_credentials',
+  const tokenRequestParams = {
+    grant_type: 'password',
+    username: 'alice',
+    password: 'secret',
     client_id: 'the client id',
     client_secret: 'the client secret',
-    random_param: 'random value',
   };
 
   const scopeOptions = getJSONEncodingScopeOptions();
   const server = createAuthorizationServer('https://authorization-server.org:443');
-  const scope = server.tokenSuccess(scopeOptions, expectedRequestParams);
+  const scope = server.tokenSuccess(scopeOptions, tokenRequestParams);
 
   const config = createModuleConfig({
     options: {
@@ -31,27 +32,29 @@ test.serial('@getToken => resolves to an access token (body credentials and JSON
   });
 
   const tokenParams = {
-    random_param: 'random value',
+    username: 'alice',
+    password: 'secret',
   };
 
   const oauth2 = oauth2Module.create(config);
-  const token = await oauth2.clientCredentials.getToken(tokenParams);
+  const token = await oauth2.ownerPassword.getToken(tokenParams);
 
   scope.done();
   t.deepEqual(token, getAccessToken());
 });
 
 test.serial('@getToken => resolves to an access token (body credentials and form format)', async (t) => {
-  const expectedRequestParams = {
-    grant_type: 'client_credentials',
-    random_param: 'random value',
+  const tokenRequestParams = {
+    grant_type: 'password',
+    username: 'alice',
+    password: 'secret',
     client_id: 'the client id',
     client_secret: 'the client secret',
   };
 
   const scopeOptions = getFormEncodingScopeOptions();
   const server = createAuthorizationServer('https://authorization-server.org:443');
-  const scope = server.tokenSuccess(scopeOptions, expectedRequestParams);
+  const scope = server.tokenSuccess(scopeOptions, tokenRequestParams);
 
   const config = createModuleConfig({
     options: {
@@ -61,25 +64,27 @@ test.serial('@getToken => resolves to an access token (body credentials and form
   });
 
   const tokenParams = {
-    random_param: 'random value',
+    username: 'alice',
+    password: 'secret',
   };
 
   const oauth2 = oauth2Module.create(config);
-  const token = await oauth2.clientCredentials.getToken(tokenParams);
+  const token = await oauth2.ownerPassword.getToken(tokenParams);
 
   scope.done();
   t.deepEqual(token, getAccessToken());
 });
 
 test.serial('@getToken => resolves to an access token (header credentials)', async (t) => {
-  const expectedRequestParams = {
-    grant_type: 'client_credentials',
-    random_param: 'random value',
+  const tokenRequestParams = {
+    grant_type: 'password',
+    username: 'alice',
+    password: 'secret',
   };
 
   const scopeOptions = getHeaderCredentialsScopeOptions();
   const server = createAuthorizationServer('https://authorization-server.org:443');
-  const scope = server.tokenSuccess(scopeOptions, expectedRequestParams);
+  const scope = server.tokenSuccess(scopeOptions, tokenRequestParams);
 
   const config = createModuleConfig({
     options: {
@@ -88,25 +93,27 @@ test.serial('@getToken => resolves to an access token (header credentials)', asy
   });
 
   const tokenParams = {
-    random_param: 'random value',
+    username: 'alice',
+    password: 'secret',
   };
 
   const oauth2 = oauth2Module.create(config);
-  const token = await oauth2.clientCredentials.getToken(tokenParams);
+  const token = await oauth2.ownerPassword.getToken(tokenParams);
 
   scope.done();
   t.deepEqual(token, getAccessToken());
 });
 
 test.serial('@getToken => resolves to an access token with custom module configuration (access token host and path)', async (t) => {
-  const expectedRequestParams = {
-    grant_type: 'client_credentials',
-    random_param: 'random value',
+  const tokenRequestParams = {
+    grant_type: 'password',
+    username: 'alice',
+    password: 'secret',
   };
 
   const scopeOptions = getHeaderCredentialsScopeOptions();
   const server = createAuthorizationServer('https://authorization-server.org:443');
-  const scope = server.tokenSuccessWithCustomPath('/oauth/token', scopeOptions, expectedRequestParams);
+  const scope = server.tokenSuccessWithCustomPath('/oauth/token', scopeOptions, tokenRequestParams);
 
   const config = createModuleConfig({
     auth: {
@@ -116,20 +123,22 @@ test.serial('@getToken => resolves to an access token with custom module configu
   });
 
   const tokenParams = {
-    random_param: 'random value',
+    username: 'alice',
+    password: 'secret',
   };
 
   const oauth2 = oauth2Module.create(config);
-  const token = await oauth2.clientCredentials.getToken(tokenParams);
+  const token = await oauth2.ownerPassword.getToken(tokenParams);
 
   scope.done();
   t.deepEqual(token, getAccessToken());
 });
 
 test.serial('@getToken => resolves to an access token with custom module configuration (http options)', async (t) => {
-  const expectedRequestParams = {
-    grant_type: 'client_credentials',
-    random_param: 'random value',
+  const tokenRequestParams = {
+    grant_type: 'password',
+    username: 'alice',
+    password: 'secret',
   };
 
   const scopeOptions = getHeaderCredentialsScopeOptions({
@@ -140,7 +149,7 @@ test.serial('@getToken => resolves to an access token with custom module configu
   });
 
   const server = createAuthorizationServer('https://authorization-server.org:443');
-  const scope = server.tokenSuccess(scopeOptions, expectedRequestParams);
+  const scope = server.tokenSuccess(scopeOptions, tokenRequestParams);
 
   const config = createModuleConfig({
     http: {
@@ -152,37 +161,39 @@ test.serial('@getToken => resolves to an access token with custom module configu
   });
 
   const tokenParams = {
-    random_param: 'random value',
+    username: 'alice',
+    password: 'secret',
   };
 
   const oauth2 = oauth2Module.create(config);
-  const token = await oauth2.clientCredentials.getToken(tokenParams);
+  const token = await oauth2.ownerPassword.getToken(tokenParams);
 
   scope.done();
   t.deepEqual(token, getAccessToken());
 });
 
 test.serial('@getToken => resolves to an access token while following redirections', async (t) => {
-  const expectedRequestParams = {
-    grant_type: 'client_credentials',
-    random_param: 'random value',
+  const tokenRequestParams = {
+    grant_type: 'password',
+    username: 'alice',
+    password: 'secret',
   };
 
   const scopeOptions = getHeaderCredentialsScopeOptions();
   const server = createAuthorizationServer('https://authorization-server.org');
   const originServer = createAuthorizationServer('https://origin-authorization-server.org');
-
-  const redirectionsScope = server.tokenSuccessWithRedirections('https://origin-authorization-server.org', scopeOptions, expectedRequestParams);
-  const originScope = originServer.tokenSuccess(scopeOptions, expectedRequestParams);
+  const redirectionsScope = server.tokenSuccessWithRedirections('https://origin-authorization-server.org', scopeOptions, tokenRequestParams);
+  const originScope = originServer.tokenSuccess(scopeOptions, tokenRequestParams);
 
   const tokenParams = {
-    random_param: 'random value',
+    username: 'alice',
+    password: 'secret',
   };
 
   const config = createModuleConfig();
   const oauth2 = oauth2Module.create(config);
 
-  const token = await oauth2.clientCredentials.getToken(tokenParams);
+  const token = await oauth2.ownerPassword.getToken(tokenParams);
 
   redirectionsScope.done();
   originScope.done();
@@ -191,79 +202,88 @@ test.serial('@getToken => resolves to an access token while following redirectio
 });
 
 test.serial('@getToken => resolves to an access token while requesting multiple scopes', async (t) => {
-  const expectedRequestParams = {
-    grant_type: 'client_credentials',
+  const tokenRequestParams = {
+    grant_type: 'password',
+    username: 'alice',
+    password: 'secret',
     scope: 'scope-a scope-b',
   };
 
   const scopeOptions = getHeaderCredentialsScopeOptions();
   const server = createAuthorizationServer('https://authorization-server.org:443');
-  const scope = server.tokenSuccess(scopeOptions, expectedRequestParams);
+  const scope = server.tokenSuccess(scopeOptions, tokenRequestParams);
 
   const tokenParams = {
+    username: 'alice',
+    password: 'secret',
     scope: ['scope-a', 'scope-b'],
   };
 
   const config = createModuleConfig();
   const oauth2 = oauth2Module.create(config);
 
-  const token = await oauth2.clientCredentials.getToken(tokenParams);
+  const token = await oauth2.ownerPassword.getToken(tokenParams);
 
   scope.done();
   t.deepEqual(token, getAccessToken());
 });
 
 test.serial('@getToken => resolves to an access token with a custom grant type', async (t) => {
-  const expectedRequestParams = {
+  const tokenRequestParams = {
     grant_type: 'my_grant',
+    username: 'alice',
+    password: 'secret',
   };
 
   const scopeOptions = getHeaderCredentialsScopeOptions();
   const server = createAuthorizationServer('https://authorization-server.org:443');
-  const scope = server.tokenSuccess(scopeOptions, expectedRequestParams);
+  const scope = server.tokenSuccess(scopeOptions, tokenRequestParams);
 
   const tokenParams = {
     grant_type: 'my_grant',
+    username: 'alice',
+    password: 'secret',
   };
 
   const config = createModuleConfig();
   const oauth2 = oauth2Module.create(config);
 
-  const token = await oauth2.clientCredentials.getToken(tokenParams);
+  const token = await oauth2.ownerPassword.getToken(tokenParams);
 
   scope.done();
   t.deepEqual(token, getAccessToken());
 });
 
 test.serial('@getToken => resolves to an access token with no params', async (t) => {
-  const expectedRequestParams = {
-    grant_type: 'client_credentials',
+  const tokenRequestParams = {
+    grant_type: 'password',
   };
 
   const scopeOptions = getHeaderCredentialsScopeOptions();
   const server = createAuthorizationServer('https://authorization-server.org:443');
-  const scope = server.tokenSuccess(scopeOptions, expectedRequestParams);
+  const scope = server.tokenSuccess(scopeOptions, tokenRequestParams);
 
   const config = createModuleConfig();
   const oauth2 = oauth2Module.create(config);
 
-  const token = await oauth2.clientCredentials.getToken();
+  const token = await oauth2.ownerPassword.getToken();
 
   scope.done();
   t.deepEqual(token, getAccessToken());
 });
 
 test.serial('@getToken => rejects the operation when a non json response is received', async (t) => {
-  const expectedRequestParams = {
-    grant_type: 'client_credentials',
+  const tokenRequestParams = {
+    grant_type: 'password',
+    username: 'alice',
+    password: 'secret',
     client_id: 'the client id',
     client_secret: 'the client secret',
-    random_param: 'random value',
   };
 
   const scopeOptions = getJSONEncodingScopeOptions();
   const server = createAuthorizationServer('https://authorization-server.org:443');
-  const scope = server.tokenSuccessWithNonJSONContent(scopeOptions, expectedRequestParams);
+  const scope = server.tokenSuccessWithNonJSONContent(scopeOptions, tokenRequestParams);
 
   const config = createModuleConfig({
     options: {
@@ -273,11 +293,12 @@ test.serial('@getToken => rejects the operation when a non json response is rece
   });
 
   const tokenParams = {
-    random_param: 'random value',
+    username: 'alice',
+    password: 'secret',
   };
 
   const oauth2 = oauth2Module.create(config);
-  const error = await t.throwsAsync(() => oauth2.clientCredentials.getToken(tokenParams));
+  const error = await t.throwsAsync(() => oauth2.ownerPassword.getToken(tokenParams));
 
   scope.done();
 

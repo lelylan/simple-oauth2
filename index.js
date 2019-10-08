@@ -1,10 +1,11 @@
 'use strict';
 
 const Joi = require('@hapi/joi');
-const authCodeModule = require('./lib/client/auth-code');
-const passwordModule = require('./lib/client/password');
-const accessTokenModule = require('./lib/access-token');
-const clientCredentialsModule = require('./lib/client/client');
+const Client = require('./lib/client');
+const AuthorizationCode = require('./lib/grants/authorization-code');
+const PasswordOwner = require('./lib/grants/password-owner');
+const ClientCredentials = require('./lib/grants/client-credentials');
+const AccessToken = require('./lib/access-token');
 
 // https://tools.ietf.org/html/draft-ietf-oauth-v2-31#appendix-A.1
 const vsCharRegEx = /^[\x20-\x7E]*$/;
@@ -41,12 +42,15 @@ module.exports = {
    */
   create(opts = {}) {
     const options = Joi.attempt(opts, optionsSchema, 'Invalid options provided to simple-oauth2');
+    const client = new Client(options);
 
     return {
-      accessToken: accessTokenModule(options),
-      ownerPassword: passwordModule(options),
-      authorizationCode: authCodeModule(options),
-      clientCredentials: clientCredentialsModule(options),
+      accessToken: {
+        create: AccessToken.factory(options, client),
+      },
+      ownerPassword: new PasswordOwner(options, client),
+      authorizationCode: new AuthorizationCode(options, client),
+      clientCredentials: new ClientCredentials(options, client),
     };
   },
 };
