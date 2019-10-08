@@ -1,5 +1,15 @@
 # Changelog
 
+## 2.5.2
+
+### Publishing changes
+
+* [#262](https://github.com/lelylan/simple-oauth2/pull/262) Use files package option instead of .npmignore
+
+### Documentation improvements
+
+* [#267](https://github.com/lelylan/simple-oauth2/pull/267) Better document encoding of values for the token exchange process
+
 ## 2.5.1
 ### New examples
 
