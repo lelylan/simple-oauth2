@@ -1,16 +1,24 @@
 # Changelog
 
-## Next
+## 3.0.0
 ### Breaking changes
+* [#260](https://github.com/lelylan/simple-oauth2/pull/260) Use @hapi/wreck v15. This version changes how a **baseUrl** is resolved against a **path**, affecting how `auth.tokenHost`, `auth.tokenPath`, `auth.authorizeHost` and `auth.authorizePath` are resolved when using the `.getToken` methods. See [@hapi/wreck](https://github.com/hapijs/wreck/issues/244) breaking changes to better understand potential issues that may arise.
 
-* [#260](https://github.com/lelylan/simple-oauth2/pull/260) Use @hapi/wreck v15. See [@hapi/wreck](https://github.com/hapijs/wreck/issues/244) breaking changes to better understand potential issues that may arise
-* [#260](https://github.com/lelylan/simple-oauth2/pull/260) Use new Node.js WHATWG URL api instead of the already deprecated url module
-* [#256](https://github.com/lelylan/simple-oauth2/pull/256) Allow to override grant_type parameter on all token exchange flows
+* [#260](https://github.com/lelylan/simple-oauth2/pull/260) Use new Node.js WHATWG URL api instead of the legacy url module. This change affects how `auth.authorizeHost` and `auth.authorizePath` are resolved when using the `authorizationCode.authorizeURL` method.
+
+* [#256](https://github.com/lelylan/simple-oauth2/pull/256) Users can override the `grant_type` parameter when performing a token exchange throught the `.getToken` method. Useful in cases where the auth server uses a value different from the standard.
+
 * [#256](https://github.com/lelylan/simple-oauth2/pull/256) Token exchange methods no longer mutate provided arguments
-* [#256](https://github.com/lelylan/simple-oauth2/pull/256) Properly encode multiple scopes when specified as an array on all token exchange methods
 * [#255](https://github.com/lelylan/simple-oauth2/pull/255) Follow up to 20 redirects by default
-* [#200](https://github.com/lelylan/simple-oauth2/pull/200) Change default multiple scope encoding from using comma to spaces
+* [#200](https://github.com/lelylan/simple-oauth2/pull/200) [#256](https://github.com/lelylan/simple-oauth2/pull/256) Change default multiple scope encoding from using comma to spaces on all token exchange methods
 * [#88](https://github.com/lelylan/simple-oauth2/pull/88) Change JSON response parsing mode from `smart` to `strict`. Since the OAuth2 specification indicates only JSON responses are valid, any non-JSON response throws an error instead of resolving into a Buffer. Use `http.json = true` to restore the previous behavior.
+
+### New features
+
+* [#270](https://github.com/lelylan/simple-oauth2/pull/270) All token exchange methods now accept an optional argument to override non-essential [http options](https://github.com/hapijs/wreck/blob/master/API.md#requestmethod-uri-options) or [read parsing options](https://github.com/hapijs/wreck/blob/master/API.md#readresponse-options).
+
+* [#268](https://github.com/lelylan/simple-oauth2/pull/268) All token exchange methods can be called without arguments
+* [#263](https://github.com/lelylan/simple-oauth2/pull/263) Use @hapi/joi v16. No breaking changes are expected.
 
 ## 2.5.2
 
