@@ -44,6 +44,7 @@
     "credentials"
   ],
   "dependencies": {
+    "@hapi/hoek": "^8.3.0",
     "@hapi/joi": "^16.1.7",
     "@hapi/wreck": "^15.1.0",
     "date-fns": "^2.4.1",

@@ -2,7 +2,7 @@
 
 const { URL } = require('url');
 const nock = require('nock');
-const merge = require('lodash/merge');
+const Hoek = require('@hapi/hoek');
 const Boom = require('@hapi/boom');
 
 const accessToken = {
@@ -120,8 +120,8 @@ function getAccessToken() {
   return accessToken;
 }
 
-function getJSONEncodingScopeOptions(options) {
-  return merge({
+function getJSONEncodingScopeOptions(options = {}) {
+  return Hoek.applyToDefaults({
     reqheaders: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
@@ -129,8 +129,8 @@ function getJSONEncodingScopeOptions(options) {
   }, options);
 }
 
-function getFormEncodingScopeOptions(options) {
-  return merge({
+function getFormEncodingScopeOptions(options = {}) {
+  return Hoek.applyToDefaults({
     reqheaders: {
       Accept: 'application/json',
       'Content-Type': 'application/x-www-form-urlencoded',
@@ -138,8 +138,8 @@ function getFormEncodingScopeOptions(options) {
   }, options);
 }
 
-function getHeaderCredentialsScopeOptions(options) {
-  return merge({
+function getHeaderCredentialsScopeOptions(options = {}) {
+  return Hoek.applyToDefaults({
     reqheaders: {
       Accept: 'application/json',
       Authorization: 'Basic dGhlK2NsaWVudCtpZDp0aGUrY2xpZW50K3NlY3JldA==',
