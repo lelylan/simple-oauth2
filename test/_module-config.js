@@ -1,6 +1,6 @@
 'use strict';
 
-const { merge } = require('lodash');
+const Hoek = require('@hapi/hoek');
 
 const baseConfig = {
   client: {
@@ -12,8 +12,8 @@ const baseConfig = {
   },
 };
 
-function createModuleConfig(config) {
-  return merge({}, baseConfig, config);
+function createModuleConfig(config = {}) {
+  return Hoek.applyToDefaults(baseConfig, config);
 }
 
 module.exports = {

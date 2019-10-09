@@ -272,6 +272,59 @@ test.serial('@getToken => resolves to an access token with no params', async (t)
   t.deepEqual(token, getAccessToken());
 });
 
+test.serial('@getToken => resolves to an access token with custom (inline) http options', async (t) => {
+  const tokenRequestParams = {
+    grant_type: 'password',
+  };
+
+  const scopeOptions = getHeaderCredentialsScopeOptions({
+    reqheaders: {
+      'X-REQUEST-ID': 123,
+    },
+  });
+
+  const server = createAuthorizationServer('https://authorization-server.org:443');
+  const scope = server.tokenSuccess(scopeOptions, tokenRequestParams);
+
+  const config = createModuleConfig();
+  const oauth2 = oauth2Module.create(config);
+
+  const httpOptions = {
+    headers: {
+      'X-REQUEST-ID': 123,
+    },
+  };
+
+  const token = await oauth2.ownerPassword.getToken(null, httpOptions);
+
+  scope.done();
+  t.deepEqual(token, getAccessToken());
+});
+
+test.serial('@getToken => resolves to an access token with custom (inline) http options without overriding (required) http options', async (t) => {
+  const tokenRequestParams = {
+    grant_type: 'password',
+  };
+
+  const scopeOptions = getHeaderCredentialsScopeOptions();
+  const server = createAuthorizationServer('https://authorization-server.org:443');
+  const scope = server.tokenSuccess(scopeOptions, tokenRequestParams);
+
+  const config = createModuleConfig();
+  const oauth2 = oauth2Module.create(config);
+
+  const httpOptions = {
+    headers: {
+      Authorization: 'Basic credentials',
+    },
+  };
+
+  const token = await oauth2.ownerPassword.getToken(null, httpOptions);
+
+  scope.done();
+  t.deepEqual(token, getAccessToken());
+});
+
 test.serial('@getToken => rejects the operation when a non json response is received', async (t) => {
   const tokenRequestParams = {
     grant_type: 'password',
