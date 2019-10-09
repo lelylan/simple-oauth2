@@ -1,12 +1,9 @@
 'use strict';
 
 const test = require('ava');
-const qs = require('querystring');
-const nock = require('nock');
-const baseConfig = require('./fixtures/module-config.json');
 const oauth2Module = require('./../index');
-
-const oauth2 = oauth2Module.create(baseConfig);
+const { createModuleConfig } = require('./_module-config');
+const { createAuthorizationServer, getHeaderCredentialsScopeOptions } = require('./_authorization-server-mock');
 
 const tokenParams = {
   code: 'code',
@@ -14,22 +11,18 @@ const tokenParams = {
 };
 
 const oauthParams = {
+  grant_type: 'authorization_code',
   code: 'code',
   redirect_uri: 'http://callback.com',
-  grant_type: 'authorization_code',
 };
 
-test('@errors => rejects operations on http error (401)', async (t) => {
-  const scopeOptions = {
-    reqheaders: {
-      Accept: 'application/json',
-      Authorization: 'Basic dGhlK2NsaWVudCtpZDp0aGUrY2xpZW50K3NlY3JldA==',
-    },
-  };
+test.serial('@errors => rejects operations on http error (401)', async (t) => {
+  const scopeOptions = getHeaderCredentialsScopeOptions();
+  const server = createAuthorizationServer('https://authorization-server.org:443');
+  const scope = server.tokenAuthorizationError(scopeOptions, oauthParams);
 
-  const scope = nock('https://authorization-server.org:443', scopeOptions)
-    .post('/oauth/token')
-    .reply(401);
+  const config = createModuleConfig();
+  const oauth2 = oauth2Module.create(config);
 
   const error = await t.throwsAsync(() => oauth2.authorizationCode.getToken(tokenParams), Error);
 
@@ -45,19 +38,13 @@ test('@errors => rejects operations on http error (401)', async (t) => {
   t.deepEqual(error.output.payload, authorizationError);
 });
 
-test('@errors => rejects operations on http error (500)', async (t) => {
-  const scopeOptions = {
-    reqheaders: {
-      Accept: 'application/json',
-      Authorization: 'Basic dGhlK2NsaWVudCtpZDp0aGUrY2xpZW50K3NlY3JldA==',
-    },
-  };
+test.serial('@errors => rejects operations on http error (500)', async (t) => {
+  const scopeOptions = getHeaderCredentialsScopeOptions();
+  const server = createAuthorizationServer('https://authorization-server.org:443');
+  const scope = server.tokenError(scopeOptions, oauthParams);
 
-  const scope = nock('https://authorization-server.org:443', scopeOptions)
-    .post('/oauth/token', qs.stringify(oauthParams))
-    .reply(500, {
-      customError: 'An amazing error has occured',
-    });
+  const config = createModuleConfig();
+  const oauth2 = oauth2Module.create(config);
 
   const error = await t.throwsAsync(() => oauth2.authorizationCode.getToken(tokenParams), Error);
 

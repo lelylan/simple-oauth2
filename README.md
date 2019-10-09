@@ -140,9 +140,12 @@ const tokenConfig = {
   scope: '<scope>', // also can be an array of multiple scopes, ex. ['<scope1>, '<scope2>', '...']
 };
 
+// Optional per-call http options
+const httpOptions = {};
+
 // Save the access token
 try {
-  const result = await oauth2.authorizationCode.getToken(tokenConfig)
+  const result = await oauth2.authorizationCode.getToken(tokenConfig, httpOptions);
   const accessToken = oauth2.accessToken.create(result);
 } catch (error) {
   console.log('Access Token Error', error.message);
@@ -167,9 +170,12 @@ const tokenConfig = {
   scope: '<scope>', // also can be an array of multiple scopes, ex. ['<scope1>, '<scope2>', '...']
 };
 
+// Optional per-call http options
+const httpOptions = {};
+
 // Save the access token
 try {
-  const result = await oauth2.ownerPassword.getToken(tokenConfig);
+  const result = await oauth2.ownerPassword.getToken(tokenConfig, httpOptions);
   const accessToken = oauth2.accessToken.create(result);
 } catch (error) {
   console.log('Access Token Error', error.message);
@@ -186,9 +192,12 @@ const tokenConfig = {
   scope: '<scope>', // also can be an array of multiple scopes, ex. ['<scope1>, '<scope2>', '...']
 };
 
+// Optional per-call http options
+const httpOptions = {};
+
 // Get the access token object for the client
 try {
-  const result = await oauth2.clientCredentials.getToken(tokenConfig);
+  const result = await oauth2.clientCredentials.getToken(tokenConfig, httpOptions);
   const accessToken = oauth2.accessToken.create(result);
 } catch (error) {
   console.log('Access Token error', error.message);
@@ -217,7 +226,11 @@ let accessToken = oauth2.accessToken.create(tokenObject);
 // Check if the token is expired. If expired it is refreshed.
 if (accessToken.expired()) {
   try {
-    accessToken = await accessToken.refresh();
+    const params = {
+      scope: '<scope>', // also can be an array of multiple scopes, ex. ['<scope1>, '<scope2>', '...']
+    };
+
+    accessToken = await accessToken.refresh(params);
   } catch (error) {
     console.log('Error refreshing access token: ', error.message);
   }

@@ -1,6 +1,5 @@
 {
   "rules": {
-    "max-len": "off",
-    "object-curly-newline": "off"
+    "max-len": "off"
   }
 }

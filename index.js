@@ -1,10 +1,11 @@
 'use strict';
 
 const Joi = require('@hapi/joi');
-const authCodeModule = require('./lib/client/auth-code');
-const passwordModule = require('./lib/client/password');
-const accessTokenModule = require('./lib/access-token');
-const clientCredentialsModule = require('./lib/client/client');
+const Client = require('./lib/client');
+const AuthorizationCode = require('./lib/grants/authorization-code');
+const PasswordOwner = require('./lib/grants/password-owner');
+const ClientCredentials = require('./lib/grants/client-credentials');
+const AccessToken = require('./lib/access-token');
 
 // https://tools.ietf.org/html/draft-ietf-oauth-v2-31#appendix-A.1
 const vsCharRegEx = /^[\x20-\x7E]*$/;
@@ -13,8 +14,8 @@ const optionsSchema = Joi
   .object()
   .keys({
     client: Joi.object().keys({
-      id: Joi.string().regex(vsCharRegEx).allow(''),
-      secret: Joi.string().regex(vsCharRegEx).allow(''),
+      id: Joi.string().pattern(vsCharRegEx).allow(''),
+      secret: Joi.string().pattern(vsCharRegEx).allow(''),
       secretParamName: Joi.string().default('client_secret'),
       idParamName: Joi.string().default('client_id'),
     }).required(),
@@ -22,13 +23,13 @@ const optionsSchema = Joi
       tokenHost: Joi.string().required().uri({ scheme: ['http', 'https'] }),
       tokenPath: Joi.string().default('/oauth/token'),
       revokePath: Joi.string().default('/oauth/revoke'),
-      authorizeHost: Joi.string().default(Joi.ref('tokenHost')),
+      authorizeHost: Joi.string().uri({ scheme: ['http', 'https'] }).default(Joi.ref('tokenHost')),
       authorizePath: Joi.string().default('/oauth/authorize'),
     }).required(),
     http: Joi.object().unknown(true),
     options: Joi.object().keys({
-      bodyFormat: Joi.any().only('form', 'json').default('form'),
-      authorizationMethod: Joi.any().only('header', 'body').default('header'),
+      bodyFormat: Joi.any().valid('form', 'json').default('form'),
+      authorizationMethod: Joi.any().valid('header', 'body').default('header'),
     }).default(),
   });
 
@@ -41,12 +42,15 @@ module.exports = {
    */
   create(opts = {}) {
     const options = Joi.attempt(opts, optionsSchema, 'Invalid options provided to simple-oauth2');
+    const client = new Client(options);
 
     return {
-      accessToken: accessTokenModule(options),
-      ownerPassword: passwordModule(options),
-      authorizationCode: authCodeModule(options),
-      clientCredentials: clientCredentialsModule(options),
+      accessToken: {
+        create: AccessToken.factory(options, client),
+      },
+      ownerPassword: new PasswordOwner(options, client),
+      authorizationCode: new AuthorizationCode(options, client),
+      clientCredentials: new ClientCredentials(options, client),
     };
   },
 };
