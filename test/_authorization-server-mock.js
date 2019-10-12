@@ -142,7 +142,7 @@ function getHeaderCredentialsScopeOptions(options = {}) {
   return Hoek.applyToDefaults({
     reqheaders: {
       Accept: 'application/json',
-      Authorization: 'Basic dGhlK2NsaWVudCtpZDp0aGUrY2xpZW50K3NlY3JldA==',
+      Authorization: 'Basic dGhlJTIwY2xpZW50JTIwaWQ6dGhlJTIwY2xpZW50JTIwc2VjcmV0',
     },
   }, options);
 }

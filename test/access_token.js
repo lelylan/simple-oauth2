@@ -8,17 +8,12 @@ const { isValid, isDate, differenceInSeconds } = require('date-fns');
 
 const oauth2Module = require('./../index.js');
 const { createModuleConfig } = require('./_module-config');
-const { createAuthorizationServer } = require('./_authorization-server-mock');
+const { createAuthorizationServer, getHeaderCredentialsScopeOptions } = require('./_authorization-server-mock');
 
 const chance = new Chance();
 chance.mixin({ accessToken: accessTokenMixin });
 
-const scopeOptions = {
-  reqheaders: {
-    Accept: 'application/json',
-    Authorization: 'Basic dGhlK2NsaWVudCtpZDp0aGUrY2xpZW50K3NlY3JldA==',
-  },
-};
+const scopeOptions = getHeaderCredentialsScopeOptions();
 
 test('@create => creates a new access token instance', (t) => {
   const config = createModuleConfig();
