@@ -16,7 +16,7 @@
     "url": "https://github.com/lelylan/simple-oauth2"
   },
   "engine": {
-    "node": ">=8.0"
+    "node": ">=8"
   },
   "scripts": {
     "pretest": "npm run lint",
