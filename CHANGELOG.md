@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.0.1
+### Publishing changes
+* [#273](https://github.com/lelylan/simple-oauth2/pull/273) Deprecate unsupported library versions
+
 ## 3.0.0
 ### Breaking changes
 * [#260](https://github.com/lelylan/simple-oauth2/pull/260) Use @hapi/wreck v15. This version changes how a **baseUrl** is resolved against a **path**, affecting how `auth.tokenHost`, `auth.tokenPath`, `auth.authorizeHost` and `auth.authorizePath` are resolved when using the `.getToken` methods. See [@hapi/wreck](https://github.com/hapijs/wreck/issues/244) breaking changes to better understand potential issues that may arise.
