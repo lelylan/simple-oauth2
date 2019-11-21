@@ -50,7 +50,25 @@ test('@create => do not reassigns the expires at property when is already a date
   t.true(isValid(accessToken.token.expires_at));
 });
 
-test('@create => parses the expires at property when is not a date', (t) => {
+test('@create => parses the expires at property when is UNIX timestamp in seconds', (t) => {
+  const config = createModuleConfig();
+  const oauth2 = oauth2Module.create(config);
+
+  const accessTokenResponse = chance.accessToken({
+    expired: true,
+    parseDate: false,
+    expireMode: 'expires_at',
+  });
+  // Sometimes expires_at is also given as a UNIX timestamp in seconds:
+  accessTokenResponse.expires_at = Math.round(new Date(accessTokenResponse.expires_at).getTime() / 1000);
+
+  const accessToken = oauth2.accessToken.create(accessTokenResponse);
+
+  t.true(isDate(accessToken.token.expires_at));
+  t.true(isValid(accessToken.token.expires_at));
+});
+
+test('@create => parses the expires at property when is ISO time', (t) => {
   const config = createModuleConfig();
   const oauth2 = oauth2Module.create(config);
 
