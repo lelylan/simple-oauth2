@@ -126,7 +126,7 @@ const oauth2 = require('simple-oauth2').create(credentials);
 // Authorization oauth2 URI
 const authorizationUri = oauth2.authorizationCode.authorizeURL({
   redirect_uri: 'http://localhost:3000/callback',
-  scope: '<scope>', // also can be an array of multiple scopes, ex. ['<scope1>, '<scope2>', '...']
+  scope: '<scope>', // also can be an array of multiple scopes, ex. ['<scope1>', '<scope2>', '...']
   state: '<state>'
 });
 
@@ -137,7 +137,7 @@ res.redirect(authorizationUri);
 const tokenConfig = {
   code: '<code>',
   redirect_uri: 'http://localhost:3000/callback',
-  scope: '<scope>', // also can be an array of multiple scopes, ex. ['<scope1>, '<scope2>', '...']
+  scope: '<scope>', // also can be an array of multiple scopes, ex. ['<scope1>', '<scope2>', '...']
 };
 
 // Optional per-call http options
@@ -167,7 +167,7 @@ const oauth2 = require('simple-oauth2').create(credentials);
 const tokenConfig = {
   username: 'username',
   password: 'password',
-  scope: '<scope>', // also can be an array of multiple scopes, ex. ['<scope1>, '<scope2>', '...']
+  scope: '<scope>', // also can be an array of multiple scopes, ex. ['<scope1>', '<scope2>', '...']
 };
 
 // Optional per-call http options
@@ -189,7 +189,7 @@ This flow is suitable when client is requesting access to the protected resource
 ```javascript
 const oauth2 = require('simple-oauth2').create(credentials);
 const tokenConfig = {
-  scope: '<scope>', // also can be an array of multiple scopes, ex. ['<scope1>, '<scope2>', '...']
+  scope: '<scope>', // also can be an array of multiple scopes, ex. ['<scope1>', '<scope2>', '...']
 };
 
 // Optional per-call http options
@@ -227,7 +227,7 @@ let accessToken = oauth2.accessToken.create(tokenObject);
 if (accessToken.expired()) {
   try {
     const params = {
-      scope: '<scope>', // also can be an array of multiple scopes, ex. ['<scope1>, '<scope2>', '...']
+      scope: '<scope>', // also can be an array of multiple scopes, ex. ['<scope1>', '<scope2>', '...']
     };
 
     accessToken = await accessToken.refresh(params);
