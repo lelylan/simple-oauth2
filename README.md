@@ -28,26 +28,23 @@ Simple OAuth 2.0 come to life thanks to the work I've made in Lelylan, an open s
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
 
-- [Simple OAuth2](#simple-oauth2)
-      - [Thanks to Open Source](#thanks-to-open-source)
-  - [Table of Contents](#table-of-contents)
-  - [Requirements](#requirements)
-  - [Getting started](#getting-started)
-    - [Installation](#installation)
-    - [Options](#options)
-    - [Example of Usage](#example-of-usage)
-  - [OAuth2 Supported flows](#oauth2-supported-flows)
-    - [Authorization Code flow](#authorization-code-flow)
-    - [Password Credentials Flow](#password-credentials-flow)
-    - [Client Credentials Flow](#client-credentials-flow)
-  - [Helpers](#helpers)
-    - [Access Token object](#access-token-object)
-    - [Errors](#errors)
-  - [Contributing](#contributing)
-  - [Authors](#authors)
-    - [Contributors](#contributors)
-  - [Changelog](#changelog)
-  - [License](#license)
+- [Requirements](#requirements)
+- [Getting started](#getting-started)
+  - [Installation](#installation)
+  - [Options](#options)
+  - [Example of Usage](#example-of-usage)
+- [OAuth2 Supported flows](#oauth2-supported-flows)
+  - [Authorization Code flow](#authorization-code-flow)
+  - [Password Credentials Flow](#password-credentials-flow)
+  - [Client Credentials Flow](#client-credentials-flow)
+- [Helpers](#helpers)
+  - [Access Token object](#access-token-object)
+  - [Errors](#errors)
+- [Contributing](#contributing)
+- [Authors](#authors)
+  - [Contributors](#contributors)
+- [Changelog](#changelog)
+- [License](#license)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -126,7 +123,7 @@ const oauth2 = require('simple-oauth2').create(credentials);
 // Authorization oauth2 URI
 const authorizationUri = oauth2.authorizationCode.authorizeURL({
   redirect_uri: 'http://localhost:3000/callback',
-  scope: '<scope>', // also can be an array of multiple scopes, ex. ['<scope1>, '<scope2>', '...']
+  scope: '<scope>', // also can be an array of multiple scopes, ex. ['<scope1>', '<scope2>', '...']
   state: '<state>'
 });
 
@@ -137,7 +134,7 @@ res.redirect(authorizationUri);
 const tokenConfig = {
   code: '<code>',
   redirect_uri: 'http://localhost:3000/callback',
-  scope: '<scope>', // also can be an array of multiple scopes, ex. ['<scope1>, '<scope2>', '...']
+  scope: '<scope>', // also can be an array of multiple scopes, ex. ['<scope1>', '<scope2>', '...']
 };
 
 // Optional per-call http options
@@ -167,7 +164,7 @@ const oauth2 = require('simple-oauth2').create(credentials);
 const tokenConfig = {
   username: 'username',
   password: 'password',
-  scope: '<scope>', // also can be an array of multiple scopes, ex. ['<scope1>, '<scope2>', '...']
+  scope: '<scope>', // also can be an array of multiple scopes, ex. ['<scope1>', '<scope2>', '...']
 };
 
 // Optional per-call http options
@@ -189,7 +186,7 @@ This flow is suitable when client is requesting access to the protected resource
 ```javascript
 const oauth2 = require('simple-oauth2').create(credentials);
 const tokenConfig = {
-  scope: '<scope>', // also can be an array of multiple scopes, ex. ['<scope1>, '<scope2>', '...']
+  scope: '<scope>', // also can be an array of multiple scopes, ex. ['<scope1>', '<scope2>', '...']
 };
 
 // Optional per-call http options
@@ -227,7 +224,7 @@ let accessToken = oauth2.accessToken.create(tokenObject);
 if (accessToken.expired()) {
   try {
     const params = {
-      scope: '<scope>', // also can be an array of multiple scopes, ex. ['<scope1>, '<scope2>', '...']
+      scope: '<scope>', // also can be an array of multiple scopes, ex. ['<scope1>', '<scope2>', '...']
     };
 
     accessToken = await accessToken.refresh(params);
