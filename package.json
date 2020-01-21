@@ -44,23 +44,23 @@
     "credentials"
   ],
   "dependencies": {
-    "@hapi/hoek": "^8.3.0",
-    "@hapi/joi": "^16.1.7",
+    "@hapi/hoek": "^8.5.0",
+    "@hapi/joi": "^16.1.8",
     "@hapi/wreck": "^15.1.0",
-    "date-fns": "^2.4.1",
+    "date-fns": "^2.9.0",
     "debug": "^4.1.1"
   },
   "devDependencies": {
     "@hapi/boom": "^8.0.1",
-    "ava": "^2.4.0",
-    "chance": "^1.1.0",
+    "ava": "^3.0.0",
+    "chance": "^1.1.4",
     "chance-access-token": "^1.0.1",
     "doctoc": "^1.4.0",
-    "eslint": "^6.5.1",
+    "eslint": "^6.8.0",
     "eslint-config-airbnb-base": "^14.0.0",
-    "eslint-plugin-import": "^2.9.0",
+    "eslint-plugin-import": "^2.20.0",
     "lodash": "^4.17.15",
-    "nock": "^11.3.6",
+    "nock": "^11.7.2",
     "nyc": "^14.1.1"
   },
   "license": "Apache-2.0"

@@ -407,7 +407,7 @@ test.serial('@revokeAll => revokes the refresh token only if the access token is
 
   const accessToken = oauth2.accessToken.create(accessTokenResponse);
 
-  const error = await t.throwsAsync(() => accessToken.revokeAll(), Error);
+  const error = await t.throwsAsync(() => accessToken.revokeAll(), { instanceOf: Error });
 
   t.true(error.isBoom);
   t.is(error.output.statusCode, 500);
