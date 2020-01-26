@@ -3,10 +3,7 @@
   "parser": "babel-eslint",
   "parserOptions": {
     "sourceType": "script",
-    "ecmaVersion": 2020,
-    "ecmaFeatures": {
-      "classPrivateMethods": true
-    }
+    "ecmaVersion": 2020
   },
   "rules": {
     "max-len": ["error", {
