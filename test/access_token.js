@@ -40,7 +40,7 @@ test('@create => do not reassigns the expires at property when is already a date
 
   const accessTokenResponse = chance.accessToken({
     expired: true,
-    parseDate: true,
+    dateFormat: 'date',
     expireMode: 'expires_at',
   });
 
@@ -50,13 +50,29 @@ test('@create => do not reassigns the expires at property when is already a date
   t.true(isValid(accessToken.token.expires_at));
 });
 
-test('@create => parses the expires at property when is not a date', (t) => {
+test('@create => parses the expires at property when is UNIX timestamp in seconds', (t) => {
   const config = createModuleConfig();
   const oauth2 = oauth2Module.create(config);
 
   const accessTokenResponse = chance.accessToken({
     expired: true,
-    parseDate: false,
+    dateFormat: 'unix',
+    expireMode: 'expires_at',
+  });
+
+  const accessToken = oauth2.accessToken.create(accessTokenResponse);
+
+  t.true(isDate(accessToken.token.expires_at));
+  t.true(isValid(accessToken.token.expires_at));
+});
+
+test('@create => parses the expires at property when is ISO time', (t) => {
+  const config = createModuleConfig();
+  const oauth2 = oauth2Module.create(config);
+
+  const accessTokenResponse = chance.accessToken({
+    expired: true,
+    dateFormat: 'iso',
     expireMode: 'expires_at',
   });
 
@@ -389,7 +405,7 @@ test.serial('@revokeAll => revokes the refresh token only if the access token is
 
   const accessToken = oauth2.accessToken.create(accessTokenResponse);
 
-  const error = await t.throwsAsync(() => accessToken.revokeAll(), Error);
+  const error = await t.throwsAsync(() => accessToken.revokeAll(), { instanceOf: Error });
 
   t.true(error.isBoom);
   t.is(error.output.statusCode, 500);
