@@ -2,7 +2,7 @@
 
 ## Next
 ### Maintainance
-* Update ava test runner to v2
+* Update ava test runner to v3
 * Update chance-access-token library to v2
 * Update nyc instrumentation library to v15
 
