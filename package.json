@@ -61,7 +61,7 @@
     "eslint-plugin-import": "^2.20.0",
     "lodash": "^4.17.15",
     "nock": "^11.7.2",
-    "nyc": "^14.1.1"
+    "nyc": "^15.0.0"
   },
   "license": "Apache-2.0"
 }
