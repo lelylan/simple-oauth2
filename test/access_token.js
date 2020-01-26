@@ -3,10 +3,10 @@
 const test = require('ava');
 const Chance = require('chance');
 const accessTokenMixin = require('chance-access-token');
-const { has, hasIn } = require('lodash');
 const { isValid, isDate, differenceInSeconds } = require('date-fns');
 
 const oauth2Module = require('./../index.js');
+const { has, hasIn } = require('./_property');
 const { createModuleConfig } = require('./_module-config');
 const { createAuthorizationServer } = require('./_authorization-server-mock');
 

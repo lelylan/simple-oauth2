@@ -6,6 +6,7 @@
   "contributors": [
     "Jonathan Samines <jn.samines@gmail.com>"
   ],
+  "license": "Apache-2.0",
   "homepage": "https://github.com/lelylan/simple-oauth2",
   "main": "index.js",
   "files": [
@@ -59,9 +60,7 @@
     "eslint": "^6.8.0",
     "eslint-config-airbnb-base": "^14.0.0",
     "eslint-plugin-import": "^2.20.0",
-    "lodash": "^4.17.15",
     "nock": "^11.7.2",
     "nyc": "^15.0.0"
-  },
-  "license": "Apache-2.0"
+  }
 }
