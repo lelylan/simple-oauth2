@@ -44,13 +44,13 @@ module.exports = {
     const options = Joi.attempt(opts, optionsSchema, 'Invalid options provided to simple-oauth2');
     const client = new Client(options);
 
-    return {
+    return Object.freeze({
       accessToken: {
         create: AccessToken.factory(options, client),
       },
       ownerPassword: new PasswordOwner(options, client),
       authorizationCode: new AuthorizationCode(options, client),
       clientCredentials: new ClientCredentials(options, client),
-    };
+    });
   },
 };

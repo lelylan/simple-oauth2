@@ -1,6 +1,11 @@
 # Changelog
 
 ## Next
+### Breaking changes
+* Upgrade @hapi/hoek to v9 (requires Node 12)
+* Upgrade @hapi/joi to v17 (requires Node 12)
+* Upgrade @hapi/wreck to v17 (requires Node 12)
+
 ### Maintainance
 * Update ava test runner to v3
 * Update chance-access-token library to v2

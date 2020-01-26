@@ -1,7 +1,12 @@
 {
   "extends": "airbnb-base",
+  "parser": "babel-eslint",
   "parserOptions": {
-    "sourceType": "script"
+    "sourceType": "script",
+    "ecmaVersion": 2020,
+    "ecmaFeatures": {
+      "classPrivateMethods": true
+    }
   },
   "rules": {
     "max-len": ["error", {
@@ -9,13 +14,6 @@
       "ignoreComments": true
     }],
     "strict": ["error", "safe"],
-    "prefer-object-spread": "off",
-    "comma-dangle": ["error", {
-      "arrays": "always-multiline",
-      "objects": "always-multiline",
-      "imports": "always-multiline",
-      "exports": "always-multiline",
-      "functions": "never"
-    }]
+    "lines-between-class-members": ["off"]
   }
 }
