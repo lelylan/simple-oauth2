@@ -1,5 +1,9 @@
 # Changelog
 
+## Next
+### Maintainance
+* Update chance-access-token library to v2
+
 ## 3.1.0
 ### New features
 * [#277](https://github.com/lelylan/simple-oauth2/pull/277) Add support to parse expire at property on access tokens as UNIX timestamps
