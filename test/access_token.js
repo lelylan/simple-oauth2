@@ -20,6 +20,15 @@ const scopeOptions = {
   },
 };
 
+test('@create => throws an error when no token payload is provided', (t) => {
+  const config = createModuleConfig();
+  const oauth2 = oauth2Module.create(config);
+
+  t.throws(() => oauth2.accessToken.create(), {
+    message: /Cannot create access token without a token to parse/,
+  });
+});
+
 test('@create => creates a new access token instance', (t) => {
   const config = createModuleConfig();
   const oauth2 = oauth2Module.create(config);
@@ -357,6 +366,18 @@ test.serial('@revoke => performs a token revoke with a custom revoke path', asyn
   await t.notThrowsAsync(() => accessToken.revoke('refresh_token'));
 
   scope.done();
+});
+
+test.serial('@revoke => throws an error with an invalid tokenType option', async (t) => {
+  const config = createModuleConfig();
+  const oauth2 = oauth2Module.create(config);
+
+  const accessTokenResponse = chance.accessToken();
+  const accessToken = oauth2.accessToken.create(accessTokenResponse);
+
+  await t.throwsAsync(() => accessToken.revoke('invalid_value'), {
+    message: /Invalid token type. Only access_token or refresh_token are valid values/,
+  });
 });
 
 test.serial('@revokeAll => revokes both the access and refresh tokens', async (t) => {
