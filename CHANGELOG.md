@@ -1,6 +1,10 @@
 # Changelog
 
 ## Next
+### Improvements
+* Valid token presence is verified on access token creation
+* Valid tokenType presence is verified on `.revoke` calls
+
 ### Maintainance
 * Remove dev lodash library
 * Update ava test runner to v3
