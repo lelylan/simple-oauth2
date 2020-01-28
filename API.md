@@ -91,8 +91,10 @@ This submodule allows for the token level operations.
 An access token (plain object) can be used to create a new token object with the following methods
 
 ### AccessToken
-#### .expired() => Boolean
+#### .expired([expirationWindowSeconds]) => Boolean
 Determines if the current access token is definitely expired or not
+
+* `expirationWindowSeconds` Window of time before the actual expiration to refresh the token. Defaults to **0**.
 
 #### .refresh(params) => Promise<ResponsePayload>
 Refreshes the current access token. The following params are allowed:
