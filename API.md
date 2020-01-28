@@ -27,6 +27,7 @@ Simple OAuth2 accepts an object with the following params.
     * `authorization` Always overriden by the library to properly send the required credentials on each scenario
 
 * `options` additional options to setup how the module perform requests
+  * `scopeSeparator` Scope separator character. Some providers may require a different separator. Defaults to **empty space**.
   * `bodyFormat` - Request's body data format. Valid options are `form` or `json`. Defaults to **form**
   * `authorizationMethod` - Method used to send the *client.id*/*client.secret* authorization params at the token request. Valid options are `header` or `body`. If set to **body**, the **bodyFormat** option will be used to format the credentials. Defaults to **header**
 

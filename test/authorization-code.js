@@ -53,6 +53,27 @@ test('@authorizeURL => returns the authorization URL with an scope array and def
   t.is(actual, expected);
 });
 
+test('@authorizeURL => returns the authorization URL with an scope array and a custom module configuration (scope separator)', (t) => {
+  const authorizeParams = {
+    redirect_uri: 'http://localhost:3000/callback',
+    state: '02afe928b',
+    scope: ['user', 'account'],
+  };
+
+  const config = createModuleConfig({
+    options: {
+      scopeSeparator: ',',
+    },
+  });
+
+  const oauth2 = oauth2Module.create(config);
+
+  const actual = oauth2.authorizationCode.authorizeURL(authorizeParams);
+  const expected = `https://authorization-server.org/oauth/authorize?response_type=code&client_id=the%20client%20id&redirect_uri=${encodeURIComponent('http://localhost:3000/callback')}&state=02afe928b&scope=user%2Caccount`;
+
+  t.is(actual, expected);
+});
+
 test('@authorizeURL => returns the authorization URL with a custom module configuration (client id param name)', (t) => {
   const config = createModuleConfig({
     client: {
@@ -304,6 +325,37 @@ test.serial('@getToken => resolves to an access token with custom module configu
   const tokenParams = {
     code: 'code',
     redirect_uri: 'http://callback.com',
+  };
+
+  const oauth2 = oauth2Module.create(config);
+  const token = await oauth2.authorizationCode.getToken(tokenParams);
+
+  scope.done();
+  t.deepEqual(token, getAccessToken());
+});
+
+test.serial('@getToken => resolves to an access token with custom module configuration (scope separator)', async (t) => {
+  const expectedRequestParams = {
+    grant_type: 'authorization_code',
+    code: 'code',
+    redirect_uri: 'http://callback.com',
+    scope: 'scope-a,scope-b',
+  };
+
+  const scopeOptions = getHeaderCredentialsScopeOptions();
+  const server = createAuthorizationServer('https://authorization-server.org:443');
+  const scope = server.tokenSuccess(scopeOptions, expectedRequestParams);
+
+  const config = createModuleConfig({
+    options: {
+      scopeSeparator: ',',
+    },
+  });
+
+  const tokenParams = {
+    code: 'code',
+    redirect_uri: 'http://callback.com',
+    scope: ['scope-a', 'scope-b'],
   };
 
   const oauth2 = oauth2Module.create(config);

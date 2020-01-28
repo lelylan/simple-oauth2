@@ -162,6 +162,33 @@ test.serial('@getToken => resolves to an access token with custom module configu
   t.deepEqual(token, getAccessToken());
 });
 
+test.serial('@getToken = resolves to an access token with custom module configuration (scope separator)', async (t) => {
+  const expectedRequestParams = {
+    grant_type: 'client_credentials',
+    scope: 'scope-a,scope-b',
+  };
+
+  const scopeOptions = getHeaderCredentialsScopeOptions();
+  const server = createAuthorizationServer('https://authorization-server.org:443');
+  const scope = server.tokenSuccess(scopeOptions, expectedRequestParams);
+
+  const tokenParams = {
+    scope: ['scope-a', 'scope-b'],
+  };
+
+  const config = createModuleConfig({
+    options: {
+      scopeSeparator: ',',
+    },
+  });
+
+  const oauth2 = oauth2Module.create(config);
+  const token = await oauth2.clientCredentials.getToken(tokenParams);
+
+  scope.done();
+  t.deepEqual(token, getAccessToken());
+});
+
 test.serial('@getToken => resolves to an access token while following redirections', async (t) => {
   const expectedRequestParams = {
     grant_type: 'client_credentials',

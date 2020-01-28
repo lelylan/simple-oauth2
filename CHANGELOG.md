@@ -1,6 +1,9 @@
 # Changelog
 
 ## Next
+### New features
+* Add support for custom scope separator
+
 ### Improvements
 * Valid token presence is verified on access token creation
 * Valid tokenType presence is verified on `.revoke` calls
@@ -13,7 +16,7 @@
 
 ## 3.1.0
 ### New features
-* [#277](https://github.com/lelylan/simple-oauth2/pull/277) Add support to parse expire at property on access tokens as UNIX timestamps
+* [#277](https://github.com/lelylan/simple-oauth2/pull/277) Add support to parse access tokens's expire_at property as UNIX timestamps
 
 ## 3.0.1
 ### Publishing changes
