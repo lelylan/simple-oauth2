@@ -1,18 +1,20 @@
 # Changelog
 
-## Next
+## 3.2.0
 ### New features
-* Add support for custom scope separator
+* [#298](https://github.com/lelylan/simple-oauth2/pull/298) Add support for custom scope separator by using the `options.scopeSeparator` configuration
 
 ### Improvements
-* Valid token presence is verified on access token creation
-* Valid tokenType presence is verified on `.revoke` calls
+* [#290](https://github.com/lelylan/simple-oauth2/pull/290) Valid token presence is verified on access token creation
+* [#290](https://github.com/lelylan/simple-oauth2/pull/290) Valid tokenType presence is verified on `.revoke` calls
 
 ### Maintainance
-* Remove dev lodash library
-* Update ava test runner to v3
-* Update chance-access-token dev library to v2
-* Update nyc instrumentation dev library to v15
+* [#289](https://github.com/lelylan/simple-oauth2/pull/289) Remove dev lodash library from tests
+* [#285](https://github.com/lelylan/simple-oauth2/pull/285) Update ava test runner to v3
+* [#287](https://github.com/lelylan/simple-oauth2/pull/287) Update chance-access-token dev library to v2
+* [#288](https://github.com/lelylan/simple-oauth2/pull/288) Update nyc instrumentation dev library to v15
+* [#297](https://github.com/lelylan/simple-oauth2/pull/297) Add tests for empty credentials support
+* [#291](https://github.com/lelylan/simple-oauth2/pull/291) Improve library documentation. Separate API reference from main documentation
 
 ## 3.1.0
 ### New features
