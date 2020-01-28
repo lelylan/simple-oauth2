@@ -138,6 +138,23 @@ test('@expired => returns true when expired', (t) => {
   t.true(accessToken.expired());
 });
 
+test('@expired => returns true if the token is expiring within the expiration window', (t) => {
+  const config = createModuleConfig();
+  const oauth2 = oauth2Module.create(config);
+
+  const accessTokenResponse = {
+    ...chance.accessToken({
+      expireMode: 'expires_in',
+    }),
+    expires_in: 10,
+  };
+
+  const expirationWindowSeconds = 11;
+  const accessToken = oauth2.accessToken.create(accessTokenResponse);
+
+  t.true(accessToken.expired(expirationWindowSeconds));
+});
+
 test('@expired => returns false when not expired', (t) => {
   const config = createModuleConfig();
   const oauth2 = oauth2Module.create(config);

@@ -1,5 +1,9 @@
 # Changelog
 
+## Next
+### New features
+* Add support to verify expired tokens with a custom expiration window (Useful to mitigate race conditions during the token refresh process)
+
 ## 3.2.0
 ### New features
 * [#298](https://github.com/lelylan/simple-oauth2/pull/298) Add support for custom scope separator by using the `options.scopeSeparator` configuration

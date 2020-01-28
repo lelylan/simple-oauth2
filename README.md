@@ -184,17 +184,9 @@ These come down to factors such as network and processing latency and can be wor
 
 ```javascript
 async function run() {
-  // Provide a window of time before the actual expiration to refresh the token
-  const EXPIRATION_WINDOW_IN_SECONDS = 300;
+  const EXPIRATION_WINDOW_IN_SECONDS = 300; // Window of time before the actual expiration to refresh the token
 
-  const { token } = accessToken;
-  const expirationTimeInSeconds = token.expires_at.getTime() / 1000;
-  const expirationWindowStart = expirationTimeInSeconds - EXPIRATION_WINDOW_IN_SECONDS;
-
-  // If the start of the window has passed, refresh the token
-  const nowInSeconds = (new Date()).getTime() / 1000;
-  const shouldRefresh = nowInSeconds >= expirationWindowStart;
-  if (shouldRefresh) {
+  if (token.expired(EXPIRATION_WINDOW_IN_SECONDS)) {
     try {
       accessToken = await accessToken.refresh();
     } catch (error) {
@@ -210,13 +202,8 @@ When you've done with the token or you want to log out, you can revoke the acces
 
 ```javascript
 async function run() {
-  // Revoke both access and refresh tokens
   try {
-    // Revoke only the access token
     await accessToken.revoke('access_token');
-
-    // Session ended. But the refresh_token is still valid.
-    // Revoke the refresh token
     await accessToken.revoke('refresh_token');
   } catch (error) {
     console.log('Error revoking token: ', error.message);
