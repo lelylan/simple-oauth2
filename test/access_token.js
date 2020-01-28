@@ -265,6 +265,37 @@ test.serial('@refresh => creates a new access token with custom params', async (
   t.true(has(refreshAccessToken.token, 'access_token'));
 });
 
+test.serial('@refresh => creates a new access token with custom module configuration (scope separator)', async (t) => {
+  const config = createModuleConfig({
+    options: {
+      scopeSeparator: ',',
+    },
+  });
+
+  const oauth2 = oauth2Module.create(config);
+
+  const accessTokenResponse = chance.accessToken({
+    expireMode: 'expires_in',
+  });
+
+  const refreshParams = {
+    grant_type: 'refresh_token',
+    scope: 'scope-a,scope-b',
+    refresh_token: accessTokenResponse.refresh_token,
+  };
+
+  const server = createAuthorizationServer('https://authorization-server.org:443');
+  const scope = server.tokenSuccess(scopeOptions, refreshParams);
+
+  const accessToken = oauth2.accessToken.create(accessTokenResponse);
+  const refreshAccessToken = await accessToken.refresh({
+    scope: ['scope-a', 'scope-b'],
+  });
+
+  scope.done();
+  t.true(has(refreshAccessToken.token, 'access_token'));
+});
+
 test.serial('@refresh => creates a new access token with a custom token path', async (t) => {
   const config = createModuleConfig({
     auth: {
