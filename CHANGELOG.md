@@ -3,10 +3,11 @@
 ## Next
 ### New features
 * Add support to verify expired tokens with a custom expiration window (Useful to mitigate race conditions during the token refresh process)
+* Add support to configure the encoding mode of header credentials by using `options.credentialsEncodingMode`
 
 ## 3.2.0
 ### New features
-* [#298](https://github.com/lelylan/simple-oauth2/pull/298) Add support for custom scope separator by using the `options.scopeSeparator` configuration
+* [#298](https://github.com/lelylan/simple-oauth2/pull/298) Add support for custom scope separator by using `options.scopeSeparator` configuration
 
 ### Improvements
 * [#290](https://github.com/lelylan/simple-oauth2/pull/290) Valid token presence is verified on access token creation
