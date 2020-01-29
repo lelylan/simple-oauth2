@@ -5,7 +5,7 @@ const Chance = require('chance');
 const accessTokenMixin = require('chance-access-token');
 const { isValid, isDate, differenceInSeconds } = require('date-fns');
 
-const oauth2Module = require('./../index.js');
+const oauth2Module = require('../index.js');
 const { has, hasIn } = require('./_property');
 const { createModuleConfig } = require('./_module-config');
 const { createAuthorizationServer } = require('./_authorization-server-mock');

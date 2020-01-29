@@ -266,6 +266,84 @@ test.serial('@getToken => resolves to an access token (header credentials)', asy
   t.deepEqual(token, getAccessToken());
 });
 
+test.serial('@getToken => resolves to an access token with custom module configuration (header credentials + loose encoding)', async (t) => {
+  const expectedRequestParams = {
+    grant_type: 'authorization_code',
+    code: 'code',
+    redirect_uri: 'http://callback.com',
+  };
+
+  const scopeOptions = getHeaderCredentialsScopeOptions({
+    reqheaders: {
+      Authorization: 'Basic dGhlICsgY2xpZW50ICsgaWQgJiBzeW1ib2xzOnRoZSArIGNsaWVudCArIHNlY3JldCAmIHN5bWJvbHM=',
+    },
+  });
+
+  const server = createAuthorizationServer('https://authorization-server.org:443');
+  const scope = server.tokenSuccess(scopeOptions, expectedRequestParams);
+
+  const config = createModuleConfig({
+    client: {
+      id: 'the + client + id & symbols',
+      secret: 'the + client + secret & symbols',
+    },
+    options: {
+      authorizationMethod: 'header',
+      credentialsEncodingMode: 'loose',
+    },
+  });
+
+  const tokenParams = {
+    code: 'code',
+    redirect_uri: 'http://callback.com',
+  };
+
+  const oauth2 = oauth2Module.create(config);
+  const token = await oauth2.authorizationCode.getToken(tokenParams);
+
+  scope.done();
+  t.deepEqual(token, getAccessToken());
+});
+
+test.serial('@getToken => resolves to an access token with custom module configuration (header credentials + strict encoding)', async (t) => {
+  const expectedRequestParams = {
+    grant_type: 'authorization_code',
+    code: 'code',
+    redirect_uri: 'http://callback.com',
+  };
+
+  const scopeOptions = getHeaderCredentialsScopeOptions({
+    reqheaders: {
+      Authorization: 'Basic dGhlKyUyQitjbGllbnQrJTJCK2lkKyUyNitzeW1ib2xzOnRoZSslMkIrY2xpZW50KyUyQitzZWNyZXQrJTI2K3N5bWJvbHM=',
+    },
+  });
+
+  const server = createAuthorizationServer('https://authorization-server.org:443');
+  const scope = server.tokenSuccess(scopeOptions, expectedRequestParams);
+
+  const config = createModuleConfig({
+    client: {
+      id: 'the + client + id & symbols',
+      secret: 'the + client + secret & symbols',
+    },
+    options: {
+      authorizationMethod: 'header',
+      credentialsEncodingMode: 'strict',
+    },
+  });
+
+  const tokenParams = {
+    code: 'code',
+    redirect_uri: 'http://callback.com',
+  };
+
+  const oauth2 = oauth2Module.create(config);
+  const token = await oauth2.authorizationCode.getToken(tokenParams);
+
+  scope.done();
+  t.deepEqual(token, getAccessToken());
+});
+
 test.serial('@getToken => resolves to an access token with custom module configuration (access token host and path)', async (t) => {
   const expectedRequestParams = {
     grant_type: 'authorization_code',
