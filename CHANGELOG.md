@@ -1,9 +1,9 @@
 # Changelog
 
 ## Next
-### New features
-* Add support to verify expired tokens with a custom expiration window (Useful to mitigate race conditions during the token refresh process)
-* Add support to configure the encoding mode of header credentials by using `options.credentialsEncodingMode`
+### 3.3.0
+* [#299](https://github.com/lelylan/simple-oauth2/pull/299) Add support to verify for token expiration with a custom expiration window
+* [#300](https://github.com/lelylan/simple-oauth2/pull/300) Add support to set the header credentials' encoding mode with `options.credentialsEncodingMode`.
 
 ## 3.2.0
 ### New features
