@@ -104,6 +104,84 @@ test.serial('@getToken => resolves to an access token (header credentials)', asy
   t.deepEqual(token, getAccessToken());
 });
 
+test.serial('@getToken => resolves to an access token with custom module configuration (header credentials + loose encoding)', async (t) => {
+  const tokenRequestParams = {
+    grant_type: 'password',
+    username: 'alice',
+    password: 'secret',
+  };
+
+  const scopeOptions = getHeaderCredentialsScopeOptions({
+    reqheaders: {
+      Authorization: 'Basic dGhlICsgY2xpZW50ICsgaWQgJiBzeW1ib2xzOnRoZSArIGNsaWVudCArIHNlY3JldCAmIHN5bWJvbHM=',
+    },
+  });
+
+  const server = createAuthorizationServer('https://authorization-server.org:443');
+  const scope = server.tokenSuccess(scopeOptions, tokenRequestParams);
+
+  const config = createModuleConfig({
+    client: {
+      id: 'the + client + id & symbols',
+      secret: 'the + client + secret & symbols',
+    },
+    options: {
+      authorizationMethod: 'header',
+      credentialsEncodingMode: 'loose',
+    },
+  });
+
+  const tokenParams = {
+    username: 'alice',
+    password: 'secret',
+  };
+
+  const oauth2 = oauth2Module.create(config);
+  const token = await oauth2.ownerPassword.getToken(tokenParams);
+
+  scope.done();
+  t.deepEqual(token, getAccessToken());
+});
+
+test.serial('@getToken => resolves to an access token with custom module configuration (header credentials + strict encoding)', async (t) => {
+  const tokenRequestParams = {
+    grant_type: 'password',
+    username: 'alice',
+    password: 'secret',
+  };
+
+  const scopeOptions = getHeaderCredentialsScopeOptions({
+    reqheaders: {
+      Authorization: 'Basic dGhlKyUyQitjbGllbnQrJTJCK2lkKyUyNitzeW1ib2xzOnRoZSslMkIrY2xpZW50KyUyQitzZWNyZXQrJTI2K3N5bWJvbHM=',
+    },
+  });
+
+  const server = createAuthorizationServer('https://authorization-server.org:443');
+  const scope = server.tokenSuccess(scopeOptions, tokenRequestParams);
+
+  const config = createModuleConfig({
+    client: {
+      id: 'the + client + id & symbols',
+      secret: 'the + client + secret & symbols',
+    },
+    options: {
+      authorizationMethod: 'header',
+      credentialsEncodingMode: 'strict',
+    },
+  });
+
+  const tokenParams = {
+    username: 'alice',
+    password: 'secret',
+  };
+
+  const oauth2 = oauth2Module.create(config);
+  const token = await oauth2.ownerPassword.getToken(tokenParams);
+
+  scope.done();
+  t.deepEqual(token, getAccessToken());
+});
+
 test.serial('@getToken => resolves to an access token with custom module configuration (access token host and path)', async (t) => {
   const tokenRequestParams = {
     grant_type: 'password',
