@@ -1,6 +1,6 @@
 # Contributing
 
-Fork the repo on github and send a pull requests with topic branches to the ```develop``` branch. Do not forget to provide specs to your contribution.
+Fork the repo on github and send a pull requests with feature branches to the ```develop``` branch. Do not forget to provide tests to your contribution.
 
 ## Repository
 

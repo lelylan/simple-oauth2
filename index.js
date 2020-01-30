@@ -28,7 +28,9 @@ const optionsSchema = Joi
     }).required(),
     http: Joi.object().unknown(true),
     options: Joi.object().keys({
-      bodyFormat: Joi.any().valid('form', 'json').default('form'),
+      scopeSeparator: Joi.string().default(' '),
+      credentialsEncodingMode: Joi.string().valid('strict', 'loose').default('strict'),
+      bodyFormat: Joi.string().valid('form', 'json').default('form'),
       authorizationMethod: Joi.any().valid('header', 'body').default('header'),
     }).default(),
   });

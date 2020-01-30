@@ -6,14 +6,29 @@
 * Upgrade @hapi/joi to v17 (requires Node 12)
 * Upgrade @hapi/wreck to v17 (requires Node 12)
 
+## 3.3.0
+* [#299](https://github.com/lelylan/simple-oauth2/pull/299) Add support to verify for token expiration with a custom expiration window
+* [#300](https://github.com/lelylan/simple-oauth2/pull/300) Add support to set the header credentials' encoding mode with `options.credentialsEncodingMode`.
+
+## 3.2.0
+### New features
+* [#298](https://github.com/lelylan/simple-oauth2/pull/298) Add support for custom scope separator by using `options.scopeSeparator` configuration
+
+### Improvements
+* [#290](https://github.com/lelylan/simple-oauth2/pull/290) Valid token presence is verified on access token creation
+* [#290](https://github.com/lelylan/simple-oauth2/pull/290) Valid tokenType presence is verified on `.revoke` calls
+
 ### Maintainance
-* Update ava test runner to v3
-* Update chance-access-token library to v2
-* Update nyc instrumentation library to v15
+* [#289](https://github.com/lelylan/simple-oauth2/pull/289) Remove dev lodash library from tests
+* [#285](https://github.com/lelylan/simple-oauth2/pull/285) Update ava test runner to v3
+* [#287](https://github.com/lelylan/simple-oauth2/pull/287) Update chance-access-token dev library to v2
+* [#288](https://github.com/lelylan/simple-oauth2/pull/288) Update nyc instrumentation dev library to v15
+* [#297](https://github.com/lelylan/simple-oauth2/pull/297) Add tests for empty credentials support
+* [#291](https://github.com/lelylan/simple-oauth2/pull/291) Improve library documentation. Separate API reference from main documentation
 
 ## 3.1.0
 ### New features
-* [#277](https://github.com/lelylan/simple-oauth2/pull/277) Add support to parse expire at property on access tokens as UNIX timestamps
+* [#277](https://github.com/lelylan/simple-oauth2/pull/277) Add support to parse access tokens's expire_at property as UNIX timestamps
 
 ## 3.0.1
 ### Publishing changes
