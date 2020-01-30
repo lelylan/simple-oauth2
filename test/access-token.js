@@ -3,10 +3,10 @@
 const test = require('ava');
 const Chance = require('chance');
 const accessTokenMixin = require('chance-access-token');
-const { has, hasIn } = require('lodash');
 const { isValid, isDate, differenceInSeconds } = require('date-fns');
 
-const oauth2Module = require('./../index.js');
+const oauth2Module = require('../index.js');
+const { has, hasIn } = require('./_property');
 const { createModuleConfig } = require('./_module-config');
 const { createAuthorizationServer } = require('./_authorization-server-mock');
 
@@ -19,6 +19,15 @@ const scopeOptions = {
     Authorization: 'Basic dGhlK2NsaWVudCtpZDp0aGUrY2xpZW50K3NlY3JldA==',
   },
 };
+
+test('@create => throws an error when no token payload is provided', (t) => {
+  const config = createModuleConfig();
+  const oauth2 = oauth2Module.create(config);
+
+  t.throws(() => oauth2.accessToken.create(), {
+    message: /Cannot create access token without a token to parse/,
+  });
+});
 
 test('@create => creates a new access token instance', (t) => {
   const config = createModuleConfig();
@@ -127,6 +136,23 @@ test('@expired => returns true when expired', (t) => {
   const accessToken = oauth2.accessToken.create(accessTokenResponse);
 
   t.true(accessToken.expired());
+});
+
+test('@expired => returns true if the token is expiring within the expiration window', (t) => {
+  const config = createModuleConfig();
+  const oauth2 = oauth2Module.create(config);
+
+  const accessTokenResponse = {
+    ...chance.accessToken({
+      expireMode: 'expires_in',
+    }),
+    expires_in: 10,
+  };
+
+  const expirationWindowSeconds = 11;
+  const accessToken = oauth2.accessToken.create(accessTokenResponse);
+
+  t.true(accessToken.expired(expirationWindowSeconds));
 });
 
 test('@expired => returns false when not expired', (t) => {
@@ -256,6 +282,37 @@ test.serial('@refresh => creates a new access token with custom params', async (
   t.true(has(refreshAccessToken.token, 'access_token'));
 });
 
+test.serial('@refresh => creates a new access token with custom module configuration (scope separator)', async (t) => {
+  const config = createModuleConfig({
+    options: {
+      scopeSeparator: ',',
+    },
+  });
+
+  const oauth2 = oauth2Module.create(config);
+
+  const accessTokenResponse = chance.accessToken({
+    expireMode: 'expires_in',
+  });
+
+  const refreshParams = {
+    grant_type: 'refresh_token',
+    scope: 'scope-a,scope-b',
+    refresh_token: accessTokenResponse.refresh_token,
+  };
+
+  const server = createAuthorizationServer('https://authorization-server.org:443');
+  const scope = server.tokenSuccess(scopeOptions, refreshParams);
+
+  const accessToken = oauth2.accessToken.create(accessTokenResponse);
+  const refreshAccessToken = await accessToken.refresh({
+    scope: ['scope-a', 'scope-b'],
+  });
+
+  scope.done();
+  t.true(has(refreshAccessToken.token, 'access_token'));
+});
+
 test.serial('@refresh => creates a new access token with a custom token path', async (t) => {
   const config = createModuleConfig({
     auth: {
@@ -357,6 +414,18 @@ test.serial('@revoke => performs a token revoke with a custom revoke path', asyn
   await t.notThrowsAsync(() => accessToken.revoke('refresh_token'));
 
   scope.done();
+});
+
+test.serial('@revoke => throws an error with an invalid tokenType option', async (t) => {
+  const config = createModuleConfig();
+  const oauth2 = oauth2Module.create(config);
+
+  const accessTokenResponse = chance.accessToken();
+  const accessToken = oauth2.accessToken.create(accessTokenResponse);
+
+  await t.throwsAsync(() => accessToken.revoke('invalid_value'), {
+    message: /Invalid token type. Only access_token or refresh_token are valid values/,
+  });
 });
 
 test.serial('@revokeAll => revokes both the access and refresh tokens', async (t) => {
