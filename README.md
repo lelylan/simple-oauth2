@@ -56,6 +56,7 @@ const credentials = {
   },
   auth: {
     tokenHost: 'https://api.oauth.com'
+    tokenPath: '<token endpoint path>'
   }
 };
 
