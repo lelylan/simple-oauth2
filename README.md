@@ -61,6 +61,7 @@ const credentials = {
 
 const oauth2 = require('simple-oauth2').create(credentials);
 ```
+For more detailed configuration information see [API Documentation](./API.md)
 
 ### OAuth2 Supported grants
 
