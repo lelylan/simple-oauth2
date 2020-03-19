@@ -32,6 +32,7 @@ const optionsSchema = Joi
       credentialsEncodingMode: Joi.string().valid('strict', 'loose').default('strict'),
       bodyFormat: Joi.string().valid('form', 'json').default('form'),
       authorizationMethod: Joi.any().valid('header', 'body').default('header'),
+      generateState: Joi.boolean().default(false),
     }).default(),
   });
 

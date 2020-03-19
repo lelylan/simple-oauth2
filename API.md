@@ -31,6 +31,7 @@ Simple OAuth2 accepts an object with the following params.
   * `credentialsEncodingMode` Setup how credentials are encoded when `options.authorizationMode` is **header**. Use **loose** if your provider doesn't conform the [OAuth2 specification](https://tools.ietf.org/html/rfc6749#section-2.3.1). Defaults to **strict**
   * `bodyFormat` - Request's body data format. Valid options are `form` or `json`. Defaults to **form**
   * `authorizationMethod` - Method used to send the *client.id*/*client.secret* authorization params at the token request. Valid options are `header` or `body`. If set to **body**, the **bodyFormat** option will be used to format the credentials. Defaults to **header**
+  * `generateState` - For Authorization Code Grant requests, generate a `state` parameter that can later be validated before the `getToken` request in accordance to the [OAuth2 specification](https://tools.ietf.org/html/rfc6749#section-10.12). Defaults to **false**
 
 ## Module
 ### .authorizationCode
@@ -41,7 +42,7 @@ Creates the authorization URL from the *client configuration* and the *authorize
 
 * `redirectURI` String representing the registered application URI where the user is redirected after authentication
 * `scope` String or array of strings representing the application privileges
-* `state` String representing an opaque value used by the client to main the state between the request and the callback
+* `state` String representing an opaque value used by the client to main the state between the request and the callback. If using the `generateState` option, passing in a `state` value is ignored.
 
 Additional options will be automatically serialized as query params in the resulting URL.
 
@@ -52,6 +53,8 @@ Get a new access token using the current grant type.
   * `code` Authorization code received by the callback URL
   * `redirectURI` Application callback URL
   * `[scope]` Optional string or array including a subset of the original client scopes to request
+  * `redirect_response_url` Optional Used for `state` validation, URL returned from the Authorization server containing the provided `state` parameter.
+  * `authorize_url` Optional URL generated from the `authorizeURL` function. When combined with the `redirect_response_url` will validate that the `state` parameter matches between API calls.
 
 Additional options will be automatically serialized as params for the token request.
 
