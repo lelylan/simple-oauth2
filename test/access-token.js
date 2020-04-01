@@ -22,7 +22,7 @@ const scopeOptions = {
 
 test('@create => throws an error when no token payload is provided', (t) => {
   const config = createModuleConfig();
-  const oauth2 = oauth2Module.create(config);
+  const oauth2 = oauth2Module.passwordOwner(config);
 
   t.throws(() => oauth2.accessToken.create(), {
     message: /Cannot create access token without a token to parse/,
@@ -31,7 +31,7 @@ test('@create => throws an error when no token payload is provided', (t) => {
 
 test('@create => creates a new access token instance', (t) => {
   const config = createModuleConfig();
-  const oauth2 = oauth2Module.create(config);
+  const oauth2 = oauth2Module.passwordOwner(config);
 
   const accessTokenResponse = chance.accessToken();
   const accessToken = oauth2.accessToken.create(accessTokenResponse);
@@ -45,7 +45,7 @@ test('@create => creates a new access token instance', (t) => {
 
 test('@create => do not reassigns the expires at property when is already a date', (t) => {
   const config = createModuleConfig();
-  const oauth2 = oauth2Module.create(config);
+  const oauth2 = oauth2Module.passwordOwner(config);
 
   const accessTokenResponse = chance.accessToken({
     expired: true,
@@ -61,7 +61,7 @@ test('@create => do not reassigns the expires at property when is already a date
 
 test('@create => parses the expires at property when is UNIX timestamp in seconds', (t) => {
   const config = createModuleConfig();
-  const oauth2 = oauth2Module.create(config);
+  const oauth2 = oauth2Module.passwordOwner(config);
 
   const accessTokenResponse = chance.accessToken({
     expired: true,
@@ -77,7 +77,7 @@ test('@create => parses the expires at property when is UNIX timestamp in second
 
 test('@create => parses the expires at property when is ISO time', (t) => {
   const config = createModuleConfig();
-  const oauth2 = oauth2Module.create(config);
+  const oauth2 = oauth2Module.passwordOwner(config);
 
   const accessTokenResponse = chance.accessToken({
     expired: true,
@@ -93,7 +93,7 @@ test('@create => parses the expires at property when is ISO time', (t) => {
 
 test('@create => computes the expires at property when only expires in is present', (t) => {
   const config = createModuleConfig();
-  const oauth2 = oauth2Module.create(config);
+  const oauth2 = oauth2Module.passwordOwner(config);
 
   const accessTokenResponse = chance.accessToken({
     expireMode: 'expires_in',
@@ -112,7 +112,7 @@ test('@create => computes the expires at property when only expires in is presen
 
 test('@create => ignores the expiration parsing when no expiration property is present', (t) => {
   const config = createModuleConfig();
-  const oauth2 = oauth2Module.create(config);
+  const oauth2 = oauth2Module.passwordOwner(config);
 
   const accessTokenResponse = chance.accessToken({
     expireMode: 'no_expiration',
@@ -126,7 +126,7 @@ test('@create => ignores the expiration parsing when no expiration property is p
 
 test('@expired => returns true when expired', (t) => {
   const config = createModuleConfig();
-  const oauth2 = oauth2Module.create(config);
+  const oauth2 = oauth2Module.passwordOwner(config);
 
   const accessTokenResponse = chance.accessToken({
     expired: true,
@@ -140,7 +140,7 @@ test('@expired => returns true when expired', (t) => {
 
 test('@expired => returns true if the token is expiring within the expiration window', (t) => {
   const config = createModuleConfig();
-  const oauth2 = oauth2Module.create(config);
+  const oauth2 = oauth2Module.passwordOwner(config);
 
   const accessTokenResponse = {
     ...chance.accessToken({
@@ -157,7 +157,7 @@ test('@expired => returns true if the token is expiring within the expiration wi
 
 test('@expired => returns false when not expired', (t) => {
   const config = createModuleConfig();
-  const oauth2 = oauth2Module.create(config);
+  const oauth2 = oauth2Module.passwordOwner(config);
 
   const accessTokenResponse = chance.accessToken({
     expired: false,
@@ -171,7 +171,7 @@ test('@expired => returns false when not expired', (t) => {
 
 test('@expired => returns false when no expiration property is present', (t) => {
   const config = createModuleConfig();
-  const oauth2 = oauth2Module.create(config);
+  const oauth2 = oauth2Module.passwordOwner(config);
 
   const accessTokenResponse = chance.accessToken({
     expireMode: 'no_expiration',
@@ -184,7 +184,7 @@ test('@expired => returns false when no expiration property is present', (t) => 
 
 test.serial('@refresh => creates a new access token with default params', async (t) => {
   const config = createModuleConfig();
-  const oauth2 = oauth2Module.create(config);
+  const oauth2 = oauth2Module.passwordOwner(config);
 
   const accessTokenResponse = chance.accessToken({
     expireMode: 'expires_in',
@@ -207,7 +207,7 @@ test.serial('@refresh => creates a new access token with default params', async 
 
 test.serial('@refresh => creates a new access token with a custom grant type', async (t) => {
   const config = createModuleConfig();
-  const oauth2 = oauth2Module.create(config);
+  const oauth2 = oauth2Module.passwordOwner(config);
 
   const accessTokenResponse = chance.accessToken({
     expireMode: 'expires_in',
@@ -232,7 +232,7 @@ test.serial('@refresh => creates a new access token with a custom grant type', a
 
 test.serial('@refresh => creates a new access token with multiple scopes', async (t) => {
   const config = createModuleConfig();
-  const oauth2 = oauth2Module.create(config);
+  const oauth2 = oauth2Module.passwordOwner(config);
 
   const accessTokenResponse = chance.accessToken({
     expireMode: 'expires_in',
@@ -258,7 +258,7 @@ test.serial('@refresh => creates a new access token with multiple scopes', async
 
 test.serial('@refresh => creates a new access token with custom params', async (t) => {
   const config = createModuleConfig();
-  const oauth2 = oauth2Module.create(config);
+  const oauth2 = oauth2Module.passwordOwner(config);
 
   const accessTokenResponse = chance.accessToken({
     expireMode: 'expires_in',
@@ -289,7 +289,7 @@ test.serial('@refresh => creates a new access token with custom module configura
     },
   });
 
-  const oauth2 = oauth2Module.create(config);
+  const oauth2 = oauth2Module.passwordOwner(config);
 
   const accessTokenResponse = chance.accessToken({
     expireMode: 'expires_in',
@@ -324,7 +324,7 @@ test.serial('@refresh => creates a new access token with a custom token path', a
     expireMode: 'expires_in',
   });
 
-  const oauth2 = oauth2Module.create(config);
+  const oauth2 = oauth2Module.passwordOwner(config);
 
   const refreshParams = {
     grant_type: 'refresh_token',
@@ -344,7 +344,7 @@ test.serial('@refresh => creates a new access token with a custom token path', a
 
 test.serial('@revoke => performs the access token revoke', async (t) => {
   const config = createModuleConfig();
-  const oauth2 = oauth2Module.create(config);
+  const oauth2 = oauth2Module.passwordOwner(config);
 
   const accessTokenResponse = chance.accessToken({
     expireMode: 'expires_in',
@@ -367,7 +367,7 @@ test.serial('@revoke => performs the access token revoke', async (t) => {
 
 test.serial('@revoke => performs the refresh token revoke', async (t) => {
   const config = createModuleConfig();
-  const oauth2 = oauth2Module.create(config);
+  const oauth2 = oauth2Module.passwordOwner(config);
 
   const accessTokenResponse = chance.accessToken({
     expireMode: 'expires_in',
@@ -395,7 +395,7 @@ test.serial('@revoke => performs a token revoke with a custom revoke path', asyn
     },
   });
 
-  const oauth2 = oauth2Module.create(config);
+  const oauth2 = oauth2Module.passwordOwner(config);
 
   const accessTokenResponse = chance.accessToken({
     expireMode: 'expires_in',
@@ -418,7 +418,7 @@ test.serial('@revoke => performs a token revoke with a custom revoke path', asyn
 
 test.serial('@revoke => throws an error with an invalid tokenType option', async (t) => {
   const config = createModuleConfig();
-  const oauth2 = oauth2Module.create(config);
+  const oauth2 = oauth2Module.passwordOwner(config);
 
   const accessTokenResponse = chance.accessToken();
   const accessToken = oauth2.accessToken.create(accessTokenResponse);
@@ -430,7 +430,7 @@ test.serial('@revoke => throws an error with an invalid tokenType option', async
 
 test.serial('@revokeAll => revokes both the access and refresh tokens', async (t) => {
   const config = createModuleConfig();
-  const oauth2 = oauth2Module.create(config);
+  const oauth2 = oauth2Module.passwordOwner(config);
 
   const accessTokenResponse = chance.accessToken({
     expireMode: 'expires_in',
@@ -458,7 +458,7 @@ test.serial('@revokeAll => revokes both the access and refresh tokens', async (t
 
 test.serial('@revokeAll => revokes the refresh token only if the access token is successfully revoked', async (t) => {
   const config = createModuleConfig();
-  const oauth2 = oauth2Module.create(config);
+  const oauth2 = oauth2Module.passwordOwner(config);
 
   const accessTokenResponse = chance.accessToken({
     expireMode: 'expires_in',

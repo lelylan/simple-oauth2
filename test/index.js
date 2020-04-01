@@ -6,13 +6,13 @@ const oauth2Module = require('../index');
 const { createModuleConfig } = require('./_module-config');
 
 test('@create => throws a validation error when no configuration is provided', (t) => {
-  t.throws(() => oauth2Module.create());
+  t.throws(() => oauth2Module.passwordOwner());
 });
 
 test('@create => creates a new instance with the minimal required configuration', (t) => {
   const config = createModuleConfig();
 
-  t.notThrows(() => oauth2Module.create(config));
+  t.notThrows(() => oauth2Module.passwordOwner(config));
 });
 
 test('@create => creates a new instance with empty credentials', (t) => {
@@ -23,7 +23,7 @@ test('@create => creates a new instance with empty credentials', (t) => {
     },
   });
 
-  t.notThrows(() => oauth2Module.create(config));
+  t.notThrows(() => oauth2Module.passwordOwner(config));
 });
 
 test('@create => creates a new instance with visual non-control characters', (t) => {
@@ -34,5 +34,5 @@ test('@create => creates a new instance with visual non-control characters', (t)
     },
   });
 
-  t.notThrows(() => oauth2Module.create(config));
+  t.notThrows(() => oauth2Module.passwordOwner(config));
 });

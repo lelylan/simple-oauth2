@@ -8,24 +8,46 @@ const ClientCredentials = require('./lib/grants/client-credentials');
 const AccessToken = require('./lib/access-token');
 const ModuleSchema = require('./lib/module-schema');
 
+function clientCredentialsFactory(opts) {
+  const options = Joi.attempt(opts, ModuleSchema, 'Invalid options provided to simple-oauth2');
+
+  const client = new Client(options);
+  const module = new ClientCredentials(options, client);
+
+  module.accessToken = {
+    create: AccessToken.factory(options, client),
+  };
+
+  return module;
+}
+
+function passwordOwnerFactory(opts) {
+  const options = Joi.attempt(opts, ModuleSchema, 'Invalid options provided to simple-oauth2');
+
+  const client = new Client(options);
+  const module = new PasswordOwner(options, client);
+
+  module.accessToken = {
+    create: AccessToken.factory(options, client),
+  };
+
+  return module;
+}
+
+function authorizationCodeFactory(opts) {
+  const options = Joi.attempt(opts, ModuleSchema, 'Invalid options provided to simple-oauth2');
+  const client = new Client(options);
+  const module = new AuthorizationCode(options, client);
+
+  module.accessToken = {
+    create: AccessToken.factory(options, client),
+  };
+
+  return module;
+}
+
 module.exports = {
-
-  /**
-   * Creates a new simple-oauth2 client with the provided configuration
-   * @param  {Object}  opts Module options as defined in schema
-   * @returns {Object} The simple-oauth2 client
-   */
-  create(opts = {}) {
-    const options = Joi.attempt(opts, ModuleSchema, 'Invalid options provided to simple-oauth2');
-    const client = new Client(options);
-
-    return Object.freeze({
-      accessToken: {
-        create: AccessToken.factory(options, client),
-      },
-      ownerPassword: new PasswordOwner(options, client),
-      authorizationCode: new AuthorizationCode(options, client),
-      clientCredentials: new ClientCredentials(options, client),
-    });
-  },
+  passwordOwner: passwordOwnerFactory,
+  clientCredentials: clientCredentialsFactory,
+  authorizationCode: authorizationCodeFactory,
 };
