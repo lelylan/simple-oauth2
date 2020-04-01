@@ -2,6 +2,17 @@
 
 ## Next
 
+## 3.4.0
+### Improvements
+* [#301](https://github.com/lelylan/simple-oauth2/pull/301) Refactor module schema to reuse constants across the codebase
+* [#302](https://github.com/lelylan/simple-oauth2/pull/302) Extract access token parsing functionality from token class
+* [#310](https://github.com/lelylan/simple-oauth2/pull/310) [#312](https://github.com/lelylan/simple-oauth2/pull/312) Change how date-fns is imported do make it compatible with webpack
+
+### Maintainance
+* [#303](https://github.com/lelylan/simple-oauth2/pull/303) [#304](https://github.com/lelylan/simple-oauth2/pull/304) Add more references to API documentation on library README
+* [#306](https://github.com/lelylan/simple-oauth2/pull/306) Add documentation for URL resolution on host/paths configurations
+* [#307](https://github.com/lelylan/simple-oauth2/pull/307) Replace travis CI with github actions
+
 ## 3.3.0
 * [#299](https://github.com/lelylan/simple-oauth2/pull/299) Add support to verify for token expiration with a custom expiration window
 * [#300](https://github.com/lelylan/simple-oauth2/pull/300) Add support to set the header credentials' encoding mode with `options.credentialsEncodingMode`.
