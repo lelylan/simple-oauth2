@@ -2,7 +2,7 @@
 
 const test = require('ava');
 
-const oauth2Module = require('./../index.js');
+const oauth2Module = require('../index');
 const { createModuleConfig } = require('./_module-config');
 
 test('@create => throws a validation error when no configuration is provided', (t) => {
