@@ -2,6 +2,8 @@
 
 ## Next
 ### Breaking changes
+* Dropped support for Node 12
+* Use private class fields for undocumented "private" properties
 * Upgrade @hapi/hoek to v9 (requires Node 12)
 * Upgrade @hapi/joi to v17 (requires Node 12)
 * Upgrade @hapi/wreck to v17 (requires Node 12)
