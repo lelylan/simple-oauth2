@@ -40,8 +40,8 @@ const optionsSchema = Joi.object().keys({
     .string()
     .valid(...Object.values(authorizationMethodEnum))
     .default(authorizationMethodEnum.HEADER),
-      generateState: Joi.boolean().default(false),
-    }).default();
+  generateState: Joi.boolean().default(false),
+}).default();
 
 const moduleOptionsSchema = Joi.object().keys({
   client: clientSchema,
