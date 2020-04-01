@@ -1,7 +1,7 @@
 'use strict';
 
 const test = require('ava');
-const oauth2Module = require('./../index');
+const oauth2Module = require('../index');
 const { createModuleConfig } = require('./_module-config');
 const { createAuthorizationServer, getHeaderCredentialsScopeOptions } = require('./_authorization-server-mock');
 

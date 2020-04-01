@@ -1,7 +1,19 @@
 # Changelog
 
 ## Next
-### 3.3.0
+### Breaking changes
+* Dropped support for Node 12
+* Use private class fields for undocumented "private" properties
+* Module public API is now freezed
+* Access token `.token` public API is now freezed
+
+### Maintainance
+* Upgrade @hapi/hoek to v9 (requires Node 12)
+* Upgrade @hapi/joi to v17 (requires Node 12)
+* Upgrade @hapi/wreck to v17 (requires Node 12)
+* Upgrade nock dev library to v12
+
+## 3.3.0
 * [#299](https://github.com/lelylan/simple-oauth2/pull/299) Add support to verify for token expiration with a custom expiration window
 * [#300](https://github.com/lelylan/simple-oauth2/pull/300) Add support to set the header credentials' encoding mode with `options.credentialsEncodingMode`.
 
@@ -33,7 +45,7 @@
 ### Breaking changes
 * [#260](https://github.com/lelylan/simple-oauth2/pull/260) Use @hapi/wreck v15. This version changes how a **baseUrl** is resolved against a **path**, affecting how `auth.tokenHost`, `auth.tokenPath`, `auth.authorizeHost` and `auth.authorizePath` are resolved when using the `.getToken` methods. See [@hapi/wreck](https://github.com/hapijs/wreck/issues/244) breaking changes to better understand potential issues that may arise.
 
-* [#260](https://github.com/lelylan/simple-oauth2/pull/260) Use new Node.js WHATWG URL api instead of the legacy url module. This change affects how `auth.authorizeHost` and `auth.authorizePath` are resolved when using the `authorizationCode.authorizeURL` method.
+* [#260](https://github.com/lelylan/simple-oauth2/pull/260) Use new [Node.js WHATWG URL](https://nodejs.org/dist/latest-v12.x/docs/api/url.html#url_constructor_new_url_input_base) api instead of the legacy url module. This change affects how `auth.authorizeHost` and `auth.authorizePath` are resolved when using the `authorizationCode.authorizeURL` method.
 
 * [#256](https://github.com/lelylan/simple-oauth2/pull/256) Users can override the `grant_type` parameter when performing a token exchange throught the `.getToken` method. Useful in cases where the auth server uses a value different from the standard.
 

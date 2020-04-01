@@ -9,15 +9,15 @@ Simple OAuth2 accepts an object with the following params.
 * `client` - required object with the following properties:
   * `id` - Service registered client id. When required by the [spec](https://tools.ietf.org/html/rfc6749#appendix-B) this value will be automatically encoded. Required
   * `secret` - Service registered client secret. When required by the [spec](https://tools.ietf.org/html/rfc6749#appendix-B) this value will be automatically encoded. Required
-  * `idParamName` - Parameter name used to send the client id. Default to **client_id**
-  * `secretParamName` - Parameter name used to send the client secret. Default to **client_secret**
+  * `idParamName` - Parameter name used to send the client id. Defaults to **client_id**
+  * `secretParamName` - Parameter name used to send the client secret. Defaults to **client_secret**
 
 * `auth` - required object with the following properties:
-  * `tokenHost` - URL used to obtain access tokens. Required
-  * `tokenPath` - URL path to obtain access tokens. Default to **/oauth/token**
-  * `revokePath` - URL path to revoke access tokens. Default to **/oauth/revoke**
-  * `authorizeHost` - URL used to request an *authorization code*. Default to the value set on `auth.tokenHost`
-  * `authorizePath` - URL path to request an *authorization code*. Default to **/oauth/authorize**
+  * `tokenHost` - Base URL used to obtain access tokens. Required
+  * `tokenPath` - URL path to obtain access tokens (See [url resolution notes](#url-resolution)). Defaults to **/oauth/token**
+  * `revokePath` - URL path to revoke access tokens (See [url resolution notes](#url-resolution)). Defaults to **/oauth/revoke**
+  * `authorizeHost` - Base URL used to request an *authorization code*. Defaults to `auth.tokenHost` value
+  * `authorizePath` - URL path to request an *authorization code* (See [url resolution notes](#url-resolution)). Defaults to **/oauth/authorize**
 
 * `http` optional object used to set default options to the internal http library ([wreck](https://github.com/hapijs/wreck)). All options except **baseUrl** are allowed
   * `json`: JSON response parsing mode. Defaults to **strict**
@@ -32,6 +32,9 @@ Simple OAuth2 accepts an object with the following params.
   * `bodyFormat` - Request's body data format. Valid options are `form` or `json`. Defaults to **form**
   * `authorizationMethod` - Method used to send the *client.id*/*client.secret* authorization params at the token request. Valid options are `header` or `body`. If set to **body**, the **bodyFormat** option will be used to format the credentials. Defaults to **header**
   * `generateState` - For Authorization Code Grant requests, generate a `state` parameter that can later be validated before the `getToken` request in accordance to the [OAuth2 specification](https://tools.ietf.org/html/rfc6749#section-10.12). Defaults to **false**
+
+### URL resolution
+URL paths are relatively resolved to their corresponding host property using the [Node WHATWG URL](https://nodejs.org/dist/latest-v12.x/docs/api/url.html#url_constructor_new_url_input_base) resolution algorithm.
 
 ## Module
 ### .authorizationCode
