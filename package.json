@@ -17,7 +17,7 @@
     "url": "https://github.com/lelylan/simple-oauth2"
   },
   "engine": {
-    "node": ">=8"
+    "node": ">=12"
   },
   "scripts": {
     "pretest": "npm run lint",
@@ -45,22 +45,23 @@
     "credentials"
   ],
   "dependencies": {
-    "@hapi/hoek": "^8.5.0",
-    "@hapi/joi": "^16.1.8",
-    "@hapi/wreck": "^15.1.0",
-    "date-fns": "^2.9.0",
+    "@hapi/hoek": "^9.0.4",
+    "@hapi/joi": "^17.1.1",
+    "@hapi/wreck": "^17.0.0",
+    "date-fns": "^2.11.1",
     "debug": "^4.1.1"
   },
   "devDependencies": {
-    "@hapi/boom": "^8.0.1",
-    "ava": "^3.1.0",
+    "@hapi/boom": "^9.1.0",
+    "ava": "^3.5.2",
+    "babel-eslint": "^10.1.0",
     "chance": "^1.1.4",
     "chance-access-token": "^2.0.0",
     "doctoc": "^1.4.0",
     "eslint": "^6.8.0",
-    "eslint-config-airbnb-base": "^14.0.0",
-    "eslint-plugin-import": "^2.20.0",
-    "nock": "^11.7.2",
+    "eslint-config-airbnb-base": "^14.1.0",
+    "eslint-plugin-import": "^2.20.2",
+    "nock": "^11.9.1",
     "nyc": "^15.0.0"
   }
 }
