@@ -11,6 +11,7 @@
 * Upgrade @hapi/hoek to v9 (requires Node 12)
 * Upgrade @hapi/joi to v17 (requires Node 12)
 * Upgrade @hapi/wreck to v17 (requires Node 12)
+* Upgrade nock dev library to v12
 
 ## 3.3.0
 * [#299](https://github.com/lelylan/simple-oauth2/pull/299) Add support to verify for token expiration with a custom expiration window
