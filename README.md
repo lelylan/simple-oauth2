@@ -154,6 +154,8 @@ run();
 
 When a token expires we need to refresh it. Simple OAuth2 offers the AccessToken class that add a couple of useful methods to refresh the access token when it is expired.
 
+**Tokens obtained with the Client Credentials Flow may not be refreshed!** Just fetch a new token, when it's expired.
+
 ```javascript
 async function run() {
   const tokenObject = {
