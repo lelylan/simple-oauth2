@@ -173,6 +173,86 @@ test('@authorizeURL => returns the authorization URL with a custom module config
   t.is(actual, expected);
 });
 
+test('@authorizeURL => generates a state when a custom module configuration (generateState)', (t) => {
+  const authorizeParams = {
+    redirect_uri: 'http://localhost:3000/callback',
+    scope: ['user', 'account'],
+  };
+
+  const config = createModuleConfig({
+    options: {
+      generateState: true,
+    },
+  });
+
+  const oauth2 = oauth2Module.create(config);
+
+  const actual = oauth2.authorizationCode.authorizeURL(authorizeParams);
+  const expectedState = (new URL(actual)).searchParams.get('state');
+  const expected = `https://authorization-server.org/oauth/authorize?response_type=code&client_id=the%20client%20id&redirect_uri=${encodeURIComponent('http://localhost:3000/callback')}&scope=user%20account&state=${expectedState}`;
+
+  t.is(actual, expected);
+});
+
+test('@getToken => validates that the state found in the returned refererURL matches the generated state in the authorizeURL and should not throw an exception', async (t) => {
+  const expectedRequestParams = {
+    grant_type: 'authorization_code',
+    code: 'code',
+    redirect_uri: 'http://callback.com',
+    client_id: 'the client id',
+    client_secret: 'the client secret',
+  };
+
+  const scopeOptions = getFormEncodingScopeOptions();
+  const server = createAuthorizationServer('https://authorization-server.org:443');
+  const scope = server.tokenSuccess(scopeOptions, expectedRequestParams);
+
+  const config = createModuleConfig({
+    options: {
+      bodyFormat: 'form',
+      authorizationMethod: 'body',
+    },
+  });
+
+  const tokenParams = {
+    code: 'code',
+    redirect_uri: 'http://callback.com',
+    redirect_response_url: 'http://callback.com?state=the-generated-state',
+    authorize_url: 'https://authorization-server.org:443/oauth2/token?state=the-generated-state',
+  };
+
+  const oauth2 = oauth2Module.create(config);
+  const token = await oauth2.authorizationCode.getToken(tokenParams);
+
+  scope.done();
+  t.deepEqual(token, getAccessToken());
+});
+
+test('@getToken => rejects mismatched state by throwing an exception', async (t) => {
+  const config = createModuleConfig({
+    options: {
+      bodyFormat: 'form',
+      authorizationMethod: 'body',
+    },
+  });
+
+  const tokenParams = {
+    code: 'code',
+    redirect_uri: 'http://callback.com',
+    redirect_response_url: 'http://callback.com?state=the-generated-state',
+    authorize_url: 'https://authorization-server.org:443/oauth2/token?state=intercepted-state',
+  };
+
+  const oauth2 = oauth2Module.create(config);
+
+  await t.throwsAsync(async () => {
+    await oauth2.authorizationCode.getToken(tokenParams);
+  }, {
+    instanceOf: Error,
+    message: 'State in refererURL does not match the original state from authorizeURL. This may be an indicator of a CSRF attack.',
+  });
+});
+
 test.serial('@getToken => resolves to an access token (body credentials and JSON format)', async (t) => {
   const expectedRequestParams = {
     grant_type: 'authorization_code',
