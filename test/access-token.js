@@ -5,9 +5,10 @@ const Chance = require('chance');
 const accessTokenMixin = require('chance-access-token');
 const { isValid, isDate, differenceInSeconds } = require('date-fns');
 
-const oauth2Module = require('../index.js');
+const AccessToken = require('../lib/access-token');
+const Client = require('../lib/client');
 const { has, hasIn } = require('./_property');
-const { createModuleConfig } = require('./_module-config');
+const { createModuleConfigWithDefaults: createModuleConfig } = require('./_module-config');
 const { createAuthorizationServer } = require('./_authorization-server-mock');
 
 const chance = new Chance();
@@ -22,19 +23,19 @@ const scopeOptions = {
 
 test('@create => throws an error when no token payload is provided', (t) => {
   const config = createModuleConfig();
-  const oauth2 = oauth2Module.create(config);
+  const client = new Client(config);
 
-  t.throws(() => oauth2.accessToken.create(), {
+  t.throws(() => new AccessToken(config, client), {
     message: /Cannot create access token without a token to parse/,
   });
 });
 
 test('@create => creates a new access token instance', (t) => {
   const config = createModuleConfig();
-  const oauth2 = oauth2Module.create(config);
+  const client = new Client(config);
 
   const accessTokenResponse = chance.accessToken();
-  const accessToken = oauth2.accessToken.create(accessTokenResponse);
+  const accessToken = new AccessToken(config, client, accessTokenResponse);
 
   t.truthy(accessToken);
   t.true(has(accessToken, 'token'));
@@ -45,7 +46,7 @@ test('@create => creates a new access token instance', (t) => {
 
 test('@create => do not reassigns the expires at property when is already a date', (t) => {
   const config = createModuleConfig();
-  const oauth2 = oauth2Module.create(config);
+  const client = new Client(config);
 
   const accessTokenResponse = chance.accessToken({
     expired: true,
@@ -53,7 +54,7 @@ test('@create => do not reassigns the expires at property when is already a date
     expireMode: 'expires_at',
   });
 
-  const accessToken = oauth2.accessToken.create(accessTokenResponse);
+  const accessToken = new AccessToken(config, client, accessTokenResponse);
 
   t.true(isDate(accessToken.token.expires_at));
   t.true(isValid(accessToken.token.expires_at));
@@ -61,7 +62,7 @@ test('@create => do not reassigns the expires at property when is already a date
 
 test('@create => parses the expires at property when is UNIX timestamp in seconds', (t) => {
   const config = createModuleConfig();
-  const oauth2 = oauth2Module.create(config);
+  const client = new Client(config);
 
   const accessTokenResponse = chance.accessToken({
     expired: true,
@@ -69,7 +70,7 @@ test('@create => parses the expires at property when is UNIX timestamp in second
     expireMode: 'expires_at',
   });
 
-  const accessToken = oauth2.accessToken.create(accessTokenResponse);
+  const accessToken = new AccessToken(config, client, accessTokenResponse);
 
   t.true(isDate(accessToken.token.expires_at));
   t.true(isValid(accessToken.token.expires_at));
@@ -77,7 +78,7 @@ test('@create => parses the expires at property when is UNIX timestamp in second
 
 test('@create => parses the expires at property when is ISO time', (t) => {
   const config = createModuleConfig();
-  const oauth2 = oauth2Module.create(config);
+  const client = new Client(config);
 
   const accessTokenResponse = chance.accessToken({
     expired: true,
@@ -85,7 +86,7 @@ test('@create => parses the expires at property when is ISO time', (t) => {
     expireMode: 'expires_at',
   });
 
-  const accessToken = oauth2.accessToken.create(accessTokenResponse);
+  const accessToken = new AccessToken(config, client, accessTokenResponse);
 
   t.true(isDate(accessToken.token.expires_at));
   t.true(isValid(accessToken.token.expires_at));
@@ -93,14 +94,14 @@ test('@create => parses the expires at property when is ISO time', (t) => {
 
 test('@create => computes the expires at property when only expires in is present', (t) => {
   const config = createModuleConfig();
-  const oauth2 = oauth2Module.create(config);
+  const client = new Client(config);
 
   const accessTokenResponse = chance.accessToken({
     expireMode: 'expires_in',
   });
 
   const today = new Date();
-  const accessToken = oauth2.accessToken.create(accessTokenResponse);
+  const accessToken = new AccessToken(config, client, accessTokenResponse);
 
   t.true(isDate(accessToken.token.expires_at));
   t.true(isValid(accessToken.token.expires_at));
@@ -112,13 +113,13 @@ test('@create => computes the expires at property when only expires in is presen
 
 test('@create => ignores the expiration parsing when no expiration property is present', (t) => {
   const config = createModuleConfig();
-  const oauth2 = oauth2Module.create(config);
+  const client = new Client(config);
 
   const accessTokenResponse = chance.accessToken({
     expireMode: 'no_expiration',
   });
 
-  const accessToken = oauth2.accessToken.create(accessTokenResponse);
+  const accessToken = new AccessToken(config, client, accessTokenResponse);
 
   t.not(has(accessToken.token, 'expires_in'));
   t.not(has(accessToken.token, 'expires_at'));
@@ -126,21 +127,21 @@ test('@create => ignores the expiration parsing when no expiration property is p
 
 test('@expired => returns true when expired', (t) => {
   const config = createModuleConfig();
-  const oauth2 = oauth2Module.create(config);
+  const client = new Client(config);
 
   const accessTokenResponse = chance.accessToken({
     expired: true,
     expireMode: 'expires_at',
   });
 
-  const accessToken = oauth2.accessToken.create(accessTokenResponse);
+  const accessToken = new AccessToken(config, client, accessTokenResponse);
 
   t.true(accessToken.expired());
 });
 
 test('@expired => returns true if the token is expiring within the expiration window', (t) => {
   const config = createModuleConfig();
-  const oauth2 = oauth2Module.create(config);
+  const client = new Client(config);
 
   const accessTokenResponse = {
     ...chance.accessToken({
@@ -150,41 +151,41 @@ test('@expired => returns true if the token is expiring within the expiration wi
   };
 
   const expirationWindowSeconds = 11;
-  const accessToken = oauth2.accessToken.create(accessTokenResponse);
+  const accessToken = new AccessToken(config, client, accessTokenResponse);
 
   t.true(accessToken.expired(expirationWindowSeconds));
 });
 
 test('@expired => returns false when not expired', (t) => {
   const config = createModuleConfig();
-  const oauth2 = oauth2Module.create(config);
+  const client = new Client(config);
 
   const accessTokenResponse = chance.accessToken({
     expired: false,
     expireMode: 'expires_at',
   });
 
-  const accessToken = oauth2.accessToken.create(accessTokenResponse);
+  const accessToken = new AccessToken(config, client, accessTokenResponse);
 
   t.false(accessToken.expired());
 });
 
 test('@expired => returns false when no expiration property is present', (t) => {
   const config = createModuleConfig();
-  const oauth2 = oauth2Module.create(config);
+  const client = new Client(config);
 
   const accessTokenResponse = chance.accessToken({
     expireMode: 'no_expiration',
   });
 
-  const accessToken = oauth2.accessToken.create(accessTokenResponse);
+  const accessToken = new AccessToken(config, client, accessTokenResponse);
 
   t.false(accessToken.expired());
 });
 
 test.serial('@refresh => creates a new access token with default params', async (t) => {
   const config = createModuleConfig();
-  const oauth2 = oauth2Module.create(config);
+  const client = new Client(config);
 
   const accessTokenResponse = chance.accessToken({
     expireMode: 'expires_in',
@@ -198,7 +199,7 @@ test.serial('@refresh => creates a new access token with default params', async 
   const server = createAuthorizationServer('https://authorization-server.org:443');
   const scope = server.tokenSuccess(scopeOptions, refreshParams);
 
-  const accessToken = oauth2.accessToken.create(accessTokenResponse);
+  const accessToken = new AccessToken(config, client, accessTokenResponse);
   const refreshAccessToken = await accessToken.refresh();
 
   scope.done();
@@ -207,7 +208,7 @@ test.serial('@refresh => creates a new access token with default params', async 
 
 test.serial('@refresh => creates a new access token with a custom grant type', async (t) => {
   const config = createModuleConfig();
-  const oauth2 = oauth2Module.create(config);
+  const client = new Client(config);
 
   const accessTokenResponse = chance.accessToken({
     expireMode: 'expires_in',
@@ -221,7 +222,7 @@ test.serial('@refresh => creates a new access token with a custom grant type', a
   const server = createAuthorizationServer('https://authorization-server.org:443');
   const scope = server.tokenSuccess(scopeOptions, refreshParams);
 
-  const accessToken = oauth2.accessToken.create(accessTokenResponse);
+  const accessToken = new AccessToken(config, client, accessTokenResponse);
   const refreshAccessToken = await accessToken.refresh({
     grant_type: 'my_grant',
   });
@@ -232,7 +233,7 @@ test.serial('@refresh => creates a new access token with a custom grant type', a
 
 test.serial('@refresh => creates a new access token with multiple scopes', async (t) => {
   const config = createModuleConfig();
-  const oauth2 = oauth2Module.create(config);
+  const client = new Client(config);
 
   const accessTokenResponse = chance.accessToken({
     expireMode: 'expires_in',
@@ -247,7 +248,7 @@ test.serial('@refresh => creates a new access token with multiple scopes', async
   const server = createAuthorizationServer('https://authorization-server.org:443');
   const scope = server.tokenSuccess(scopeOptions, refreshParams);
 
-  const accessToken = oauth2.accessToken.create(accessTokenResponse);
+  const accessToken = new AccessToken(config, client, accessTokenResponse);
   const refreshAccessToken = await accessToken.refresh({
     scope: ['scope-a', 'scope-b'],
   });
@@ -258,7 +259,7 @@ test.serial('@refresh => creates a new access token with multiple scopes', async
 
 test.serial('@refresh => creates a new access token with custom params', async (t) => {
   const config = createModuleConfig();
-  const oauth2 = oauth2Module.create(config);
+  const client = new Client(config);
 
   const accessTokenResponse = chance.accessToken({
     expireMode: 'expires_in',
@@ -273,7 +274,7 @@ test.serial('@refresh => creates a new access token with custom params', async (
   const server = createAuthorizationServer('https://authorization-server.org:443');
   const scope = server.tokenSuccess(scopeOptions, refreshParams);
 
-  const accessToken = oauth2.accessToken.create(accessTokenResponse);
+  const accessToken = new AccessToken(config, client, accessTokenResponse);
   const refreshAccessToken = await accessToken.refresh({
     scope: 'TESTING_EXAMPLE_SCOPES',
   });
@@ -289,7 +290,7 @@ test.serial('@refresh => creates a new access token with custom module configura
     },
   });
 
-  const oauth2 = oauth2Module.create(config);
+  const client = new Client(config);
 
   const accessTokenResponse = chance.accessToken({
     expireMode: 'expires_in',
@@ -304,7 +305,7 @@ test.serial('@refresh => creates a new access token with custom module configura
   const server = createAuthorizationServer('https://authorization-server.org:443');
   const scope = server.tokenSuccess(scopeOptions, refreshParams);
 
-  const accessToken = oauth2.accessToken.create(accessTokenResponse);
+  const accessToken = new AccessToken(config, client, accessTokenResponse);
   const refreshAccessToken = await accessToken.refresh({
     scope: ['scope-a', 'scope-b'],
   });
@@ -324,7 +325,7 @@ test.serial('@refresh => creates a new access token with a custom token path', a
     expireMode: 'expires_in',
   });
 
-  const oauth2 = oauth2Module.create(config);
+  const client = new Client(config);
 
   const refreshParams = {
     grant_type: 'refresh_token',
@@ -335,7 +336,7 @@ test.serial('@refresh => creates a new access token with a custom token path', a
   const server = createAuthorizationServer('https://authorization-server.org:443');
   const scope = server.tokenSuccessWithCustomPath('/the-custom/path', scopeOptions, refreshParams);
 
-  const accessToken = oauth2.accessToken.create(accessTokenResponse);
+  const accessToken = new AccessToken(config, client, accessTokenResponse);
   const refreshAccessToken = await accessToken.refresh({ scope: 'TESTING_EXAMPLE_SCOPES' });
 
   scope.done();
@@ -344,7 +345,7 @@ test.serial('@refresh => creates a new access token with a custom token path', a
 
 test.serial('@revoke => performs the access token revoke', async (t) => {
   const config = createModuleConfig();
-  const oauth2 = oauth2Module.create(config);
+  const client = new Client(config);
 
   const accessTokenResponse = chance.accessToken({
     expireMode: 'expires_in',
@@ -358,7 +359,7 @@ test.serial('@revoke => performs the access token revoke', async (t) => {
   const server = createAuthorizationServer('https://authorization-server.org:443');
   const scope = server.tokenRevokeSuccess(scopeOptions, revokeParams);
 
-  const accessToken = oauth2.accessToken.create(accessTokenResponse);
+  const accessToken = new AccessToken(config, client, accessTokenResponse);
 
   await t.notThrowsAsync(() => accessToken.revoke('access_token'));
 
@@ -367,7 +368,7 @@ test.serial('@revoke => performs the access token revoke', async (t) => {
 
 test.serial('@revoke => performs the refresh token revoke', async (t) => {
   const config = createModuleConfig();
-  const oauth2 = oauth2Module.create(config);
+  const client = new Client(config);
 
   const accessTokenResponse = chance.accessToken({
     expireMode: 'expires_in',
@@ -381,7 +382,7 @@ test.serial('@revoke => performs the refresh token revoke', async (t) => {
   const server = createAuthorizationServer('https://authorization-server.org:443');
   const scope = server.tokenRevokeSuccess(scopeOptions, revokeParams);
 
-  const accessToken = oauth2.accessToken.create(accessTokenResponse);
+  const accessToken = new AccessToken(config, client, accessTokenResponse);
 
   await t.notThrowsAsync(() => accessToken.revoke('refresh_token'));
 
@@ -395,7 +396,7 @@ test.serial('@revoke => performs a token revoke with a custom revoke path', asyn
     },
   });
 
-  const oauth2 = oauth2Module.create(config);
+  const client = new Client(config);
 
   const accessTokenResponse = chance.accessToken({
     expireMode: 'expires_in',
@@ -409,7 +410,7 @@ test.serial('@revoke => performs a token revoke with a custom revoke path', asyn
   const server = createAuthorizationServer('https://authorization-server.org:443');
   const scope = server.tokenRevokeSuccessWithCustomPath('/the-custom/revoke-path', scopeOptions, revokeParams);
 
-  const accessToken = oauth2.accessToken.create(accessTokenResponse);
+  const accessToken = new AccessToken(config, client, accessTokenResponse);
 
   await t.notThrowsAsync(() => accessToken.revoke('refresh_token'));
 
@@ -418,10 +419,10 @@ test.serial('@revoke => performs a token revoke with a custom revoke path', asyn
 
 test.serial('@revoke => throws an error with an invalid tokenType option', async (t) => {
   const config = createModuleConfig();
-  const oauth2 = oauth2Module.create(config);
+  const client = new Client(config);
 
   const accessTokenResponse = chance.accessToken();
-  const accessToken = oauth2.accessToken.create(accessTokenResponse);
+  const accessToken = new AccessToken(config, client, accessTokenResponse);
 
   await t.throwsAsync(() => accessToken.revoke('invalid_value'), {
     message: /Invalid token type. Only access_token or refresh_token are valid values/,
@@ -430,7 +431,7 @@ test.serial('@revoke => throws an error with an invalid tokenType option', async
 
 test.serial('@revokeAll => revokes both the access and refresh tokens', async (t) => {
   const config = createModuleConfig();
-  const oauth2 = oauth2Module.create(config);
+  const client = new Client(config);
 
   const accessTokenResponse = chance.accessToken({
     expireMode: 'expires_in',
@@ -449,7 +450,7 @@ test.serial('@revokeAll => revokes both the access and refresh tokens', async (t
   const server = createAuthorizationServer('https://authorization-server.org:443');
   const scope = server.tokenRevokeAllSuccess(scopeOptions, accessTokenRevokeParams, refreshTokenRevokeParams);
 
-  const accessToken = oauth2.accessToken.create(accessTokenResponse);
+  const accessToken = new AccessToken(config, client, accessTokenResponse);
 
   await t.notThrowsAsync(() => accessToken.revokeAll());
 
@@ -458,7 +459,7 @@ test.serial('@revokeAll => revokes both the access and refresh tokens', async (t
 
 test.serial('@revokeAll => revokes the refresh token only if the access token is successfully revoked', async (t) => {
   const config = createModuleConfig();
-  const oauth2 = oauth2Module.create(config);
+  const client = new Client(config);
 
   const accessTokenResponse = chance.accessToken({
     expireMode: 'expires_in',
@@ -472,7 +473,7 @@ test.serial('@revokeAll => revokes the refresh token only if the access token is
   const server = createAuthorizationServer('https://authorization-server.org:443');
   const scope = server.tokenRevokeError(scopeOptions, accessTokenRevokeParams);
 
-  const accessToken = oauth2.accessToken.create(accessTokenResponse);
+  const accessToken = new AccessToken(config, client, accessTokenResponse);
 
   const error = await t.throwsAsync(() => accessToken.revokeAll(), { instanceOf: Error });
 
