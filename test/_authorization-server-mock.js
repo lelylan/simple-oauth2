@@ -42,12 +42,6 @@ function createAuthorizationServer(authorizationServerUrl) {
       });
   }
 
-  function tokenSuccessWithEmptyToken(scopeOptions, params) {
-    return nock(authorizationServerUrl, scopeOptions)
-      .post('/oauth/token', params)
-      .reply(200, null);
-  }
-
   function tokenError(scopeOptions, params) {
     return nock(authorizationServerUrl, scopeOptions)
       .post('/oauth/token', params)
@@ -118,7 +112,6 @@ function createAuthorizationServer(authorizationServerUrl) {
     tokenSuccessWithNonJSONContent,
     tokenSuccessWithRedirections,
     tokenSuccessWithCustomPath,
-    tokenSuccessWithEmptyToken,
     tokenSuccess,
   };
 }
