@@ -11,6 +11,7 @@
       "ignoreComments": true
     }],
     "strict": ["error", "safe"],
+    "max-classes-per-file": ["off"],
     "lines-between-class-members": ["off"]
   }
 }

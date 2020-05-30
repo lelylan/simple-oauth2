@@ -1,7 +1,7 @@
 'use strict';
 
 const test = require('ava');
-const oauth2Module = require('../index');
+const { AuthorizationCode } = require('../index');
 const { createModuleConfig } = require('./_module-config');
 const { createAuthorizationServer, getHeaderCredentialsScopeOptions } = require('./_authorization-server-mock');
 
@@ -22,7 +22,7 @@ test.serial('@errors => rejects operations on http error (401)', async (t) => {
   const scope = server.tokenAuthorizationError(scopeOptions, oauthParams);
 
   const config = createModuleConfig();
-  const oauth2 = oauth2Module.authorizationCode(config);
+  const oauth2 = new AuthorizationCode(config);
 
   const error = await t.throwsAsync(() => oauth2.getToken(tokenParams), { instanceOf: Error });
 
@@ -44,7 +44,7 @@ test.serial('@errors => rejects operations on http error (500)', async (t) => {
   const scope = server.tokenError(scopeOptions, oauthParams);
 
   const config = createModuleConfig();
-  const oauth2 = oauth2Module.authorizationCode(config);
+  const oauth2 = new AuthorizationCode(config);
 
   const error = await t.throwsAsync(() => oauth2.getToken(tokenParams), { instanceOf: Error });
 

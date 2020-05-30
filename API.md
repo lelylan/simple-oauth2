@@ -2,9 +2,9 @@
 
 Node.js client library for [OAuth2](http://oauth.net/2/). OAuth2 allows users to grant access to restricted resources by third party applications, giving them the possibility to enable and disable those accesses whenever they want.
 
-## .create(options) => Module
+## Options
 
-Simple OAuth2 accepts an object with the following params.
+Simple OAuth2 grant classes accept an object with the following params.
 
 * `client` - required object with the following properties:
   * `id` - Service registered client id. When required by the [spec](https://tools.ietf.org/html/rfc6749#appendix-B) this value will be automatically encoded. Required
@@ -35,8 +35,8 @@ Simple OAuth2 accepts an object with the following params.
 ### URL resolution
 URL paths are relatively resolved to their corresponding host property using the [Node WHATWG URL](https://nodejs.org/dist/latest-v12.x/docs/api/url.html#url_constructor_new_url_input_base) resolution algorithm.
 
-## Module
-### .authorizationCode
+## Grants
+### new AuthorizationCode(options)
 This submodule provides supports for the OAuth2 [Authorization Code Grant](http://tools.ietf.org/html/draft-ietf-oauth-v2-31#section-4.1) to support applications asking for user's resources without handling the user credentials.
 
 #### .authorizeURL([authorizeOptions]) => String
@@ -48,7 +48,7 @@ Creates the authorization URL from the *client configuration* and the *authorize
 
 Additional options will be automatically serialized as query params in the resulting URL.
 
-#### .getToken(params, [httpOptions]) => Promise<token>
+#### .getToken(params, [httpOptions]) => Promise<AccessToken>
 Get a new access token using the current grant type.
 
 * `params`
@@ -60,10 +60,10 @@ Additional options will be automatically serialized as params for the token requ
 
 * `httpOptions` All [wreck](https://github.com/hapijs/wreck) options can be overriden as documented by the module `http` options.
 
-### .ownerPassword
+### new PasswordOwner(options)
 This submodule provides support for the OAuth2 [Password Owner](http://tools.ietf.org/html/draft-ietf-oauth-v2-31#section-4.3) to support applications handling the user credentials.
 
-#### .getToken(params, [httpOptions]) => Promise<token>
+#### .getToken(params, [httpOptions]) => Promise<AccessToken>
 Get a new access token using the current grant type.
 
 * `params`
@@ -75,10 +75,10 @@ Additional options will be automatically serialized as params for the token requ
 
 * `httpOptions` All [wreck](https://github.com/hapijs/wreck) options can be overriden as documented by the module `http` options.
 
-### .clientCredentials
+### new ClientCredentials(options)
 This submodule provides support for the OAuth2 [Client Credentials](http://tools.ietf.org/html/draft-ietf-oauth-v2-31#section-4.4) to support clients that can request access tokens using only its client credentials.
 
-#### .getToken(params, [httpOptions]) => Promise<token>
+#### .getToken(params, [httpOptions]) => Promise<AccessToken>
 Get a new access token using the current grant type.
 
 * `params`
@@ -88,19 +88,13 @@ Additional options will be automatically serialized as params for the token requ
 
 * `httpOptions` All [wreck](https://github.com/hapijs/wreck) options can be overriden as documented by the module `http` options.
 
-### .accessToken
-This submodule allows for the token level operations.
-
-#### .create(token) => AccessToken
-An access token (plain object) can be used to create a new token object with the following methods
-
 ### AccessToken
 #### .expired([expirationWindowSeconds]) => Boolean
 Determines if the current access token is definitely expired or not
 
 * `expirationWindowSeconds` Window of time before the actual expiration to refresh the token. Defaults to **0**.
 
-#### .refresh(params) => Promise<ResponsePayload>
+#### .refresh(params) => Promise<AccessToken>
 Refreshes the current access token. The following params are allowed:
 
 * `params`

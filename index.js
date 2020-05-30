@@ -1,53 +1,40 @@
 'use strict';
 
-const Joi = require('@hapi/joi');
 const Client = require('./lib/client');
-const AuthorizationCode = require('./lib/grants/authorization-code');
-const PasswordOwner = require('./lib/grants/password-owner');
-const ClientCredentials = require('./lib/grants/client-credentials');
-const AccessToken = require('./lib/access-token');
-const ModuleSchema = require('./lib/module-schema');
+const Config = require('./lib/config');
+const AuthorizationCodeGrant = require('./lib/grants/authorization-code');
+const PasswordOwnerGrant = require('./lib/grants/password-owner');
+const ClientCredentialsGrant = require('./lib/grants/client-credentials');
 
-function clientCredentialsFactory(opts) {
-  const options = Joi.attempt(opts, ModuleSchema, 'Invalid options provided to simple-oauth2');
+class AuthorizationCode extends AuthorizationCodeGrant {
+  constructor(options) {
+    const config = Config.apply(options);
+    const client = new Client(config);
 
-  const client = new Client(options);
-  const module = new ClientCredentials(options, client);
-
-  module.accessToken = {
-    create: AccessToken.factory(options, client),
-  };
-
-  return module;
+    super(config, client);
+  }
 }
 
-function passwordOwnerFactory(opts) {
-  const options = Joi.attempt(opts, ModuleSchema, 'Invalid options provided to simple-oauth2');
+class ClientCredentials extends ClientCredentialsGrant {
+  constructor(options) {
+    const config = Config.apply(options);
+    const client = new Client(config);
 
-  const client = new Client(options);
-  const module = new PasswordOwner(options, client);
-
-  module.accessToken = {
-    create: AccessToken.factory(options, client),
-  };
-
-  return module;
+    super(config, client);
+  }
 }
 
-function authorizationCodeFactory(opts) {
-  const options = Joi.attempt(opts, ModuleSchema, 'Invalid options provided to simple-oauth2');
-  const client = new Client(options);
-  const module = new AuthorizationCode(options, client);
+class PasswordOwner extends PasswordOwnerGrant {
+  constructor(options) {
+    const config = Config.apply(options);
+    const client = new Client(config);
 
-  module.accessToken = {
-    create: AccessToken.factory(options, client),
-  };
-
-  return module;
+    super(config, client);
+  }
 }
 
 module.exports = {
-  passwordOwner: passwordOwnerFactory,
-  clientCredentials: clientCredentialsFactory,
-  authorizationCode: authorizationCodeFactory,
+  PasswordOwner,
+  ClientCredentials,
+  AuthorizationCode,
 };

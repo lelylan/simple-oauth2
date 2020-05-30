@@ -21,7 +21,7 @@ Node.js client library for [OAuth2](http://oauth.net/2/). OAuth2 allows users to
       - [Authorization Code](#authorization-code)
       - [Password Credentials Flow](#password-credentials-flow)
       - [Client Credentials Flow](#client-credentials-flow)
-    - [Access Token object](#access-token-object)
+    - [Access Token](#access-token)
     - [Errors](#errors)
   - [Debugging the module](#debugging-the-module)
   - [API](#api)
@@ -50,7 +50,7 @@ npm install --save simple-oauth2
 Create a new instance by specifying the minimal configuration
 
 ```javascript
-const credentials = {
+const config = {
   client: {
     id: '<client-id>',
     secret: '<client-secret>'
@@ -60,7 +60,7 @@ const credentials = {
   }
 };
 
-const oauth2 = require('simple-oauth2').create(credentials);
+const { ClientCredentials, PasswordOwner, AuthorizationCode } = require('simple-oauth2');
 ```
 For more detailed configuration information see [API Documentation](./API.md)
 
@@ -74,9 +74,9 @@ The [Authorization Code](http://tools.ietf.org/html/draft-ietf-oauth-v2-31#secti
 
 ```javascript
 async function run() {
-  const oauth2 = require('simple-oauth2').create(credentials);
+  const authorizationCode = new AuthorizationCode(config);
 
-  const authorizationUri = oauth2.authorizationCode.authorizeURL({
+  const authorizationUri = authorizationCode.authorizeURL({
     redirect_uri: 'http://localhost:3000/callback',
     scope: '<scope>',
     state: '<state>'
@@ -92,8 +92,7 @@ async function run() {
   };
 
   try {
-    const result = await oauth2.authorizationCode.getToken(tokenConfig);
-    const accessToken = oauth2.accessToken.create(result);
+    const accessToken = await authorizationCode.getToken(tokenConfig);
   } catch (error) {
     console.log('Access Token Error', error.message);
   }
@@ -108,7 +107,7 @@ The [Password Owner](http://tools.ietf.org/html/draft-ietf-oauth-v2-31#section-4
 
 ```javascript
 async function run() {
-  const oauth2 = require('simple-oauth2').create(credentials);
+  const passwordOwner = new PasswordOwner(config);
 
   const tokenConfig = {
     username: 'username',
@@ -117,8 +116,7 @@ async function run() {
   };
 
   try {
-    const result = await oauth2.ownerPassword.getToken(tokenConfig);
-    const accessToken = oauth2.accessToken.create(result);
+    const accessToken = await passwordOwner.getToken(tokenConfig);
   } catch (error) {
     console.log('Access Token Error', error.message);
   }
@@ -133,15 +131,14 @@ The [Client Credentials](http://tools.ietf.org/html/draft-ietf-oauth-v2-31#secti
 
 ```javascript
 async function run() {
-  const oauth2 = require('simple-oauth2').create(credentials);
+  const clientCredentials = new ClientCredentials(config);
 
   const tokenConfig = {
     scope: '<scope>',
   };
 
   try {
-    const result = await oauth2.clientCredentials.getToken(tokenConfig);
-    const accessToken = oauth2.accessToken.create(result);
+    const accessToken = await clientCredentials.getToken(tokenConfig);
   } catch (error) {
     console.log('Access Token error', error.message);
   }
@@ -150,7 +147,7 @@ async function run() {
 run();
 ```
 
-### Access Token object
+### Access Token
 
 When a token expires we need to refresh it. Simple OAuth2 offers the AccessToken class that add a couple of useful methods to refresh the access token when it is expired.
 
@@ -161,8 +158,6 @@ async function run() {
     'refresh_token': '<refresh-token>',
     'expires_in': '7200'
   };
-
-  let accessToken = oauth2.accessToken.create(tokenObject);
 
   if (accessToken.expired()) {
     try {
@@ -188,7 +183,7 @@ These come down to factors such as network and processing latency and can be wor
 async function run() {
   const EXPIRATION_WINDOW_IN_SECONDS = 300; // Window of time before the actual expiration to refresh the token
 
-  if (token.expired(EXPIRATION_WINDOW_IN_SECONDS)) {
+  if (accessToken.expired(EXPIRATION_WINDOW_IN_SECONDS)) {
     try {
       accessToken = await accessToken.refresh();
     } catch (error) {
@@ -241,8 +236,10 @@ As a standard [boom](https://github.com/hapijs/boom) error you can access any of
 
 ```javascript
 async function run() {
+  const clientCredentials = new ClientCredentials(config);
+
   try {
-    await oauth2.authorizationCode.getToken();
+    await clientCredentials.getToken();
   } catch(error) {
     console.log(error.output);
   }
