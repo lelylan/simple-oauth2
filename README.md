@@ -237,23 +237,24 @@ Errors are returned when a 4xx or 5xx status code is received.
 
     BoomError
 
-As a standard [boom](https://github.com/hapijs/boom) error you can access any of the boom error properties. The total amount of information varies according to the generated status code.
+As a standard [boom](https://github.com/hapijs/boom) error you can access any of the [boom error properties](https://hapi.dev/module/boom/api). The total amount of information varies according to the generated status code.
 
 ```javascript
 async function run() {
   try {
     await oauth2.authorizationCode.getToken();
   } catch(error) {
-    console.log(error);
+    console.log(error.output);
   }
 }
 
 run();
-// => {
-//     "statusCode": 401,
-//     "error": "Unauthorized",
-//     "message": "invalid password"
-// }
+// { statusCode: 401,
+//   payload:
+//    { statusCode: 401,
+//      error: 'Unauthorized',
+//      message: 'Response Error: 401 Unauthorized' },
+//   headers: {} }
 ```
 
 ## Debugging the module
