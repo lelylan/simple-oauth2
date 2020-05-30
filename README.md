@@ -1,7 +1,6 @@
 # Simple OAuth2
 
 [![NPM Package Version](https://img.shields.io/npm/v/simple-oauth2.svg?style=flat-square)](https://www.npmjs.com/package/simple-oauth2)
-[![Build Status](https://img.shields.io/travis/lelylan/simple-oauth2.svg?style=flat-square)](https://travis-ci.org/lelylan/simple-oauth2)
 [![Build Status](https://github.com/lelylan/simple-oauth2/workflows/Node.js%20CI/badge.svg)](https://github.com/lelylan/simple-oauth2/actions)
 [![Dependency Status](https://img.shields.io/david/lelylan/simple-oauth2.svg?style=flat-square)](https://david-dm.org/lelylan/simple-oauth2)
 
@@ -37,7 +36,7 @@ Node.js client library for [OAuth2](http://oauth.net/2/). OAuth2 allows users to
 
 ## Requirements
 
-The node client library is tested against Node 8 LTS and newer versions. Older node versions are unsupported.
+The node client library is tested against Node 12 LTS and newer versions. Older node versions are unsupported.
 
 ## Usage
 
