@@ -37,7 +37,7 @@ URL paths are relatively resolved to their corresponding host property using the
 
 ## Grants
 ### new AuthorizationCode(options)
-This submodule provides supports for the OAuth2 [Authorization Code Grant](http://tools.ietf.org/html/draft-ietf-oauth-v2-31#section-4.1) to support applications asking for user's resources without handling the user credentials.
+This submodule provides supports for the OAuth2 [Authorization Code](https://oauth.net/2/grant-types/authorization-code/) grant type
 
 #### .authorizeURL([authorizeOptions]) => String
 Creates the authorization URL from the *client configuration* and the *authorize options*. The following are supported authorize options:
@@ -61,7 +61,7 @@ Additional options will be automatically serialized as params for the token requ
 * `httpOptions` All [wreck](https://github.com/hapijs/wreck) options can be overriden as documented by the module `http` options.
 
 ### new PasswordOwner(options)
-This submodule provides support for the OAuth2 [Password Owner](http://tools.ietf.org/html/draft-ietf-oauth-v2-31#section-4.3) to support applications handling the user credentials.
+This submodule provides support for the OAuth2 [Resource Owner Password Credentials](https://oauth.net/2/grant-types/password/) grant type.
 
 #### .getToken(params, [httpOptions]) => Promise<AccessToken>
 Get a new access token using the current grant type.
@@ -76,7 +76,7 @@ Additional options will be automatically serialized as params for the token requ
 * `httpOptions` All [wreck](https://github.com/hapijs/wreck) options can be overriden as documented by the module `http` options.
 
 ### new ClientCredentials(options)
-This submodule provides support for the OAuth2 [Client Credentials](http://tools.ietf.org/html/draft-ietf-oauth-v2-31#section-4.4) to support clients that can request access tokens using only its client credentials.
+This submodule provides support for the OAuth2 [Client Credentials](https://oauth.net/2/grant-types/client-credentials/) grant type.
 
 #### .getToken(params, [httpOptions]) => Promise<AccessToken>
 Get a new access token using the current grant type.

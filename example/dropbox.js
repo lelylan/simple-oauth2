@@ -1,10 +1,10 @@
 'use strict';
 
 const createApplication = require('./');
-const simpleOauthModule = require('./../');
+const { AuthorizationCode } = require('./../');
 
 createApplication(({ app, callbackUrl }) => {
-  const oauth2 = simpleOauthModule.create({
+  const client = new AuthorizationCode({
     client: {
       id: process.env.CLIENT_ID,
       secret: process.env.CLIENT_SECRET,
@@ -21,7 +21,7 @@ createApplication(({ app, callbackUrl }) => {
   });
 
   // Authorization uri definition
-  const authorizationUri = oauth2.authorizationCode.authorizeURL({
+  const authorizationUri = client.authorizeURL({
     redirect_uri: callbackUrl,
     state: '3(#0/!~',
   });
@@ -41,13 +41,11 @@ createApplication(({ app, callbackUrl }) => {
     };
 
     try {
-      const result = await oauth2.authorizationCode.getToken(options);
+      const accessToken = await client.getToken(options);
 
-      console.log('The resulting token: ', result);
+      console.log('The resulting token: ', accessToken.token);
 
-      const token = oauth2.accessToken.create(result);
-
-      return res.status(200).json(token);
+      return res.status(200).json(accessToken.token);
     } catch (error) {
       console.error('Access Token Error', error.message);
       return res.status(500).json('Authentication failed');
