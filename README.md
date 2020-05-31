@@ -59,7 +59,7 @@ const config = {
   }
 };
 
-const { ClientCredentials, PasswordOwner, AuthorizationCode } = require('simple-oauth2');
+const { ClientCredentials, ResourceOwnerPassword, AuthorizationCode } = require('simple-oauth2');
 ```
 
 For a complete reference of configuration options, see the [API Options](./API.md#options)
@@ -109,7 +109,7 @@ The [Resource Owner Password Credentials](https://oauth.net/2/grant-types/passwo
 
 ```javascript
 async function run() {
-  const client = new PasswordOwner(config);
+  const client = new ResourceOwnerPassword(config);
 
   const tokenParams = {
     username: 'username',
@@ -127,7 +127,7 @@ async function run() {
 run();
 ```
 
-See the [API reference](./API.md#new-passwordowneroptions) for a complete reference of available options.
+See the [API reference](./API.md#new-resourceownerpasswordoptions) for a complete reference of available options.
 
 #### Client Credentials Grant
 

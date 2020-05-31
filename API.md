@@ -60,7 +60,7 @@ Additional options will be automatically serialized as params for the token requ
 
 * `httpOptions` All [wreck](https://github.com/hapijs/wreck) options can be overriden as documented by the module `http` options.
 
-### new PasswordOwner(options)
+### new ResourceOwnerPassword(options)
 This submodule provides support for the OAuth2 [Resource Owner Password Credentials](https://oauth.net/2/grant-types/password/) grant type.
 
 #### .getToken(params, [httpOptions]) => Promise<AccessToken>
