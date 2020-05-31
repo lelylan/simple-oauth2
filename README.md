@@ -199,6 +199,8 @@ async function run() {
 run();
 ```
 
+**Warning:** Tokens obtained with the Client Credentials grant may not be refreshed. Fetch a new token when it's expired.
+
 See the [API reference](./API.md#accesstoken) for a complete reference of available options.
 
 #### Revoke an access or refresh token
