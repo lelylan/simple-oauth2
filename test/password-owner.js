@@ -1,10 +1,10 @@
 'use strict';
 
 const test = require('ava');
-const oauth2Module = require('../index');
+const { ResourceOwnerPassword } = require('../index');
+const AccessToken = require('../lib/access-token');
 const { createModuleConfig } = require('./_module-config');
 const {
-  getAccessToken,
   createAuthorizationServer,
   getJSONEncodingScopeOptions,
   getFormEncodingScopeOptions,
@@ -36,11 +36,11 @@ test.serial('@getToken => resolves to an access token (body credentials and JSON
     password: 'secret',
   };
 
-  const oauth2 = oauth2Module.create(config);
-  const token = await oauth2.ownerPassword.getToken(tokenParams);
+  const oauth2 = new ResourceOwnerPassword(config);
+  const accessToken = await oauth2.getToken(tokenParams);
 
   scope.done();
-  t.deepEqual(token, getAccessToken());
+  t.true(accessToken instanceof AccessToken);
 });
 
 test.serial('@getToken => resolves to an access token (body credentials and form format)', async (t) => {
@@ -68,11 +68,11 @@ test.serial('@getToken => resolves to an access token (body credentials and form
     password: 'secret',
   };
 
-  const oauth2 = oauth2Module.create(config);
-  const token = await oauth2.ownerPassword.getToken(tokenParams);
+  const oauth2 = new ResourceOwnerPassword(config);
+  const accessToken = await oauth2.getToken(tokenParams);
 
   scope.done();
-  t.deepEqual(token, getAccessToken());
+  t.true(accessToken instanceof AccessToken);
 });
 
 test.serial('@getToken => resolves to an access token (header credentials)', async (t) => {
@@ -97,11 +97,11 @@ test.serial('@getToken => resolves to an access token (header credentials)', asy
     password: 'secret',
   };
 
-  const oauth2 = oauth2Module.create(config);
-  const token = await oauth2.ownerPassword.getToken(tokenParams);
+  const oauth2 = new ResourceOwnerPassword(config);
+  const accessToken = await oauth2.getToken(tokenParams);
 
   scope.done();
-  t.deepEqual(token, getAccessToken());
+  t.true(accessToken instanceof AccessToken);
 });
 
 test.serial('@getToken => resolves to an access token with custom module configuration (header credentials + loose encoding)', async (t) => {
@@ -136,11 +136,11 @@ test.serial('@getToken => resolves to an access token with custom module configu
     password: 'secret',
   };
 
-  const oauth2 = oauth2Module.create(config);
-  const token = await oauth2.ownerPassword.getToken(tokenParams);
+  const oauth2 = new ResourceOwnerPassword(config);
+  const accessToken = await oauth2.getToken(tokenParams);
 
   scope.done();
-  t.deepEqual(token, getAccessToken());
+  t.true(accessToken instanceof AccessToken);
 });
 
 test.serial('@getToken => resolves to an access token with custom module configuration (header credentials + strict encoding)', async (t) => {
@@ -175,11 +175,11 @@ test.serial('@getToken => resolves to an access token with custom module configu
     password: 'secret',
   };
 
-  const oauth2 = oauth2Module.create(config);
-  const token = await oauth2.ownerPassword.getToken(tokenParams);
+  const oauth2 = new ResourceOwnerPassword(config);
+  const accessToken = await oauth2.getToken(tokenParams);
 
   scope.done();
-  t.deepEqual(token, getAccessToken());
+  t.true(accessToken instanceof AccessToken);
 });
 
 test.serial('@getToken => resolves to an access token with custom module configuration (access token host and path)', async (t) => {
@@ -205,11 +205,11 @@ test.serial('@getToken => resolves to an access token with custom module configu
     password: 'secret',
   };
 
-  const oauth2 = oauth2Module.create(config);
-  const token = await oauth2.ownerPassword.getToken(tokenParams);
+  const oauth2 = new ResourceOwnerPassword(config);
+  const accessToken = await oauth2.getToken(tokenParams);
 
   scope.done();
-  t.deepEqual(token, getAccessToken());
+  t.true(accessToken instanceof AccessToken);
 });
 
 test.serial('@getToken => resolves to an access token with custom module configuration (http options)', async (t) => {
@@ -243,11 +243,11 @@ test.serial('@getToken => resolves to an access token with custom module configu
     password: 'secret',
   };
 
-  const oauth2 = oauth2Module.create(config);
-  const token = await oauth2.ownerPassword.getToken(tokenParams);
+  const oauth2 = new ResourceOwnerPassword(config);
+  const accessToken = await oauth2.getToken(tokenParams);
 
   scope.done();
-  t.deepEqual(token, getAccessToken());
+  t.true(accessToken instanceof AccessToken);
 });
 
 test.serial('@getToken => resolves to an access token with custom module configuration (token separator)', async (t) => {
@@ -274,12 +274,12 @@ test.serial('@getToken => resolves to an access token with custom module configu
     },
   });
 
-  const oauth2 = oauth2Module.create(config);
+  const oauth2 = new ResourceOwnerPassword(config);
 
-  const token = await oauth2.ownerPassword.getToken(tokenParams);
+  const accessToken = await oauth2.getToken(tokenParams);
 
   scope.done();
-  t.deepEqual(token, getAccessToken());
+  t.true(accessToken instanceof AccessToken);
 });
 
 test.serial('@getToken => resolves to an access token while following redirections', async (t) => {
@@ -301,14 +301,14 @@ test.serial('@getToken => resolves to an access token while following redirectio
   };
 
   const config = createModuleConfig();
-  const oauth2 = oauth2Module.create(config);
+  const oauth2 = new ResourceOwnerPassword(config);
 
-  const token = await oauth2.ownerPassword.getToken(tokenParams);
+  const accessToken = await oauth2.getToken(tokenParams);
 
   redirectionsScope.done();
   originScope.done();
 
-  t.deepEqual(token, getAccessToken());
+  t.true(accessToken instanceof AccessToken);
 });
 
 test.serial('@getToken => resolves to an access token while requesting multiple scopes', async (t) => {
@@ -330,12 +330,12 @@ test.serial('@getToken => resolves to an access token while requesting multiple 
   };
 
   const config = createModuleConfig();
-  const oauth2 = oauth2Module.create(config);
+  const oauth2 = new ResourceOwnerPassword(config);
 
-  const token = await oauth2.ownerPassword.getToken(tokenParams);
+  const accessToken = await oauth2.getToken(tokenParams);
 
   scope.done();
-  t.deepEqual(token, getAccessToken());
+  t.true(accessToken instanceof AccessToken);
 });
 
 test.serial('@getToken => resolves to an access token with a custom grant type', async (t) => {
@@ -356,12 +356,12 @@ test.serial('@getToken => resolves to an access token with a custom grant type',
   };
 
   const config = createModuleConfig();
-  const oauth2 = oauth2Module.create(config);
+  const oauth2 = new ResourceOwnerPassword(config);
 
-  const token = await oauth2.ownerPassword.getToken(tokenParams);
+  const accessToken = await oauth2.getToken(tokenParams);
 
   scope.done();
-  t.deepEqual(token, getAccessToken());
+  t.true(accessToken instanceof AccessToken);
 });
 
 test.serial('@getToken => resolves to an access token with no params', async (t) => {
@@ -374,12 +374,12 @@ test.serial('@getToken => resolves to an access token with no params', async (t)
   const scope = server.tokenSuccess(scopeOptions, tokenRequestParams);
 
   const config = createModuleConfig();
-  const oauth2 = oauth2Module.create(config);
+  const oauth2 = new ResourceOwnerPassword(config);
 
-  const token = await oauth2.ownerPassword.getToken();
+  const accessToken = await oauth2.getToken();
 
   scope.done();
-  t.deepEqual(token, getAccessToken());
+  t.true(accessToken instanceof AccessToken);
 });
 
 test.serial('@getToken => resolves to an access token with custom (inline) http options', async (t) => {
@@ -397,7 +397,7 @@ test.serial('@getToken => resolves to an access token with custom (inline) http 
   const scope = server.tokenSuccess(scopeOptions, tokenRequestParams);
 
   const config = createModuleConfig();
-  const oauth2 = oauth2Module.create(config);
+  const oauth2 = new ResourceOwnerPassword(config);
 
   const httpOptions = {
     headers: {
@@ -405,10 +405,10 @@ test.serial('@getToken => resolves to an access token with custom (inline) http 
     },
   };
 
-  const token = await oauth2.ownerPassword.getToken(null, httpOptions);
+  const accessToken = await oauth2.getToken(null, httpOptions);
 
   scope.done();
-  t.deepEqual(token, getAccessToken());
+  t.true(accessToken instanceof AccessToken);
 });
 
 test.serial('@getToken => resolves to an access token with custom (inline) http options without overriding (required) http options', async (t) => {
@@ -421,7 +421,7 @@ test.serial('@getToken => resolves to an access token with custom (inline) http 
   const scope = server.tokenSuccess(scopeOptions, tokenRequestParams);
 
   const config = createModuleConfig();
-  const oauth2 = oauth2Module.create(config);
+  const oauth2 = new ResourceOwnerPassword(config);
 
   const httpOptions = {
     headers: {
@@ -429,10 +429,10 @@ test.serial('@getToken => resolves to an access token with custom (inline) http 
     },
   };
 
-  const token = await oauth2.ownerPassword.getToken(null, httpOptions);
+  const accessToken = await oauth2.getToken(null, httpOptions);
 
   scope.done();
-  t.deepEqual(token, getAccessToken());
+  t.true(accessToken instanceof AccessToken);
 });
 
 test.serial('@getToken => rejects the operation when a non json response is received', async (t) => {
@@ -460,8 +460,8 @@ test.serial('@getToken => rejects the operation when a non json response is rece
     password: 'secret',
   };
 
-  const oauth2 = oauth2Module.create(config);
-  const error = await t.throwsAsync(() => oauth2.ownerPassword.getToken(tokenParams));
+  const oauth2 = new ResourceOwnerPassword(config);
+  const error = await t.throwsAsync(() => oauth2.getToken(tokenParams));
 
   scope.done();
 

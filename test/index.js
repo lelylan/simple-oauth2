@@ -2,17 +2,21 @@
 
 const test = require('ava');
 
-const oauth2Module = require('./../index.js');
+const { ResourceOwnerPassword, ClientCredentials, AuthorizationCode } = require('../index');
 const { createModuleConfig } = require('./_module-config');
 
 test('@create => throws a validation error when no configuration is provided', (t) => {
-  t.throws(() => oauth2Module.create());
+  t.throws(() => new ResourceOwnerPassword());
+  t.throws(() => new ClientCredentials());
+  t.throws(() => new AuthorizationCode());
 });
 
 test('@create => creates a new instance with the minimal required configuration', (t) => {
   const config = createModuleConfig();
 
-  t.notThrows(() => oauth2Module.create(config));
+  t.notThrows(() => new ResourceOwnerPassword(config));
+  t.notThrows(() => new ClientCredentials(config));
+  t.notThrows(() => new AuthorizationCode(config));
 });
 
 test('@create => creates a new instance with empty credentials', (t) => {
@@ -23,7 +27,9 @@ test('@create => creates a new instance with empty credentials', (t) => {
     },
   });
 
-  t.notThrows(() => oauth2Module.create(config));
+  t.notThrows(() => new ResourceOwnerPassword(config));
+  t.notThrows(() => new ClientCredentials(config));
+  t.notThrows(() => new AuthorizationCode(config));
 });
 
 test('@create => creates a new instance with visual non-control characters', (t) => {
@@ -34,5 +40,7 @@ test('@create => creates a new instance with visual non-control characters', (t)
     },
   });
 
-  t.notThrows(() => oauth2Module.create(config));
+  t.notThrows(() => new ResourceOwnerPassword(config));
+  t.notThrows(() => new ClientCredentials(config));
+  t.notThrows(() => new AuthorizationCode(config));
 });
