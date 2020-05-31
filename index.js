@@ -3,7 +3,7 @@
 const Client = require('./lib/client');
 const Config = require('./lib/config');
 const AuthorizationCodeGrant = require('./lib/grants/authorization-code');
-const PasswordOwnerGrant = require('./lib/grants/password-owner');
+const ResourceOwnerPasswordGrant = require('./lib/grants/resource-owner-password');
 const ClientCredentialsGrant = require('./lib/grants/client-credentials');
 
 class AuthorizationCode extends AuthorizationCodeGrant {
@@ -24,7 +24,7 @@ class ClientCredentials extends ClientCredentialsGrant {
   }
 }
 
-class PasswordOwner extends PasswordOwnerGrant {
+class ResourceOwnerPassword extends ResourceOwnerPasswordGrant {
   constructor(options) {
     const config = Config.apply(options);
     const client = new Client(config);
@@ -34,7 +34,7 @@ class PasswordOwner extends PasswordOwnerGrant {
 }
 
 module.exports = {
-  PasswordOwner,
+  ResourceOwnerPassword,
   ClientCredentials,
   AuthorizationCode,
 };
