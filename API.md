@@ -37,7 +37,7 @@ URL paths are relatively resolved to their corresponding host property using the
 
 ## Grants
 ### new AuthorizationCode(options)
-This submodule provides supports for the OAuth2 [Authorization Code](https://oauth.net/2/grant-types/authorization-code/) grant type
+This submodule provides support for the OAuth2 [Authorization Code](https://oauth.net/2/grant-types/authorization-code/) grant type.
 
 #### .authorizeURL([authorizeOptions]) => String
 Creates the authorization URL from the *client configuration* and the *authorize options*. The following are supported authorize options:
