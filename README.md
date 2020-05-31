@@ -21,6 +21,8 @@
       - [Resource Owner Password Credentials Grant](#resource-owner-password-credentials-grant)
       - [Client Credentials Grant](#client-credentials-grant)
     - [Access Token](#access-token)
+      - [Refresh an access token](#refresh-an-access-token)
+      - [Revoke an access or refresh token](#revoke-an-access-or-refresh-token)
     - [Errors](#errors)
   - [Debugging the module](#debugging-the-module)
   - [Contributing](#contributing)
@@ -153,23 +155,21 @@ See the [API reference](./API.md#new-clientcredentialsoptions) for a complete re
 
 ### Access Token
 
-When a token expires we need to refresh it. Simple OAuth2 offers the AccessToken class that add a couple of useful methods to refresh the access token when it is expired.
+On completion of any [supported grant type](#supported-grant-types) an access token will be obtained. A list of supported operations can be found below.
+
+#### Refresh an access token
+
+When a token expires we need a mechanism to obtain a new access token. The [AccessToken](./API.md#accesstoken) methods can be used to perform the token refresh process.
 
 ```javascript
 async function run() {
-  const tokenObject = {
-    'access_token': '<access-token>',
-    'refresh_token': '<refresh-token>',
-    'expires_in': '7200'
-  };
-
   if (accessToken.expired()) {
     try {
-      const params = {
+      const refreshParams = {
         scope: '<scope>',
       };
 
-      accessToken = await accessToken.refresh(params);
+      accessToken = await accessToken.refresh(refreshParams);
     } catch (error) {
       console.log('Error refreshing access token: ', error.message);
     }
@@ -199,7 +199,11 @@ async function run() {
 run();
 ```
 
-When you've done with the token or you want to log out, you can revoke the access and refresh tokens.
+See the [API reference](./API.md#accesstoken) for a complete reference of available options.
+
+#### Revoke an access or refresh token
+
+When you've done with the token or you want to log out, you can revoke both access and refresh tokens.
 
 ```javascript
 async function run() {
@@ -218,7 +222,6 @@ As a convenience method, you can also revoke both tokens in a single call:
 
 ```javascript
 async function run() {
-  // Revoke both access and refresh tokens
   try {
     // Revokes both tokens, refresh token is only revoked if the access_token is properly revoked
     await accessToken.revokeAll();
@@ -230,26 +233,25 @@ async function run() {
 run();
 ```
 
+See the [API reference](./API.md#accesstoken) for a complete reference of available options.
+
 ### Errors
 
-Errors are returned when a 4xx or 5xx status code is received.
-
-    BoomError
-
-As a standard [boom](https://github.com/hapijs/boom) error you can access any of the [boom error properties](https://hapi.dev/module/boom/api). The total amount of information varies according to the generated status code.
+Whenever a client or server error is produced, a [boom](https://github.com/hapijs/boom) error is thrown by the library. As such any [boom error property](https://hapi.dev/module/boom/api) is available, but the exact information may vary according to the type of error.
 
 ```javascript
 async function run() {
-  const clientCredentials = new ClientCredentials(config);
+  const client = new ClientCredentials(config);
 
   try {
-    await clientCredentials.getToken();
+    await client.getToken();
   } catch(error) {
     console.log(error.output);
   }
 }
 
 run();
+
 // { statusCode: 401,
 //   payload:
 //    { statusCode: 401,
