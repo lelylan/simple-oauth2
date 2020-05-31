@@ -1,17 +1,24 @@
 # Changelog
 
-## Next
+## 4.0.0
 ### Breaking changes
-* Dropped support for Node 12
-* Use private class fields for undocumented "private" properties
-* Module public API is now freezed
-* Access token `.token` public API is now freezed
+* [#292](https://github.com/lelylan/simple-oauth2/pull/292) [#313](https://github.com/lelylan/simple-oauth2/pull/313) Require at least Node 12
+* [#292](https://github.com/lelylan/simple-oauth2/pull/292) Use private class fields for non-public API's
+* [#292](https://github.com/lelylan/simple-oauth2/pull/292) Access token `.token` property is now frozen
+* [#318](https://github.com/lelylan/simple-oauth2/pull/318) New public API separating each grant type into it's own submodule
+* [#321](https://github.com/lelylan/simple-oauth2/pull/321) Rename resource owner credentials module to be accurate
 
 ### Maintainance
-* Upgrade @hapi/hoek to v9 (requires Node 12)
-* Upgrade @hapi/joi to v17 (requires Node 12)
-* Upgrade @hapi/wreck to v17 (requires Node 12)
-* Upgrade nock dev library to v12
+* [#292](https://github.com/lelylan/simple-oauth2/pull/292) Upgrade @hapi/hoek to v9 (requires Node 12)
+* [#292](https://github.com/lelylan/simple-oauth2/pull/292) Upgrade @hapi/joi to v17 (requires Node 12)
+* [#292](https://github.com/lelylan/simple-oauth2/pull/292) Upgrade @hapi/wreck to v17 (requires Node 12)
+* [#311](https://github.com/lelylan/simple-oauth2/pull/311) Upgrade nock dev library to v12
+* [#319](https://github.com/lelylan/simple-oauth2/pull/319) Add Node 14 to test matrix
+
+### Documentation
+* [#314](https://github.com/lelylan/simple-oauth2/pull/314) Add client credentials token refresh disclaimer
+* [#317](https://github.com/lelylan/simple-oauth2/pull/317) Fix output documentation for boom errors
+* [#320](https://github.com/lelylan/simple-oauth2/pull/320) Add complete reference documentation
 
 ## 3.4.0
 ### Improvements
