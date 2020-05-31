@@ -4,7 +4,7 @@
 [![Build Status](https://github.com/lelylan/simple-oauth2/workflows/Node.js%20CI/badge.svg)](https://github.com/lelylan/simple-oauth2/actions)
 [![Dependency Status](https://img.shields.io/david/lelylan/simple-oauth2.svg?style=flat-square)](https://david-dm.org/lelylan/simple-oauth2)
 
-Node.js client library for [OAuth2](http://oauth.net/2/). OAuth2 allows users to grant access to restricted resources by third party applications.
+[Simple OAuth2](#simple-oauth2) is a Node.js client library for the [OAuth 2.0](http://oauth.net/2/) authorization framework. [OAuth 2.0](http://oauth.net/2/) is the industry-standard protocol for authorization, enabling third-party applications to obtain limited access to an HTTP service, either on behalf of a resource owner or by allowing the third-party application to obtain access on it's own behalf.
 
 ## Table of Contents
 
@@ -16,15 +16,15 @@ Node.js client library for [OAuth2](http://oauth.net/2/). OAuth2 allows users to
   - [Table of Contents](#table-of-contents)
   - [Requirements](#requirements)
   - [Usage](#usage)
-    - [OAuth2 Supported grants](#oauth2-supported-grants)
-      - [Authorization Code](#authorization-code)
-      - [Password Credentials Flow](#password-credentials-flow)
-      - [Client Credentials Flow](#client-credentials-flow)
+    - [Supported Grant Types](#supported-grant-types)
+      - [Authorization Code Grant](#authorization-code-grant)
+      - [Resource Owner Password Credentials Grant](#resource-owner-password-credentials-grant)
+      - [Client Credentials Grant](#client-credentials-grant)
     - [Access Token](#access-token)
+      - [Refresh an access token](#refresh-an-access-token)
+      - [Revoke an access or refresh token](#revoke-an-access-or-refresh-token)
     - [Errors](#errors)
   - [Debugging the module](#debugging-the-module)
-  - [API](#api)
-  - [Usage examples](#usage-examples)
   - [Contributing](#contributing)
   - [Authors](#authors)
     - [Contributors](#contributors)
@@ -46,7 +46,7 @@ Install the client library using [npm](http://npmjs.org/):
 npm install --save simple-oauth2
 ```
 
-Create a new instance by specifying the minimal configuration
+With a minimal configuration, create an client instace of any supported [grant type](#supported-grant-types).
 
 ```javascript
 const config = {
@@ -61,21 +61,22 @@ const config = {
 
 const { ClientCredentials, PasswordOwner, AuthorizationCode } = require('simple-oauth2');
 ```
-For more detailed configuration information see [API Documentation](./API.md)
 
-### OAuth2 Supported grants
+For a complete reference of configuration options, see the [API Options](./API.md#options)
 
-Depending on your use case, any of the following supported grant types may be useful:
+### Supported Grant Types
 
-#### Authorization Code
+Depending on your use-case, any of the following supported grant types may be useful:
 
-The [Authorization Code](http://tools.ietf.org/html/draft-ietf-oauth-v2-31#section-4.1) grant type is made up from two parts. At first your application asks to the user the permission to access their data. If the user approves the OAuth2 server sends to the client an authorization code. In the second part, the client POST the authorization code along with its client secret to the oauth server in order to get the access token.
+#### Authorization Code Grant
+
+The [Authorization Code](https://oauth.net/2/grant-types/authorization-code/) grant type is used by confidential and public clients to exchange an authorization code for an access token. After the user returns to the client via the redirect URL, the application will get the authorization code from the URL and use it to request an access token.
 
 ```javascript
 async function run() {
-  const authorizationCode = new AuthorizationCode(config);
+  const client = new AuthorizationCode(config);
 
-  const authorizationUri = authorizationCode.authorizeURL({
+  const authorizationUri = client.authorizeURL({
     redirect_uri: 'http://localhost:3000/callback',
     scope: '<scope>',
     state: '<state>'
@@ -84,14 +85,14 @@ async function run() {
   // Redirect example using Express (see http://expressjs.com/api.html#res.redirect)
   res.redirect(authorizationUri);
 
-  const tokenConfig = {
+  const tokenParams = {
     code: '<code>',
     redirect_uri: 'http://localhost:3000/callback',
     scope: '<scope>',
   };
 
   try {
-    const accessToken = await authorizationCode.getToken(tokenConfig);
+    const accessToken = await client.getToken(tokenParams);
   } catch (error) {
     console.log('Access Token Error', error.message);
   }
@@ -100,22 +101,24 @@ async function run() {
 run();
 ```
 
-#### Password Credentials Flow
+See the [API reference](./API.md#new-authorizationcodeoptions) for a complete reference of available options or any of our available examples at the [example folder](./example).
 
-The [Password Owner](http://tools.ietf.org/html/draft-ietf-oauth-v2-31#section-4.3) grant type is suitable when the resource owner has a trust relationship with the client, such as its computer operating system or a highly privileged application. Use this flow only when other flows are not viable or when you need a fast way to test your application.
+#### Resource Owner Password Credentials Grant
+
+The [Resource Owner Password Credentials](https://oauth.net/2/grant-types/password/) grant type is a way to exchange a user's credentials for an access token. Because the client application has to collect the user's password and send it to the authorization server, it is not recommended that this grant be used at all anymore.
 
 ```javascript
 async function run() {
-  const passwordOwner = new PasswordOwner(config);
+  const client = new PasswordOwner(config);
 
-  const tokenConfig = {
+  const tokenParams = {
     username: 'username',
     password: 'password',
     scope: '<scope>',
   };
 
   try {
-    const accessToken = await passwordOwner.getToken(tokenConfig);
+    const accessToken = await client.getToken(tokenParams);
   } catch (error) {
     console.log('Access Token Error', error.message);
   }
@@ -124,20 +127,22 @@ async function run() {
 run();
 ```
 
-#### Client Credentials Flow
+See the [API reference](./API.md#new-passwordowneroptions) for a complete reference of available options.
 
-The [Client Credentials](http://tools.ietf.org/html/draft-ietf-oauth-v2-31#section-4.4) grant type is suitable when client is requesting access to the protected resources under its control.
+#### Client Credentials Grant
+
+The [Client Credentials](https://oauth.net/2/grant-types/client-credentials/) grant type is used by clients to obtain an access token outside of the context of a user. This is typically used by clients to access resources about themselves rather than to access a user's resources.
 
 ```javascript
 async function run() {
-  const clientCredentials = new ClientCredentials(config);
+  const client = new ClientCredentials(config);
 
-  const tokenConfig = {
+  const tokenParams = {
     scope: '<scope>',
   };
 
   try {
-    const accessToken = await clientCredentials.getToken(tokenConfig);
+    const accessToken = await client.getToken(tokenParams);
   } catch (error) {
     console.log('Access Token error', error.message);
   }
@@ -146,25 +151,25 @@ async function run() {
 run();
 ```
 
+See the [API reference](./API.md#new-clientcredentialsoptions) for a complete reference of available options.
+
 ### Access Token
 
-When a token expires we need to refresh it. Simple OAuth2 offers the AccessToken class that add a couple of useful methods to refresh the access token when it is expired.
+On completion of any [supported grant type](#supported-grant-types) an access token will be obtained. A list of supported operations can be found below.
+
+#### Refresh an access token
+
+When a token expires we need a mechanism to obtain a new access token. The [AccessToken](./API.md#accesstoken) methods can be used to perform the token refresh process.
 
 ```javascript
 async function run() {
-  const tokenObject = {
-    'access_token': '<access-token>',
-    'refresh_token': '<refresh-token>',
-    'expires_in': '7200'
-  };
-
   if (accessToken.expired()) {
     try {
-      const params = {
+      const refreshParams = {
         scope: '<scope>',
       };
 
-      accessToken = await accessToken.refresh(params);
+      accessToken = await accessToken.refresh(refreshParams);
     } catch (error) {
       console.log('Error refreshing access token: ', error.message);
     }
@@ -194,7 +199,11 @@ async function run() {
 run();
 ```
 
-When you've done with the token or you want to log out, you can revoke the access and refresh tokens.
+See the [API reference](./API.md#accesstoken) for a complete reference of available options.
+
+#### Revoke an access or refresh token
+
+When you've done with the token or you want to log out, you can revoke both access and refresh tokens.
 
 ```javascript
 async function run() {
@@ -213,7 +222,6 @@ As a convenience method, you can also revoke both tokens in a single call:
 
 ```javascript
 async function run() {
-  // Revoke both access and refresh tokens
   try {
     // Revokes both tokens, refresh token is only revoked if the access_token is properly revoked
     await accessToken.revokeAll();
@@ -225,26 +233,25 @@ async function run() {
 run();
 ```
 
+See the [API reference](./API.md#accesstoken) for a complete reference of available options.
+
 ### Errors
 
-Errors are returned when a 4xx or 5xx status code is received.
-
-    BoomError
-
-As a standard [boom](https://github.com/hapijs/boom) error you can access any of the [boom error properties](https://hapi.dev/module/boom/api). The total amount of information varies according to the generated status code.
+Whenever a client or server error is produced, a [boom](https://github.com/hapijs/boom) error is thrown by the library. As such any [boom error property](https://hapi.dev/module/boom/api) is available, but the exact information may vary according to the type of error.
 
 ```javascript
 async function run() {
-  const clientCredentials = new ClientCredentials(config);
+  const client = new ClientCredentials(config);
 
   try {
-    await clientCredentials.getToken();
+    await client.getToken();
   } catch(error) {
     console.log(error.output);
   }
 }
 
 run();
+
 // { statusCode: 401,
 //   payload:
 //    { statusCode: 401,
@@ -259,13 +266,6 @@ This module uses the [debug](https://github.com/visionmedia/debug) module to hel
 ```
 DEBUG=*simple-oauth2*
 ```
-
-## API
-For a complete reference, see the module [API](./API.md).
-
-## Usage examples
-
-For complete reference examples, see the [example folder](./example).
 
 ## Contributing
 
