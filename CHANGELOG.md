@@ -1,5 +1,9 @@
 # Changelog
 
+## Next
+### Maintainance
+- Setup [volta](https://volta.sh/) instead of nvm to handle node versions
+
 ## 4.0.0
 ### Breaking changes
 * [#292](https://github.com/lelylan/simple-oauth2/pull/292) [#313](https://github.com/lelylan/simple-oauth2/pull/313) Require at least Node 12
