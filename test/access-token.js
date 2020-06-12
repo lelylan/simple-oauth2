@@ -3,7 +3,12 @@
 const test = require('ava');
 const Chance = require('chance');
 const accessTokenMixin = require('chance-access-token');
-const { isValid, isDate, differenceInSeconds } = require('date-fns');
+const {
+  isValid,
+  isDate,
+  differenceInSeconds,
+  isEqual,
+} = require('date-fns');
 
 const AccessToken = require('../lib/access-token');
 const Client = require('../lib/client');
@@ -123,6 +128,19 @@ test('@create => ignores the expiration parsing when no expiration property is p
 
   t.not(has(accessToken.token, 'expires_in'));
   t.not(has(accessToken.token, 'expires_at'));
+});
+
+test('@toJSON => serializes the access token information in an equivalent format', (t) => {
+  const config = createModuleConfig();
+  const client = new Client(config);
+
+  const accessTokenResponse = chance.accessToken();
+
+  const accessToken = new AccessToken(config, client, accessTokenResponse);
+  const restoredAccessToken = new AccessToken(config, client, JSON.parse(JSON.stringify(accessToken)));
+
+  t.deepEqual(restoredAccessToken.token, accessToken.token);
+  t.true(isEqual(restoredAccessToken.token.expires_at, accessToken.token.expires_at));
 });
 
 test('@expired => returns true when expired', (t) => {
