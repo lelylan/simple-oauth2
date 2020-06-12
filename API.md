@@ -48,7 +48,7 @@ Creates the authorization URL from the *client configuration* and the *authorize
 
 Additional options will be automatically serialized as query params in the resulting URL.
 
-#### .getToken(params, [httpOptions]) => Promise<AccessToken>
+#### await .getToken(params, [httpOptions]) => AccessToken
 Get a new access token using the current grant type.
 
 * `params`
@@ -61,12 +61,12 @@ Additional options will be automatically serialized as params for the token requ
 * `httpOptions` All [wreck](https://github.com/hapijs/wreck) options can be overriden as documented by the module `http` options.
 
 #### .createToken(token) => AccessToken
-Creates a new access token by providing a valid plain token object.
+Creates a new access token by providing a token object as specified by [RFC6750](https://tools.ietf.org/html/rfc6750#section-4).
 
 ### new ResourceOwnerPassword(options)
 This submodule provides support for the OAuth2 [Resource Owner Password Credentials](https://oauth.net/2/grant-types/password/) grant type.
 
-#### .getToken(params, [httpOptions]) => Promise<AccessToken>
+#### await .getToken(params, [httpOptions]) => AccessToken
 Get a new access token using the current grant type.
 
 * `params`
@@ -79,12 +79,12 @@ Additional options will be automatically serialized as params for the token requ
 * `httpOptions` All [wreck](https://github.com/hapijs/wreck) options can be overriden as documented by the module `http` options.
 
 #### .createToken(token) => AccessToken
-Creates a new access token by providing a valid plain token object.
+Creates a new access token by providing a token object as specified by [RFC6750](https://tools.ietf.org/html/rfc6750#section-4).
 
 ### new ClientCredentials(options)
 This submodule provides support for the OAuth2 [Client Credentials](https://oauth.net/2/grant-types/client-credentials/) grant type.
 
-#### .getToken(params, [httpOptions]) => Promise<AccessToken>
+#### await .getToken(params, [httpOptions]) => AccessToken
 Get a new access token using the current grant type.
 
 * `params`
@@ -95,7 +95,7 @@ Additional options will be automatically serialized as params for the token requ
 * `httpOptions` All [wreck](https://github.com/hapijs/wreck) options can be overriden as documented by the module `http` options.
 
 #### .createToken(token) => AccessToken
-Creates a new access token by providing a valid plain token object.
+Creates a new access token by providing a token object as specified by [RFC6750](https://tools.ietf.org/html/rfc6750#section-4).
 
 ### AccessToken
 #### .expired([expirationWindowSeconds]) => Boolean
@@ -103,7 +103,7 @@ Determines if the current access token is definitely expired or not
 
 * `expirationWindowSeconds` Window of time before the actual expiration to refresh the token. Defaults to **0**.
 
-#### .refresh(params) => Promise<AccessToken>
+#### await .refresh(params) => AccessToken
 Refreshes the current access token. The following params are allowed:
 
 * `params`
@@ -111,10 +111,10 @@ Refreshes the current access token. The following params are allowed:
 
 Additional options will be automatically serialized as query params for the token request.
 
-#### .revoke(tokenType) => Promise
+#### await .revoke(tokenType)
 Revokes either the access or refresh token depending on the {tokenType} value. Token type can be one of: `access_token` or `refresh_token`.
 
-#### .revokeAll() => Promise
+#### await .revokeAll()
 Revokes both the current access and refresh tokens
 
 #### .token

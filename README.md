@@ -184,7 +184,7 @@ async function run() {
 run();
 ```
 
-Once we have determined the access token needs refreshing with the [.expired()](./API.md##expiredexpirationwindowseconds--boolean) method, we can finally refresh it with a [.refresh()](#refreshparams--promiseaccesstoken) method call.
+Once we have determined the access token needs refreshing with the [.expired()](./API.md#expiredexpirationwindowseconds--boolean) method, we can finally refresh it with a [.refresh()](./API.md#await-refreshparams--accesstoken) method call.
 
 ```javascript
 async function run() {
