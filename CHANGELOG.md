@@ -1,6 +1,9 @@
 # Changelog
 
 ## Next
+### Improvements
+- Add support to refresh persitent access tokens
+
 ### Maintainance
 - Remove usage of [date-fns](https://date-fns.org/) production dependency
 - Setup [volta](https://volta.sh/) instead of nvm to handle node versions

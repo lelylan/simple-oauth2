@@ -159,7 +159,32 @@ On completion of any [supported grant type](#supported-grant-types) an access to
 
 #### Refresh an access token
 
-When a token expires we need a mechanism to obtain a new access token. The [AccessToken](./API.md#accesstoken) methods can be used to perform the token refresh process.
+On long lived applications, it is often necessary to refresh access tokens. In such scenarios the access token is usually persisted in an external database by first serializing it.
+
+
+```javascript
+async function run() {
+  const accessTokenJSONString = JSON.stringify(accessToken);
+
+  await persistAccessTokenJSON(accessTokenJSONString);
+}
+
+run();
+```
+
+By the time we need to refresh the persistent access token, we can get back an [AccessToken](./API.md#accesstoken) instance by using the client's [.createToken](./API.md#createtokentoken--accesstoken) method.
+
+```javascript
+async function run() {
+  const accessTokenJSONString = await getPersistedAccessTokenJSON();
+
+  let accessToken = client.createToken(JSON.parse(accessTokenJSONString));
+}
+
+run();
+```
+
+Once we have determined the access token needs refreshing with the [.expired()](./API.md##expiredexpirationwindowseconds--boolean) method, we can finally refresh it with a [.refresh()](#refreshparams--promiseaccesstoken) method call.
 
 ```javascript
 async function run() {
@@ -179,7 +204,7 @@ async function run() {
 run();
 ```
 
-The `expired` helper is useful for knowing when a token has definitively expired. However, there is a common race condition when tokens are near expiring. If an OAuth 2.0 token is issued with a `expires_in` property (as opposed to an `expires_at` property), there can be discrepancies between the time the OAuth 2.0 server issues the access token and when it is received.
+The [.expired()](./API.md##expiredexpirationwindowseconds--boolean) helper is useful for knowing when a token has definitively expired. However, there is a common race condition when tokens are near expiring. If an OAuth 2.0 token is issued with a `expires_in` property (as opposed to an `expires_at` property), there can be discrepancies between the time the OAuth 2.0 server issues the access token and when it is received.
 
 These come down to factors such as network and processing latency and can be worked around by preemptively refreshing the access token:
 

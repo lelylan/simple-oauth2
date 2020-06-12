@@ -60,6 +60,9 @@ Additional options will be automatically serialized as params for the token requ
 
 * `httpOptions` All [wreck](https://github.com/hapijs/wreck) options can be overriden as documented by the module `http` options.
 
+#### .createToken(token) => AccessToken
+Creates a new access token by providing a valid plain token object.
+
 ### new ResourceOwnerPassword(options)
 This submodule provides support for the OAuth2 [Resource Owner Password Credentials](https://oauth.net/2/grant-types/password/) grant type.
 
@@ -75,6 +78,9 @@ Additional options will be automatically serialized as params for the token requ
 
 * `httpOptions` All [wreck](https://github.com/hapijs/wreck) options can be overriden as documented by the module `http` options.
 
+#### .createToken(token) => AccessToken
+Creates a new access token by providing a valid plain token object.
+
 ### new ClientCredentials(options)
 This submodule provides support for the OAuth2 [Client Credentials](https://oauth.net/2/grant-types/client-credentials/) grant type.
 
@@ -87,6 +93,9 @@ Get a new access token using the current grant type.
 Additional options will be automatically serialized as params for the token request.
 
 * `httpOptions` All [wreck](https://github.com/hapijs/wreck) options can be overriden as documented by the module `http` options.
+
+#### .createToken(token) => AccessToken
+Creates a new access token by providing a valid plain token object.
 
 ### AccessToken
 #### .expired([expirationWindowSeconds]) => Boolean
@@ -107,3 +116,8 @@ Revokes either the access or refresh token depending on the {tokenType} value. T
 
 #### .revokeAll() => Promise
 Revokes both the current access and refresh tokens
+
+#### .token
+Immutable object containing the token object provided while constructing a new access token instance. This property will usually have the schema as specified by [RFC6750](https://tools.ietf.org/html/rfc6750#section-4), but the exact properties may vary between authorization servers.
+
+Please also note, that the current implementation will always add an **expires_at** property regardless of the authorization server response, as we require it to to provide the refresh token functionality.
