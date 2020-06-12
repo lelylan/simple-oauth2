@@ -2,6 +2,9 @@
 
 Fork the repo on github and send a pull requests with feature branches to the ```develop``` branch. Do not forget to provide tests to your contribution.
 
+## Node version
+This project is pinned to an specific node version for local development by using [volta](https://volta.sh/) as engines manager. Make sure you have it installed, to ensure your changes are tested with our recommended engine.
+
 ## Repository
 
 * The master branch will always point to the npm latest published version.

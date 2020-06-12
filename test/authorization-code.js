@@ -5,6 +5,7 @@ const { AuthorizationCode } = require('../index');
 const AccessToken = require('../lib/access-token');
 const { createModuleConfig } = require('./_module-config');
 const {
+  getAccessToken,
   createAuthorizationServer,
   getJSONEncodingScopeOptions,
   getFormEncodingScopeOptions,
@@ -171,6 +172,13 @@ test('@authorizeURL => returns the authorization URL with a custom module config
   const expected = 'https://other-authorization-server.com/authorize-now?response_type=code&client_id=client-id';
 
   t.is(actual, expected);
+});
+
+test('@createToken => creates a new access token instance from a JSON object', async (t) => {
+  const oauth2 = new AuthorizationCode(createModuleConfig());
+  const accessToken = oauth2.createToken(getAccessToken());
+
+  t.true(accessToken instanceof AccessToken);
 });
 
 test.serial('@getToken => resolves to an access token (body credentials and JSON format)', async (t) => {

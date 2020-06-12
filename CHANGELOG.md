@@ -1,5 +1,14 @@
 # Changelog
 
+## 4.1.0
+### Improvements
+- [#398](https://github.com/lelylan/simple-oauth2/pull/328) Add support to refresh persitent access tokens
+
+### Maintainance
+- [#326](https://github.com/lelylan/simple-oauth2/pull/326) Remove usage of [date-fns](https://date-fns.org/) production dependency
+- [#325](https://github.com/lelylan/simple-oauth2/pull/325) Setup [volta](https://volta.sh/) instead of nvm to handle node versions
+- [#322](https://github.com/lelylan/simple-oauth2/pull/322) Update acorn version in package-lock file
+
 ## 4.0.0
 ### Breaking changes
 * [#292](https://github.com/lelylan/simple-oauth2/pull/292) [#313](https://github.com/lelylan/simple-oauth2/pull/313) Require at least Node 12

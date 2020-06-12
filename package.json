@@ -1,6 +1,6 @@
 {
   "name": "simple-oauth2",
-  "version": "4.0.0",
+  "version": "4.1.0",
   "description": "Node.js client for OAuth2",
   "author": "Andrea Reginato <andrea.reginato@gmail.com>",
   "contributors": [
@@ -48,7 +48,6 @@
     "@hapi/hoek": "^9.0.4",
     "@hapi/joi": "^17.1.1",
     "@hapi/wreck": "^17.0.0",
-    "date-fns": "^2.14.0",
     "debug": "^4.1.1"
   },
   "devDependencies": {
@@ -57,11 +56,15 @@
     "babel-eslint": "^10.1.0",
     "chance": "^1.1.6",
     "chance-access-token": "^2.0.0",
+    "date-fns": "^2.14.0",
     "doctoc": "^1.4.0",
     "eslint": "^6.8.0",
     "eslint-config-airbnb-base": "^14.1.0",
     "eslint-plugin-import": "^2.20.2",
     "nock": "^12.0.3",
     "nyc": "^15.0.1"
+  },
+  "volta": {
+    "node": "12.18.0"
   }
 }
