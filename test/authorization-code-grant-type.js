@@ -152,7 +152,7 @@ test('@authorizeURL => returns the authorization URL with a custom module config
   t.is(actual, expected);
 });
 
-test('@authorizeURL => returns the authorization URL with a custom module configuartion (authorize path with query params)', (t) => {
+test('@authorizeURL => returns the authorization URL with a custom module configuration (authorize path with query params)', (t) => {
   const config = createModuleConfig({
     client: {
       id: 'client-id',
@@ -192,7 +192,7 @@ test('@authorizeURL => returns the authorization URL with a custom module config
   t.is(actual, expected);
 });
 
-test('@authorizeURL => returns the authorization URL with a custom module configuration (authorize path with query params conflicing with override params)', (t) => {
+test('@authorizeURL => returns the authorization URL with a custom module configuration (authorize path with query params conflicting with override params)', (t) => {
   const config = createModuleConfig({
     client: {
       id: 'client-id',
