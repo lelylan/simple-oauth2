@@ -35,7 +35,7 @@ Simple OAuth2 grant classes accept an object with the following params.
 ### URL resolution
 URL paths are relatively resolved to their corresponding host property using the [Node WHATWG URL](https://nodejs.org/dist/latest-v12.x/docs/api/url.html#url_constructor_new_url_input_base) resolution algorithm.
 
-## Grants
+## Grant Types
 ### new AuthorizationCode(options)
 This submodule provides support for the OAuth2 [Authorization Code](https://oauth.net/2/grant-types/authorization-code/) grant type.
 

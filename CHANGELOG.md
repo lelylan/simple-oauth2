@@ -3,6 +3,7 @@
 ## Next
 ### Maintainance
 - Documentation updates for persistent access token refresh
+- Internal module reorganization
 
 ## 4.1.0
 ### Improvements
