@@ -82,9 +82,6 @@ test('@authorizeURL => returns the authorization URL with a custom module config
       secret: 'client-secret',
       idParamName: 'incredible-param-name',
     },
-    auth: {
-      tokenHost: 'https://authorization-server.org',
-    },
   });
 
   const oauth2 = new AuthorizationCode(config);
@@ -151,6 +148,70 @@ test('@authorizeURL => returns the authorization URL with a custom module config
 
   const actual = oauth2.authorizeURL();
   const expected = 'https://authorization-server.org/authorize-now?response_type=code&client_id=client-id';
+
+  t.is(actual, expected);
+});
+
+test('@authorizeURL => returns the authorization URL with a custom module configuartion (authorize path with query params)', (t) => {
+  const config = createModuleConfig({
+    client: {
+      id: 'client-id',
+      secret: 'client-secret',
+    },
+    auth: {
+      tokenHost: 'https://authorization-server.org',
+      authorizePath: '/authorize-now?unique=param',
+    },
+  });
+
+  const oauth2 = new AuthorizationCode(config);
+
+  const actual = oauth2.authorizeURL();
+  const expected = 'https://authorization-server.org/authorize-now?unique=param&response_type=code&client_id=client-id';
+
+  t.is(actual, expected);
+});
+
+test('@authorizeURL => returns the authorization URL with a custom module configuration (authorize path with query params conflicting with mandatory params)', (t) => {
+  const config = createModuleConfig({
+    client: {
+      id: 'client-id',
+      secret: 'client-secret',
+    },
+    auth: {
+      tokenHost: 'https://authorization-server.org',
+      authorizePath: '/authorize-now?response_type=token',
+    },
+  });
+
+  const oauth2 = new AuthorizationCode(config);
+
+  const actual = oauth2.authorizeURL();
+  const expected = 'https://authorization-server.org/authorize-now?response_type=code&client_id=client-id';
+
+  t.is(actual, expected);
+});
+
+test('@authorizeURL => returns the authorization URL with a custom module configuration (authorize path with query params conflicing with override params)', (t) => {
+  const config = createModuleConfig({
+    client: {
+      id: 'client-id',
+      secret: 'client-secret',
+    },
+    auth: {
+      tokenHost: 'https://authorization-server.org',
+      authorizePath: '/authorize-now?custom=base',
+    },
+  });
+
+  const authorizeParams = {
+    custom: 'override',
+  };
+
+  const oauth2 = new AuthorizationCode(config);
+
+  const actual = oauth2.authorizeURL(authorizeParams);
+  const expected = 'https://authorization-server.org/authorize-now?custom=override&response_type=code&client_id=client-id';
 
   t.is(actual, expected);
 });
