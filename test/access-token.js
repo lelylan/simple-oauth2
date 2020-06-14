@@ -11,7 +11,7 @@ const {
 } = require('date-fns');
 
 const AccessToken = require('../lib/access-token');
-const Client = require('../lib/client');
+const { Client } = require('../lib/client');
 const { has, hasIn } = require('./_property');
 const { createModuleConfigWithDefaults: createModuleConfig } = require('./_module-config');
 const { createAuthorizationServer } = require('./_authorization-server-mock');
