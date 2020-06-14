@@ -17,7 +17,7 @@ test('@authorizeURL => returns the authorization URL with no options and default
   const oauth2 = new AuthorizationCode(config);
 
   const actual = oauth2.authorizeURL();
-  const expected = 'https://authorization-server.org/oauth/authorize?response_type=code&client_id=the%20client%20id';
+  const expected = 'https://authorization-server.org/oauth/authorize?response_type=code&client_id=the+client+id';
 
   t.is(actual, expected);
 });
@@ -33,7 +33,7 @@ test('@authorizeURL => returns the authorization URL with options and default mo
   const oauth2 = new AuthorizationCode(config);
 
   const actual = oauth2.authorizeURL(authorizeParams);
-  const expected = `https://authorization-server.org/oauth/authorize?response_type=code&client_id=the%20client%20id&redirect_uri=${encodeURIComponent('http://localhost:3000/callback')}&scope=user&state=02afe928b`;
+  const expected = `https://authorization-server.org/oauth/authorize?response_type=code&client_id=the+client+id&redirect_uri=${encodeURIComponent('http://localhost:3000/callback')}&scope=user&state=02afe928b`;
 
   t.is(actual, expected);
 });
@@ -49,7 +49,7 @@ test('@authorizeURL => returns the authorization URL with an scope array and def
   const oauth2 = new AuthorizationCode(config);
 
   const actual = oauth2.authorizeURL(authorizeParams);
-  const expected = `https://authorization-server.org/oauth/authorize?response_type=code&client_id=the%20client%20id&redirect_uri=${encodeURIComponent('http://localhost:3000/callback')}&state=02afe928b&scope=user%20account`;
+  const expected = `https://authorization-server.org/oauth/authorize?response_type=code&client_id=the+client+id&redirect_uri=${encodeURIComponent('http://localhost:3000/callback')}&state=02afe928b&scope=user+account`;
 
   t.is(actual, expected);
 });
@@ -70,7 +70,7 @@ test('@authorizeURL => returns the authorization URL with an scope array and a c
   const oauth2 = new AuthorizationCode(config);
 
   const actual = oauth2.authorizeURL(authorizeParams);
-  const expected = `https://authorization-server.org/oauth/authorize?response_type=code&client_id=the%20client%20id&redirect_uri=${encodeURIComponent('http://localhost:3000/callback')}&state=02afe928b&scope=user%2Caccount`;
+  const expected = `https://authorization-server.org/oauth/authorize?response_type=code&client_id=the+client+id&redirect_uri=${encodeURIComponent('http://localhost:3000/callback')}&state=02afe928b&scope=user%2Caccount`;
 
   t.is(actual, expected);
 });
