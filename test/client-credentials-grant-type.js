@@ -180,6 +180,43 @@ test.serial('@getToken => resolves to an access token with custom module configu
   t.true(accessToken instanceof AccessToken);
 });
 
+test.serial('@getToken => resolves to an access token with custom module configuration (header credentials with unescaped characters + strict encoding)', async (t) => {
+  const expectedRequestParams = {
+    grant_type: 'client_credentials',
+    random_param: 'random value',
+  };
+
+  const scopeOptions = getHeaderCredentialsScopeOptions({
+    reqheaders: {
+      Authorization: 'Basic SSUyN20rdGhlX2NsaWVudC1pZCUyMSslMjYrJTI4c3ltYm9scyUyQSUyOTpJJTI3bSt0aGVfY2xpZW50LXNlY3JldCUyMSslMjYrJTI4c3ltYm9scyUyQSUyOQ==',
+    },
+  });
+
+  const server = createAuthorizationServer('https://authorization-server.org:443');
+  const scope = server.tokenSuccess(scopeOptions, expectedRequestParams);
+
+  const config = createModuleConfig({
+    client: {
+      id: 'I\'m the_client-id! & (symbols*)',
+      secret: 'I\'m the_client-secret! & (symbols*)',
+    },
+    options: {
+      authorizationMethod: 'header',
+      credentialsEncodingMode: 'strict',
+    },
+  });
+
+  const tokenParams = {
+    random_param: 'random value',
+  };
+
+  const oauth2 = new ClientCredentials(config);
+  const accessToken = await oauth2.getToken(tokenParams);
+
+  scope.done();
+  t.true(accessToken instanceof AccessToken);
+});
+
 test.serial('@getToken => resolves to an access token with custom module configuration (access token host and path)', async (t) => {
   const expectedRequestParams = {
     grant_type: 'client_credentials',
