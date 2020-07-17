@@ -75,25 +75,6 @@ test('@authorizeURL => returns the authorization URL with an scope array and a c
   t.is(actual, expected);
 });
 
-test('@authorizeURL => returns the authorization URL with a custom module configuration (client id with unescaped characters)', (t) => {
-  const config = createModuleConfig({
-    client: {
-      id: 'I\'m the_client-id! & (symbols*)',
-      secret: 'I\'m the_client-secret! & (symbols*)',
-    },
-    auth: {
-      tokenHost: 'https://authorization-server.org',
-    },
-  });
-
-  const oauth2 = new AuthorizationCode(config);
-
-  const actual = oauth2.authorizeURL();
-  const expected = "https://authorization-server.org/oauth/authorize?response_type=code&client_id=I'm%20the_client-id!%20%26%20(symbols*)";
-
-  t.is(actual, expected);
-});
-
 test('@authorizeURL => returns the authorization URL with a custom module configuration (client id param name)', (t) => {
   const config = createModuleConfig({
     client: {
