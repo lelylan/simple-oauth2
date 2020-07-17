@@ -75,6 +75,25 @@ test('@authorizeURL => returns the authorization URL with an scope array and a c
   t.is(actual, expected);
 });
 
+test('@authorizeURL => returns the authorization URL with a custom module configuration (client id with unescaped characters)', (t) => {
+  const config = createModuleConfig({
+    client: {
+      id: 'I\'m the_client-id! & (symbols*)',
+      secret: 'I\'m the_client-secret! & (symbols*)',
+    },
+    auth: {
+      tokenHost: 'https://authorization-server.org',
+    },
+  });
+
+  const oauth2 = new AuthorizationCode(config);
+
+  const actual = oauth2.authorizeURL();
+  const expected = "https://authorization-server.org/oauth/authorize?response_type=code&client_id=I'm%20the_client-id!%20%26%20(symbols*)";
+
+  t.is(actual, expected);
+});
+
 test('@authorizeURL => returns the authorization URL with a custom module configuration (client id param name)', (t) => {
   const config = createModuleConfig({
     client: {
@@ -333,6 +352,45 @@ test.serial('@getToken => resolves to an access token with custom module configu
     client: {
       id: 'the + client + id & symbols',
       secret: 'the + client + secret & symbols',
+    },
+    options: {
+      authorizationMethod: 'header',
+      credentialsEncodingMode: 'strict',
+    },
+  });
+
+  const tokenParams = {
+    code: 'code',
+    redirect_uri: 'http://callback.com',
+  };
+
+  const oauth2 = new AuthorizationCode(config);
+  const accessToken = await oauth2.getToken(tokenParams);
+
+  scope.done();
+  t.true(accessToken instanceof AccessToken);
+});
+
+test.serial('@getToken => resolves to an access token with custom module configuration (header credentials with unescaped characters + strict encoding)', async (t) => {
+  const expectedRequestParams = {
+    grant_type: 'authorization_code',
+    code: 'code',
+    redirect_uri: 'http://callback.com',
+  };
+
+  const scopeOptions = getHeaderCredentialsScopeOptions({
+    reqheaders: {
+      Authorization: 'Basic SSUyN20rdGhlX2NsaWVudC1pZCUyMSslMjYrJTI4c3ltYm9scyUyQSUyOTpJJTI3bSt0aGVfY2xpZW50LXNlY3JldCUyMSslMjYrJTI4c3ltYm9scyUyQSUyOQ==',
+    },
+  });
+
+  const server = createAuthorizationServer('https://authorization-server.org:443');
+  const scope = server.tokenSuccess(scopeOptions, expectedRequestParams);
+
+  const config = createModuleConfig({
+    client: {
+      id: 'I\'m the_client-id! & (symbols*)',
+      secret: 'I\'m the_client-secret! & (symbols*)',
     },
     options: {
       authorizationMethod: 'header',
