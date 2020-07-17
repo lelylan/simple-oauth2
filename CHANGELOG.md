@@ -2,8 +2,9 @@
 
 ## Next
 ### Maintainance
-- Documentation updates for persistent access token refresh
 - Internal module reorganization
+- Preserve query params on authorizePath on authorizeURL method
+- Documentation updates for persistent access token refresh
 
 ## 4.1.0
 ### Improvements
