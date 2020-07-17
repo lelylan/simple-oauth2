@@ -1,8 +1,13 @@
 # Changelog
 
+## Next
+### Maintainance
+- Documentation updates for persistent access token refresh
+- Internal module reorganization
+
 ## 4.1.0
 ### Improvements
-- [#398](https://github.com/lelylan/simple-oauth2/pull/328) Add support to refresh persitent access tokens
+- [#398](https://github.com/lelylan/simple-oauth2/pull/328) Add support to refresh persistent access tokens
 
 ### Maintainance
 - [#326](https://github.com/lelylan/simple-oauth2/pull/326) Remove usage of [date-fns](https://date-fns.org/) production dependency

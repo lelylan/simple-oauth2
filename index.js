@@ -1,12 +1,12 @@
 'use strict';
 
-const Client = require('./lib/client');
 const Config = require('./lib/config');
-const AuthorizationCodeGrant = require('./lib/grants/authorization-code');
-const ResourceOwnerPasswordGrant = require('./lib/grants/resource-owner-password');
-const ClientCredentialsGrant = require('./lib/grants/client-credentials');
+const { Client } = require('./lib/client');
+const AuthorizationCodeGrantType = require('./lib/authorization-code-grant-type');
+const ResourceOwnerPasswordGrantType = require('./lib/resource-owner-password-grant-type');
+const ClientCredentialsGrantType = require('./lib/client-credentials-grant-type');
 
-class AuthorizationCode extends AuthorizationCodeGrant {
+class AuthorizationCode extends AuthorizationCodeGrantType {
   constructor(options) {
     const config = Config.apply(options);
     const client = new Client(config);
@@ -15,7 +15,7 @@ class AuthorizationCode extends AuthorizationCodeGrant {
   }
 }
 
-class ClientCredentials extends ClientCredentialsGrant {
+class ClientCredentials extends ClientCredentialsGrantType {
   constructor(options) {
     const config = Config.apply(options);
     const client = new Client(config);
@@ -24,7 +24,7 @@ class ClientCredentials extends ClientCredentialsGrant {
   }
 }
 
-class ResourceOwnerPassword extends ResourceOwnerPasswordGrant {
+class ResourceOwnerPassword extends ResourceOwnerPasswordGrantType {
   constructor(options) {
     const config = Config.apply(options);
     const client = new Client(config);
