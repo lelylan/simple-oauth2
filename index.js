@@ -9,7 +9,7 @@ const { AuthorizationCodeSchema, ClientCredentialsSchema, ResourceOwnerPasswordS
 
 class AuthorizationCode extends AuthorizationCodeGrantType {
   constructor(options) {
-    const config = Joi.attempt(options, AuthorizationCodeSchema, 'grant type configuration not supported');
+    const config = Joi.attempt(options, AuthorizationCodeSchema, 'Invalid options provided to simple-oauth2');
     const client = new Client(config);
 
     super(config, client);
@@ -18,7 +18,7 @@ class AuthorizationCode extends AuthorizationCodeGrantType {
 
 class ClientCredentials extends ClientCredentialsGrantType {
   constructor(options) {
-    const config = Joi.attempt(options, ClientCredentialsSchema, 'grant type configuration not supported');
+    const config = Joi.attempt(options, ClientCredentialsSchema, 'Invalid options provided to simple-oauth2');
     const client = new Client(config);
 
     super(config, client);
@@ -27,7 +27,7 @@ class ClientCredentials extends ClientCredentialsGrantType {
 
 class ResourceOwnerPassword extends ResourceOwnerPasswordGrantType {
   constructor(options) {
-    const config = Joi.attempt(options, ResourceOwnerPasswordSchema, 'grant type configuration not supported');
+    const config = Joi.attempt(options, ResourceOwnerPasswordSchema, 'Invalid options provided to simple-oauth2');
     const client = new Client(config);
 
     super(config, client);
