@@ -5,6 +5,7 @@
 - Internal module reorganization
 - Preserve query params on authorizePath on authorizeURL method
 - Documentation updates for persistent access token refresh
+- Accept only options available per grant type
 
 ## 4.1.0
 ### Improvements
