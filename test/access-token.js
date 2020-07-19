@@ -13,8 +13,10 @@ const {
 const AccessToken = require('../lib/access-token');
 const { Client } = require('../lib/client');
 const { has, hasIn } = require('./_property');
-const { createModuleConfigWithDefaults: createModuleConfig } = require('./_module-config');
+const { createModuleConfigWithDefaults } = require('./_module-config');
 const { createAuthorizationServer } = require('./_authorization-server-mock');
+
+const createModuleConfig = (...args) => createModuleConfigWithDefaults('authorization-code', ...args);
 
 const chance = new Chance();
 chance.mixin({ accessToken: accessTokenMixin });

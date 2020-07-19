@@ -1,7 +1,14 @@
 'use strict';
 
 const Hoek = require('@hapi/hoek');
-const Config = require('../lib/config');
+const Joi = require('@hapi/joi');
+const { AuthorizationCodeSchema, ClientCredentialsSchema, ResourceOwnerPasswordSchema } = require('../lib/config');
+
+const schemas = {
+  'authorization-code': AuthorizationCodeSchema,
+  'client-credentials': ClientCredentialsSchema,
+  'resource-owner-password': ResourceOwnerPasswordSchema,
+};
 
 const baseConfig = {
   client: {
@@ -17,8 +24,10 @@ function createModuleConfig(config = {}) {
   return Hoek.applyToDefaults(baseConfig, config);
 }
 
-function createModuleConfigWithDefaults(config) {
-  return Config.apply(createModuleConfig(config));
+function createModuleConfigWithDefaults(grantType, config) {
+  Hoek.assert(schemas[grantType], 'grant type configuration not supported');
+
+  return Joi.attempt(createModuleConfig(config), schemas[grantType]);
 }
 
 module.exports = {
