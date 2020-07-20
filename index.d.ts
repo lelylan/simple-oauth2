@@ -13,14 +13,11 @@ export interface AuthOptions {
   authorizeHost?: string;
   authorizePath?: string;
 }
+
 export interface HttpOptions {
   json?: string;
   redirects?: number;
-  // todo is this simple http headers interface?
-  headers?: {
-    accept?: string;
-    authorization?: string;
-  }
+  headers?: any;
 }
 export interface ModuleOptions {
   scopeSeparator?: string;
