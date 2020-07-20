@@ -2,13 +2,7 @@
 
 const Hoek = require('@hapi/hoek');
 const Joi = require('@hapi/joi');
-const { AuthorizationCodeSchema, ClientCredentialsSchema, ResourceOwnerPasswordSchema } = require('../lib/config');
-
-const schemas = {
-  'authorization-code': AuthorizationCodeSchema,
-  'client-credentials': ClientCredentialsSchema,
-  'resource-owner-password': ResourceOwnerPasswordSchema,
-};
+const { AuthorizationCodeSchema } = require('../lib/config');
 
 const baseConfig = {
   client: {
@@ -24,10 +18,8 @@ function createModuleConfig(config = {}) {
   return Hoek.applyToDefaults(baseConfig, config);
 }
 
-function createModuleConfigWithDefaults(grantType, config) {
-  Hoek.assert(schemas[grantType], 'grant type configuration not supported');
-
-  return Joi.attempt(createModuleConfig(config), schemas[grantType]);
+function createModuleConfigWithDefaults(config = {}) {
+  return Joi.attempt(createModuleConfig(config), AuthorizationCodeSchema); // any grant type schema works here
 }
 
 module.exports = {
