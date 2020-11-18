@@ -4,6 +4,7 @@
 ### Maintainance
 - Documentation updates for persistent access token refresh
 - Internal module reorganization
+- Use Node 14 as default runtime version for development. Document support matrix
 
 ## 4.1.0
 ### Improvements

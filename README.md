@@ -36,7 +36,12 @@
 
 ## Requirements
 
-The node client library is tested against Node 12 LTS and newer versions. Older node versions are unsupported.
+| Version                                                                          | Node support        |
+|----------------------------------------------------------------------------------|---------------------|
+| [3.x](https://github.com/lelylan/simple-oauth2/tree/3.x)                         | Node 8.x or higher  |
+| [4.x (Current)](https://github.com/lelylan/simple-oauth2/tree/master)            | Node 12.x or higher |
+
+Older node versions are unsupported.
 
 ## Usage
 
