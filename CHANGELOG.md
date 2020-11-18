@@ -5,6 +5,7 @@
 - Documentation updates for persistent access token refresh
 - Internal module reorganization
 - Use Node 14 as default runtime version for development. Document support matrix
+- Use [joi](https://www.npmjs.com/package/joi) instead of the deprecated [@hapi/joi](https://www.npmjs.com/package/@hapi/joi) module
 
 ## 4.1.0
 ### Improvements
