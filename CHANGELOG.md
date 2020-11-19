@@ -1,19 +1,22 @@
 # Changelog
 
-## Next
+## 4.2.0
 
 ### Improvements
-- Add support for custom http options to access token refresh and revoke operations
+- [#354](https://github.com/lelylan/simple-oauth2/pull/354) Add support for custom http options to access token refresh and revoke operations
 
 ### Maintainance
-- Documentation updates for persistent access token refresh
-- Internal module reorganization
-- Use Node 14 as default runtime version for development. Document support matrix
-- Use [joi](https://www.npmjs.com/package/joi) instead of the deprecated [@hapi/joi](https://www.npmjs.com/package/@hapi/joi) module
+- [#329](https://github.com/lelylan/simple-oauth2/pull/329) Documentation updates for persistent access token refresh
+- [#330](https://github.com/lelylan/simple-oauth2/pull/330) Upgrade module to use eslint v7
+- [#331](https://github.com/lelylan/simple-oauth2/pull/331) Internal module reorganization
+- [#333](https://github.com/lelylan/simple-oauth2/pull/333) Add template for issues
+- [#341](https://github.com/lelylan/simple-oauth2/pull/341) Segregate integration tests by responsability area
+- [#352](https://github.com/lelylan/simple-oauth2/pull/352) Use Node 14 as default runtime version for development. Document support matrix
+- [#353](https://github.com/lelylan/simple-oauth2/pull/353) Use [joi](https://www.npmjs.com/package/joi) instead of the deprecated [@hapi/joi](https://www.npmjs.com/package/@hapi/joi) module
 
 ## 4.1.0
 ### Improvements
-- [#398](https://github.com/lelylan/simple-oauth2/pull/328) Add support to refresh persistent access tokens
+- [#328](https://github.com/lelylan/simple-oauth2/pull/328) Add support to refresh persistent access tokens
 
 ### Maintainance
 - [#326](https://github.com/lelylan/simple-oauth2/pull/326) Remove usage of [date-fns](https://date-fns.org/) production dependency
