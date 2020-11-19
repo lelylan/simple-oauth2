@@ -1,6 +1,10 @@
 # Changelog
 
 ## Next
+
+### Improvements
+- Add support for custom http options to access token refresh and revoke operations
+
 ### Maintainance
 - Documentation updates for persistent access token refresh
 - Internal module reorganization
