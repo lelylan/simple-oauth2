@@ -1,7 +1,7 @@
 {
   "extends": "airbnb-base",
   "parserOptions": {
-    "sourceType": "script",
+    "sourceType": "module",
     "ecmaVersion": 2022
   },
   "rules": {
@@ -9,8 +9,8 @@
       "code": 120,
       "ignoreComments": true
     }],
-    "strict": ["error", "safe"],
     "max-classes-per-file": ["off"],
-    "lines-between-class-members": ["off"]
+    "lines-between-class-members": ["off"],
+    "import/extensions": "off"
   }
 }

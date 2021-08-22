@@ -1,9 +1,7 @@
-'use strict';
-
-const { URL } = require('url');
-const nock = require('nock');
-const Hoek = require('@hapi/hoek');
-const Boom = require('@hapi/boom');
+import { URL } from 'url';
+import nock from 'nock';
+import Hoek from '@hapi/hoek';
+import Boom from '@hapi/boom';
 
 const accessToken = {
   access_token: '5683E74C-7514-4426-B64F-CF0C24223F69',
@@ -12,7 +10,7 @@ const accessToken = {
   expires_in: '240000',
 };
 
-function createAuthorizationServer(authorizationServerUrl) {
+export function createAuthorizationServer(authorizationServerUrl) {
   function tokenSuccessWithCustomPath(path, scopeOptions, params) {
     return nock(authorizationServerUrl, scopeOptions)
       .post(path, params)
@@ -116,11 +114,11 @@ function createAuthorizationServer(authorizationServerUrl) {
   };
 }
 
-function getAccessToken() {
+export function getAccessToken() {
   return accessToken;
 }
 
-function getJSONEncodingScopeOptions(options = {}) {
+export function getJSONEncodingScopeOptions(options = {}) {
   return Hoek.applyToDefaults({
     reqheaders: {
       Accept: 'application/json',
@@ -129,7 +127,7 @@ function getJSONEncodingScopeOptions(options = {}) {
   }, options);
 }
 
-function getFormEncodingScopeOptions(options = {}) {
+export function getFormEncodingScopeOptions(options = {}) {
   return Hoek.applyToDefaults({
     reqheaders: {
       Accept: 'application/json',
@@ -138,7 +136,7 @@ function getFormEncodingScopeOptions(options = {}) {
   }, options);
 }
 
-function getHeaderCredentialsScopeOptions(options = {}) {
+export function getHeaderCredentialsScopeOptions(options = {}) {
   return Hoek.applyToDefaults({
     reqheaders: {
       Accept: 'application/json',
@@ -146,11 +144,3 @@ function getHeaderCredentialsScopeOptions(options = {}) {
     },
   }, options);
 }
-
-module.exports = {
-  getAccessToken,
-  createAuthorizationServer,
-  getJSONEncodingScopeOptions,
-  getFormEncodingScopeOptions,
-  getHeaderCredentialsScopeOptions,
-};

@@ -1,9 +1,6 @@
-'use strict';
-
-const test = require('ava');
-
-const { ResourceOwnerPassword, ClientCredentials, AuthorizationCode } = require('../index');
-const { createModuleConfig } = require('./_module-config');
+import test from 'ava';
+import { ResourceOwnerPassword, ClientCredentials, AuthorizationCode } from '../index.js';
+import { createModuleConfig } from './_module-config.js';
 
 test('@create => throws a validation error when no configuration is provided', (t) => {
   t.throws(() => new ResourceOwnerPassword());

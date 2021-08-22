@@ -1,7 +1,5 @@
-'use strict';
-
-const Hoek = require('@hapi/hoek');
-const Config = require('../lib/config');
+import Hoek from '@hapi/hoek';
+import Config from '../lib/config.js';
 
 const baseConfig = {
   client: {
@@ -13,15 +11,10 @@ const baseConfig = {
   },
 };
 
-function createModuleConfig(config = {}) {
+export function createModuleConfig(config = {}) {
   return Hoek.applyToDefaults(baseConfig, config);
 }
 
-function createModuleConfigWithDefaults(config) {
+export function createModuleConfigWithDefaults(config) {
   return Config.apply(createModuleConfig(config));
 }
-
-module.exports = {
-  createModuleConfig,
-  createModuleConfigWithDefaults,
-};
