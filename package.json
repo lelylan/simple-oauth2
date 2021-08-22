@@ -22,12 +22,12 @@
   },
   "scripts": {
     "pretest": "npm run lint",
-    "test": "nyc ava",
+    "test": "c8 ava",
     "lint": "eslint .",
     "docs-gen": "doctoc README.md --github --no-title",
     "clean-install": "rm -rf node_modules && npm install"
   },
-  "nyc": {
+  "c8": {
     "check-coverage": true,
     "lines": 100,
     "statements": 100,
@@ -53,8 +53,9 @@
   },
   "devDependencies": {
     "@hapi/boom": "^9.1.0",
-    "ava": "^3.13.0",
+    "ava": "^3.15.0",
     "babel-eslint": "^10.1.0",
+    "c8": "^7.8.0",
     "chance": "^1.1.7",
     "chance-access-token": "^2.1.0",
     "date-fns": "^2.14.0",
@@ -62,8 +63,7 @@
     "eslint": "^7.14.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-plugin-import": "^2.22.1",
-    "nock": "^13.0.5",
-    "nyc": "^15.1.0"
+    "nock": "^13.1.2"
   },
   "volta": {
     "node": "14.15.1"
