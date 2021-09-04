@@ -1,5 +1,10 @@
 # Changelog
 
+## Next
+
+### Breaking changes
+- Drop node 12 support
+
 ## 4.2.0
 
 ### Improvements
