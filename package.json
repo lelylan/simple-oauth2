@@ -52,17 +52,18 @@
     "joi": "^17.3.0"
   },
   "devDependencies": {
+    "@babel/core": "^7.15.4",
+    "@babel/eslint-parser": "^7.15.4",
     "@hapi/boom": "^9.1.0",
     "ava": "^3.15.0",
-    "babel-eslint": "^10.1.0",
     "c8": "^7.8.0",
     "chance": "^1.1.7",
     "chance-access-token": "^2.1.0",
     "date-fns": "^2.14.0",
     "doctoc": "^1.4.0",
-    "eslint": "^7.14.0",
+    "eslint": "^7.32.0",
     "eslint-config-airbnb-base": "^14.2.1",
-    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-import": "^2.24.2",
     "nock": "^13.1.2"
   },
   "volta": {
