@@ -5,6 +5,9 @@
 ### Breaking changes
 - Drop node 12 support
 
+### Maintainance
+- Use c8 to collect code coverage
+
 ## 4.2.0
 
 ### Improvements
