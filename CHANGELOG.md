@@ -7,6 +7,7 @@
 
 ### Maintainance
 - Use c8 to collect code coverage
+- Upgrade eslint parser from babel-eslint to @babel/eslint-parser
 
 ## 4.2.0
 
