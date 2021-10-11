@@ -51,7 +51,7 @@ Install the client library using [npm](http://npmjs.org/):
 npm install --save simple-oauth2
 ```
 
-With a minimal configuration, create an client instace of any supported [grant type](#supported-grant-types).
+With a minimal configuration, create a client instance of any supported [grant type](#supported-grant-types).
 
 ```javascript
 const config = {
