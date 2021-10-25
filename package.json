@@ -52,7 +52,6 @@
     "joi": "^17.3.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.15.8",
     "@hapi/boom": "^9.1.0",
     "ava": "^3.15.0",
     "c8": "^7.8.0",
