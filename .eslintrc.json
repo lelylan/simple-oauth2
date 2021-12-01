@@ -2,8 +2,7 @@
   "extends": "airbnb-base",
   "parserOptions": {
     "sourceType": "script",
-    "ecmaVersion": 2022,
-    "requireConfigFile": false
+    "ecmaVersion": 2022
   },
   "rules": {
     "max-len": ["error", {
