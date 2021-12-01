@@ -1,9 +1,7 @@
-'use strict';
-
-const test = require('ava');
-const { AuthorizationCode } = require('../index');
-const { createModuleConfig } = require('./_module-config');
-const { createAuthorizationServer, getHeaderCredentialsScopeOptions } = require('./_authorization-server-mock');
+import test from 'ava';
+import { AuthorizationCode } from '../index.js';
+import { createModuleConfig } from './_module-config.js';
+import { createAuthorizationServer, getHeaderCredentialsScopeOptions } from './_authorization-server-mock.js';
 
 const tokenParams = {
   code: 'code',

@@ -1,16 +1,14 @@
-'use strict';
-
-const test = require('ava');
-const { ClientCredentials } = require('../index');
-const AccessToken = require('../lib/access-token');
-const { createModuleConfig } = require('./_module-config');
-const {
+import test from 'ava';
+import { ClientCredentials } from '../index.js';
+import AccessToken from '../lib/access-token.js';
+import { createModuleConfig } from './_module-config.js';
+import {
   getAccessToken,
   createAuthorizationServer,
   getJSONEncodingScopeOptions,
   getFormEncodingScopeOptions,
   getHeaderCredentialsScopeOptions,
-} = require('./_authorization-server-mock');
+} from './_authorization-server-mock.js';
 
 test('@createToken => creates a new access token instance from a JSON object', async (t) => {
   const oauth2 = new ClientCredentials(createModuleConfig());

@@ -4,6 +4,7 @@
 
 ### Breaking changes
 - Drop node 12 support
+- Rewrite library using ecmascript modules
 
 ### Maintainance
 - Use c8 to collect code coverage

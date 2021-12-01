@@ -54,6 +54,8 @@ npm install --save simple-oauth2
 With a minimal configuration, create a client instance of any supported [grant type](#supported-grant-types).
 
 ```javascript
+import { ClientCredentials, ResourceOwnerPassword, AuthorizationCode } from 'simple-oauth2';
+
 const config = {
   client: {
     id: '<client-id>',
@@ -63,8 +65,6 @@ const config = {
     tokenHost: 'https://api.oauth.com'
   }
 };
-
-const { ClientCredentials, ResourceOwnerPassword, AuthorizationCode } = require('simple-oauth2');
 ```
 
 For a complete reference of configuration options, see the [API Options](./API.md#options)
@@ -78,32 +78,28 @@ Depending on your use-case, any of the following supported grant types may be us
 The [Authorization Code](https://oauth.net/2/grant-types/authorization-code/) grant type is used by confidential and public clients to exchange an authorization code for an access token. After the user returns to the client via the redirect URL, the application will get the authorization code from the URL and use it to request an access token.
 
 ```javascript
-async function run() {
-  const client = new AuthorizationCode(config);
+const client = new AuthorizationCode(config);
 
-  const authorizationUri = client.authorizeURL({
-    redirect_uri: 'http://localhost:3000/callback',
-    scope: '<scope>',
-    state: '<state>'
-  });
+const authorizationUri = client.authorizeURL({
+  redirect_uri: 'http://localhost:3000/callback',
+  scope: '<scope>',
+  state: '<state>'
+});
 
-  // Redirect example using Express (see http://expressjs.com/api.html#res.redirect)
-  res.redirect(authorizationUri);
+// Redirect example using Express (see http://expressjs.com/api.html#res.redirect)
+res.redirect(authorizationUri);
 
-  const tokenParams = {
-    code: '<code>',
-    redirect_uri: 'http://localhost:3000/callback',
-    scope: '<scope>',
-  };
+const tokenParams = {
+  code: '<code>',
+  redirect_uri: 'http://localhost:3000/callback',
+  scope: '<scope>',
+};
 
-  try {
-    const accessToken = await client.getToken(tokenParams);
-  } catch (error) {
-    console.log('Access Token Error', error.message);
-  }
+try {
+  const accessToken = await client.getToken(tokenParams);
+} catch (error) {
+  console.log('Access Token Error', error.message);
 }
-
-run();
 ```
 
 See the [API reference](./API.md#new-authorizationcodeoptions) for a complete reference of available options or any of our available examples at the [example folder](./example).
@@ -113,23 +109,19 @@ See the [API reference](./API.md#new-authorizationcodeoptions) for a complete re
 The [Resource Owner Password Credentials](https://oauth.net/2/grant-types/password/) grant type is a way to exchange a user's credentials for an access token. Because the client application has to collect the user's password and send it to the authorization server, it is not recommended that this grant be used at all anymore.
 
 ```javascript
-async function run() {
-  const client = new ResourceOwnerPassword(config);
+const client = new ResourceOwnerPassword(config);
 
-  const tokenParams = {
-    username: 'username',
-    password: 'password',
-    scope: '<scope>',
-  };
+const tokenParams = {
+  username: 'username',
+  password: 'password',
+  scope: '<scope>',
+};
 
-  try {
-    const accessToken = await client.getToken(tokenParams);
-  } catch (error) {
-    console.log('Access Token Error', error.message);
-  }
+try {
+  const accessToken = await client.getToken(tokenParams);
+} catch (error) {
+  console.log('Access Token Error', error.message);
 }
-
-run();
 ```
 
 See the [API reference](./API.md#new-resourceownerpasswordoptions) for a complete reference of available options.
@@ -139,21 +131,17 @@ See the [API reference](./API.md#new-resourceownerpasswordoptions) for a complet
 The [Client Credentials](https://oauth.net/2/grant-types/client-credentials/) grant type is used by clients to obtain an access token outside of the context of a user. This is typically used by clients to access resources about themselves rather than to access a user's resources.
 
 ```javascript
-async function run() {
-  const client = new ClientCredentials(config);
+const client = new ClientCredentials(config);
 
-  const tokenParams = {
-    scope: '<scope>',
-  };
+const tokenParams = {
+  scope: '<scope>',
+};
 
-  try {
-    const accessToken = await client.getToken(tokenParams);
-  } catch (error) {
-    console.log('Access Token error', error.message);
-  }
+try {
+  const accessToken = await client.getToken(tokenParams);
+} catch (error) {
+  console.log('Access Token error', error.message);
 }
-
-run();
 ```
 
 See the [API reference](./API.md#new-clientcredentialsoptions) for a complete reference of available options.
@@ -168,45 +156,33 @@ On long lived applications, it is often necessary to refresh access tokens. In s
 
 
 ```javascript
-async function run() {
-  const accessTokenJSONString = JSON.stringify(accessToken);
+const accessTokenJSONString = JSON.stringify(accessToken);
 
-  await persistAccessTokenJSON(accessTokenJSONString);
-}
-
-run();
+await persistAccessTokenJSON(accessTokenJSONString);
 ```
 
 By the time we need to refresh the persistent access token, we can get back an [AccessToken](./API.md#accesstoken) instance by using the client's [.createToken](./API.md#createtokentoken--accesstoken) method.
 
 ```javascript
-async function run() {
-  const accessTokenJSONString = await getPersistedAccessTokenJSON();
+const accessTokenJSONString = await getPersistedAccessTokenJSON();
 
-  let accessToken = client.createToken(JSON.parse(accessTokenJSONString));
-}
-
-run();
+let accessToken = client.createToken(JSON.parse(accessTokenJSONString));
 ```
 
 Once we have determined the access token needs refreshing with the [.expired()](./API.md#expiredexpirationwindowseconds--boolean) method, we can finally refresh it with a [.refresh()](./API.md#await-refreshparams--accesstoken) method call.
 
 ```javascript
-async function run() {
-  if (accessToken.expired()) {
-    try {
-      const refreshParams = {
-        scope: '<scope>',
-      };
+if (accessToken.expired()) {
+  try {
+    const refreshParams = {
+      scope: '<scope>',
+    };
 
-      accessToken = await accessToken.refresh(refreshParams);
-    } catch (error) {
-      console.log('Error refreshing access token: ', error.message);
-    }
+    accessToken = await accessToken.refresh(refreshParams);
+  } catch (error) {
+    console.log('Error refreshing access token: ', error.message);
   }
 }
-
-run();
 ```
 
 The [.expired()](./API.md##expiredexpirationwindowseconds--boolean) helper is useful for knowing when a token has definitively expired. However, there is a common race condition when tokens are near expiring. If an OAuth 2.0 token is issued with a `expires_in` property (as opposed to an `expires_at` property), there can be discrepancies between the time the OAuth 2.0 server issues the access token and when it is received.
@@ -214,19 +190,15 @@ The [.expired()](./API.md##expiredexpirationwindowseconds--boolean) helper is us
 These come down to factors such as network and processing latency and can be worked around by preemptively refreshing the access token:
 
 ```javascript
-async function run() {
-  const EXPIRATION_WINDOW_IN_SECONDS = 300; // Window of time before the actual expiration to refresh the token
+const EXPIRATION_WINDOW_IN_SECONDS = 300; // Window of time before the actual expiration to refresh the token
 
-  if (accessToken.expired(EXPIRATION_WINDOW_IN_SECONDS)) {
-    try {
-      accessToken = await accessToken.refresh();
-    } catch (error) {
-      console.log('Error refreshing access token: ', error.message);
-    }
+if (accessToken.expired(EXPIRATION_WINDOW_IN_SECONDS)) {
+  try {
+    accessToken = await accessToken.refresh();
+  } catch (error) {
+    console.log('Error refreshing access token: ', error.message);
   }
 }
-
-run();
 ```
 
 **Warning:** Tokens obtained with the Client Credentials grant may not be refreshed. Fetch a new token when it's expired.
@@ -238,31 +210,23 @@ See the [API reference](./API.md#accesstoken) for a complete reference of availa
 When you've done with the token or you want to log out, you can revoke both access and refresh tokens.
 
 ```javascript
-async function run() {
-  try {
-    await accessToken.revoke('access_token');
-    await accessToken.revoke('refresh_token');
-  } catch (error) {
-    console.log('Error revoking token: ', error.message);
-  }
+try {
+  await accessToken.revoke('access_token');
+  await accessToken.revoke('refresh_token');
+} catch (error) {
+  console.log('Error revoking token: ', error.message);
 }
-
-run();
 ```
 
 As a convenience method, you can also revoke both tokens in a single call:
 
 ```javascript
-async function run() {
-  try {
-    // Revokes both tokens, refresh token is only revoked if the access_token is properly revoked
-    await accessToken.revokeAll();
-  } catch (error) {
-    console.log('Error revoking token: ', error.message);
-  }
+try {
+  // Revokes both tokens, refresh token is only revoked if the access_token is properly revoked
+  await accessToken.revokeAll();
+} catch (error) {
+  console.log('Error revoking token: ', error.message);
 }
-
-run();
 ```
 
 See the [API reference](./API.md#accesstoken) for a complete reference of available options.
@@ -272,17 +236,13 @@ See the [API reference](./API.md#accesstoken) for a complete reference of availa
 Whenever a client or server error is produced, a [boom](https://github.com/hapijs/boom) error is thrown by the library. As such any [boom error property](https://hapi.dev/module/boom/api) is available, but the exact information may vary according to the type of error.
 
 ```javascript
-async function run() {
-  const client = new ClientCredentials(config);
+const client = new ClientCredentials(config);
 
-  try {
-    await client.getToken();
-  } catch(error) {
-    console.log(error.output);
-  }
+try {
+  await client.getToken();
+} catch(error) {
+  console.log(error.output);
 }
-
-run();
 
 // { statusCode: 401,
 //   payload:

@@ -1,20 +1,18 @@
-'use strict';
-
-const test = require('ava');
-const Chance = require('chance');
-const accessTokenMixin = require('chance-access-token');
-const {
+import test from 'ava';
+import Chance from 'chance';
+import accessTokenMixin from 'chance-access-token';
+import {
   isValid,
   isDate,
   differenceInSeconds,
   isEqual,
-} = require('date-fns');
+} from 'date-fns';
 
-const AccessToken = require('../lib/access-token');
-const { Client } = require('../lib/client');
-const { has, hasIn } = require('./_property');
-const { createModuleConfigWithDefaults: createModuleConfig } = require('./_module-config');
-const { createAuthorizationServer, getHeaderCredentialsScopeOptions } = require('./_authorization-server-mock');
+import AccessToken from '../lib/access-token.js';
+import { Client } from '../lib/client/index.js';
+import { has, hasIn } from './_property.js';
+import { createModuleConfigWithDefaults as createModuleConfig } from './_module-config.js';
+import { createAuthorizationServer, getHeaderCredentialsScopeOptions } from './_authorization-server-mock.js';
 
 const chance = new Chance();
 chance.mixin({ accessToken: accessTokenMixin });
