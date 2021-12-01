@@ -59,9 +59,9 @@
     "chance-access-token": "^2.1.0",
     "date-fns": "^2.14.0",
     "doctoc": "^1.4.0",
-    "eslint": "^8.1.0",
-    "eslint-config-airbnb-base": "^14.2.1",
-    "eslint-plugin-import": "^2.25.2",
+    "eslint": "^8.2.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.25.3",
     "nock": "^13.1.2"
   },
   "volta": {
