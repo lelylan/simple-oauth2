@@ -15,6 +15,7 @@ Simple OAuth2 grant classes accept an object with the following params.
 * `auth` - required object with the following properties:
   * `tokenHost` - Base URL used to obtain access tokens. Required
   * `tokenPath` - URL path to obtain access tokens (See [url resolution notes](#url-resolution)). Defaults to **/oauth/token**
+  * `refreshPath` - URL path to refresh access tokens (See [url resolution notes](#url-resolution)). Defaults to `auth.tokenPath`
   * `revokePath` - URL path to revoke access tokens (See [url resolution notes](#url-resolution)). Defaults to **/oauth/revoke**
   * `authorizeHost` - Base URL used to request an *authorization code*. Defaults to `auth.tokenHost` value
   * `authorizePath` - URL path to request an *authorization code* (See [url resolution notes](#url-resolution)). Defaults to **/oauth/authorize**
