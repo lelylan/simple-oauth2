@@ -355,6 +355,34 @@ test.serial('@refresh => creates a new access token with a custom token path', a
   t.true(has(refreshAccessToken.token, 'access_token'));
 });
 
+test.serial('@refresh => creates a new access token with a custom refresh path', async (t) => {
+  const config = createModuleConfig({
+    auth: {
+      refreshPath: '/the-custom/refresh-path',
+    },
+  });
+
+  const accessTokenResponse = chance.accessToken({
+    expireMode: 'expires_in',
+  });
+
+  const client = new Client(config);
+
+  const refreshParams = {
+    grant_type: 'refresh_token',
+    refresh_token: accessTokenResponse.refresh_token,
+  };
+
+  const server = createAuthorizationServer('https://authorization-server.org:443');
+  const scope = server.tokenSuccessWithCustomPath('/the-custom/refresh-path', scopeOptions, refreshParams);
+
+  const accessToken = new AccessToken(config, client, accessTokenResponse);
+  const refreshAccessToken = await accessToken.refresh();
+
+  scope.done();
+  t.true(has(refreshAccessToken.token, 'access_token'));
+});
+
 test.serial('@refresh => creates a new access token with custom (inline) http options', async (t) => {
   const config = createModuleConfig();
 
