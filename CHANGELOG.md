@@ -1,10 +1,20 @@
 # Changelog
 
-## Next
+## 4.3.0
+
+### New features
+- [#387](https://github.com/lelylan/simple-oauth2/pull/387) Add support to configure refreshPath
 
 ### Maintainance
-- Use c8 to collect code coverage
-- Update eslint v8
+- [#386](https://github.com/lelylan/simple-oauth2/pull/386) Update eslint v8
+- [#379](https://github.com/lelylan/simple-oauth2/pull/379) Use c8 to collect code coverage
+- [#356](https://github.com/lelylan/simple-oauth2/pull/356) Update development dependencies
+- [#355](https://github.com/lelylan/simple-oauth2/pull/355) Add package support info
+
+### Documentation
+- [#385](https://github.com/lelylan/simple-oauth2/pull/385) Documentation update
+- [#380](https://github.com/lelylan/simple-oauth2/pull/380) Deprecate simple-oauth2 v3
+- [#373](https://github.com/lelylan/simple-oauth2/pull/373) Documentation update
 
 ## 4.2.0
 
