@@ -34,7 +34,7 @@ Simple OAuth2 grant classes accept an object with the following params.
   * `authorizationMethod` - Method used to send the *client.id*/*client.secret* authorization params at the token request. Valid options are `header` or `body`. If set to **body**, the **bodyFormat** option will be used to format the credentials. Defaults to **header**
 
 ### URL resolution
-URL paths are relatively resolved to their corresponding host property using the [Node WHATWG URL](https://nodejs.org/dist/latest-v12.x/docs/api/url.html#url_constructor_new_url_input_base) resolution algorithm.
+URL paths are relatively resolved to their corresponding host property using the [Node WHATWG URL](https://nodejs.org/docs/latest-v14.x/api/url.html#url_new_url_input_base) resolution algorithm.
 
 ## Grant Types
 ### new AuthorizationCode(options)
