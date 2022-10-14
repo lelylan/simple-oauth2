@@ -1,5 +1,13 @@
 # Changelog
 
+## Next
+
+### New features
+- Preserve query params on authorizePath on authorizeURL method
+
+### Breaking changes
+- Accept only options available per grant type
+
 ## 4.3.0
 
 ### New features
