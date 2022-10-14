@@ -1,15 +1,38 @@
 # Changelog
 
-## Next
+## 4.3.0
+
+### New features
+- [#387](https://github.com/lelylan/simple-oauth2/pull/387) Add support to configure refreshPath
+
 ### Maintainance
-- Internal module reorganization
-- Preserve query params on authorizePath on authorizeURL method
-- Documentation updates for persistent access token refresh
-- Accept only options available per grant type
+- [#386](https://github.com/lelylan/simple-oauth2/pull/386) Update eslint v8
+- [#379](https://github.com/lelylan/simple-oauth2/pull/379) Use c8 to collect code coverage
+- [#356](https://github.com/lelylan/simple-oauth2/pull/356) Update development dependencies
+- [#355](https://github.com/lelylan/simple-oauth2/pull/355) Add package support info
+
+### Documentation
+- [#385](https://github.com/lelylan/simple-oauth2/pull/385) Documentation update
+- [#380](https://github.com/lelylan/simple-oauth2/pull/380) Deprecate simple-oauth2 v3
+- [#373](https://github.com/lelylan/simple-oauth2/pull/373) Documentation update
+
+## 4.2.0
+
+### Improvements
+- [#354](https://github.com/lelylan/simple-oauth2/pull/354) Add support for custom http options to access token refresh and revoke operations
+
+### Maintainance
+- [#329](https://github.com/lelylan/simple-oauth2/pull/329) Documentation updates for persistent access token refresh
+- [#330](https://github.com/lelylan/simple-oauth2/pull/330) Upgrade module to use eslint v7
+- [#331](https://github.com/lelylan/simple-oauth2/pull/331) Internal module reorganization
+- [#333](https://github.com/lelylan/simple-oauth2/pull/333) Add template for issues
+- [#341](https://github.com/lelylan/simple-oauth2/pull/341) Segregate integration tests by responsability area
+- [#352](https://github.com/lelylan/simple-oauth2/pull/352) Use Node 14 as default runtime version for development. Document support matrix
+- [#353](https://github.com/lelylan/simple-oauth2/pull/353) Use [joi](https://www.npmjs.com/package/joi) instead of the deprecated [@hapi/joi](https://www.npmjs.com/package/@hapi/joi) module
 
 ## 4.1.0
 ### Improvements
-- [#398](https://github.com/lelylan/simple-oauth2/pull/328) Add support to refresh persistent access tokens
+- [#328](https://github.com/lelylan/simple-oauth2/pull/328) Add support to refresh persistent access tokens
 
 ### Maintainance
 - [#326](https://github.com/lelylan/simple-oauth2/pull/326) Remove usage of [date-fns](https://date-fns.org/) production dependency

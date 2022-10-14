@@ -1,9 +1,8 @@
 {
   "extends": "airbnb-base",
-  "parser": "babel-eslint",
   "parserOptions": {
     "sourceType": "script",
-    "ecmaVersion": 2020
+    "ecmaVersion": 2022
   },
   "rules": {
     "max-len": ["error", {

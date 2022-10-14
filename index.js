@@ -1,6 +1,6 @@
 'use strict';
 
-const Joi = require('@hapi/joi');
+const Joi = require('joi');
 const { Client } = require('./lib/client');
 const AuthorizationCodeGrantType = require('./lib/authorization-code-grant-type');
 const ResourceOwnerPasswordGrantType = require('./lib/resource-owner-password-grant-type');

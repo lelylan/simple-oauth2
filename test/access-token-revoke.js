@@ -6,7 +6,7 @@ const Chance = require('./_chance');
 const AccessToken = require('../lib/access-token');
 const { Client } = require('../lib/client');
 const { createModuleConfigWithDefaults: createModuleConfig } = require('./_module-config');
-const { createAuthorizationServer } = require('./_authorization-server-mock');
+const { createAuthorizationServer, getHeaderCredentialsScopeOptions } = require('./_authorization-server-mock');
 
 const chance = new Chance();
 
@@ -91,6 +91,70 @@ test.serial('@revoke => performs a token revoke with a custom revoke path', asyn
   scope.done();
 });
 
+test.serial('@revoke => performs a token revoke with custom (inline) http options', async (t) => {
+  const config = createModuleConfig();
+  const client = new Client(config);
+
+  const accessTokenResponse = chance.accessToken({
+    expireMode: 'expires_in',
+  });
+
+  const revokeParams = {
+    token: accessTokenResponse.refresh_token,
+    token_type_hint: 'refresh_token',
+  };
+
+  const customScopeOptions = getHeaderCredentialsScopeOptions({
+    reqheaders: {
+      'X-REQUEST-ID': 123,
+    },
+  });
+
+  const server = createAuthorizationServer('https://authorization-server.org:443');
+  const scope = server.tokenRevokeSuccess(customScopeOptions, revokeParams);
+
+  const httpOptions = {
+    headers: {
+      'X-REQUEST-ID': 123,
+    },
+  };
+
+  const accessToken = new AccessToken(config, client, accessTokenResponse);
+
+  await t.notThrowsAsync(() => accessToken.revoke('refresh_token', httpOptions));
+
+  scope.done();
+});
+
+test.serial('@revoke => performs a token revoke with custom (inline) http options without overriding (required) http options', async (t) => {
+  const config = createModuleConfig();
+  const client = new Client(config);
+
+  const accessTokenResponse = chance.accessToken({
+    expireMode: 'expires_in',
+  });
+
+  const revokeParams = {
+    token: accessTokenResponse.refresh_token,
+    token_type_hint: 'refresh_token',
+  };
+
+  const server = createAuthorizationServer('https://authorization-server.org:443');
+  const scope = server.tokenRevokeSuccess(scopeOptions, revokeParams);
+
+  const httpOptions = {
+    headers: {
+      Authorization: 'Basic credentials',
+    },
+  };
+
+  const accessToken = new AccessToken(config, client, accessTokenResponse);
+
+  await t.notThrowsAsync(() => accessToken.revoke('refresh_token', httpOptions));
+
+  scope.done();
+});
+
 test.serial('@revoke => throws an error with an invalid tokenType option', async (t) => {
   const config = createModuleConfig();
   const client = new Client(config);
@@ -127,6 +191,80 @@ test.serial('@revokeAll => revokes both the access and refresh tokens', async (t
   const accessToken = new AccessToken(config, client, accessTokenResponse);
 
   await t.notThrowsAsync(() => accessToken.revokeAll());
+
+  scope.done();
+});
+
+test.serial('@revokenAll => revokes both the access and refresh tokens with custom (inline) http options', async (t) => {
+  const config = createModuleConfig();
+  const client = new Client(config);
+
+  const accessTokenResponse = chance.accessToken({
+    expireMode: 'expires_in',
+  });
+
+  const refreshTokenRevokeParams = {
+    token: accessTokenResponse.refresh_token,
+    token_type_hint: 'refresh_token',
+  };
+
+  const accessTokenRevokeParams = {
+    token: accessTokenResponse.access_token,
+    token_type_hint: 'access_token',
+  };
+
+  const customScopeOptions = getHeaderCredentialsScopeOptions({
+    reqheaders: {
+      'X-REQUEST-ID': 123,
+    },
+  });
+
+  const server = createAuthorizationServer('https://authorization-server.org:443');
+  const scope = server.tokenRevokeAllSuccess(customScopeOptions, accessTokenRevokeParams, refreshTokenRevokeParams);
+
+  const httpOptions = {
+    headers: {
+      'X-REQUEST-ID': 123,
+    },
+  };
+
+  const accessToken = new AccessToken(config, client, accessTokenResponse);
+
+  await t.notThrowsAsync(() => accessToken.revokeAll(httpOptions));
+
+  scope.done();
+});
+
+test.serial('@revokeAll => revokes tboth the access and refresh tokens with custom (inline) http options without overriding (required) http options', async (t) => {
+  const config = createModuleConfig();
+  const client = new Client(config);
+
+  const accessTokenResponse = chance.accessToken({
+    expireMode: 'expires_in',
+  });
+
+  const refreshTokenRevokeParams = {
+    token: accessTokenResponse.refresh_token,
+    token_type_hint: 'refresh_token',
+  };
+
+  const accessTokenRevokeParams = {
+    token: accessTokenResponse.access_token,
+    token_type_hint: 'access_token',
+  };
+
+  const server = createAuthorizationServer('https://authorization-server.org:443');
+  const scope = server.tokenRevokeAllSuccess(scopeOptions, accessTokenRevokeParams, refreshTokenRevokeParams);
+
+  const httpOptions = {
+    headers: {
+      Authorization: 'Basic credentials',
+    },
+  };
+
+  const accessToken = new AccessToken(config, client, accessTokenResponse);
+
+  await t.notThrowsAsync(() => accessToken.revokeAll(httpOptions));
 
   scope.done();
 });

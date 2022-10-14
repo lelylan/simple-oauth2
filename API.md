@@ -15,6 +15,7 @@ Simple OAuth2 grant classes accept an object with the following params.
 * `auth` - required object with the following properties:
   * `tokenHost` - Base URL used to obtain access tokens. Required
   * `tokenPath` - URL path to obtain access tokens (See [url resolution notes](#url-resolution)). Defaults to **/oauth/token**
+  * `refreshPath` - URL path to refresh access tokens (See [url resolution notes](#url-resolution)). Defaults to `auth.tokenPath`
   * `revokePath` - URL path to revoke access tokens (See [url resolution notes](#url-resolution)). Defaults to **/oauth/revoke**
   * `authorizeHost` - Base URL used to request an *authorization code*. Only valid for *AuthorizationCode*. Defaults to `auth.tokenHost` value
   * `authorizePath` - URL path to request an *authorization code* (See [url resolution notes](#url-resolution)). Only valid for *AuthorizationCode*). Defaults to **/oauth/authorize**
@@ -103,19 +104,24 @@ Determines if the current access token is definitely expired or not
 
 * `expirationWindowSeconds` Window of time before the actual expiration to refresh the token. Defaults to **0**.
 
-#### await .refresh(params) => AccessToken
+#### await .refresh(params, [httpOptions]) => AccessToken
 Refreshes the current access token. The following params are allowed:
 
 * `params`
   * `[scope]` Optional string or array including a subset of the original token scopes to request
+* `httpOptions` All [wreck](https://github.com/hapijs/wreck) options can be overriden as documented by the module `http` options.
 
 Additional options will be automatically serialized as query params for the token request.
 
-#### await .revoke(tokenType)
+#### await .revoke(tokenType, [httpOptions])
 Revokes either the access or refresh token depending on the {tokenType} value. Token type can be one of: `access_token` or `refresh_token`.
 
-#### await .revokeAll()
+* `httpOptions` All [wreck](https://github.com/hapijs/wreck) options can be overriden as documented by the module `http` options.
+
+#### await .revokeAll([httpOptions])
 Revokes both the current access and refresh tokens
+
+* `httpOptions` All [wreck](https://github.com/hapijs/wreck) options can be overriden as documented by the module `http` options.
 
 #### .token
 Immutable object containing the token object provided while constructing a new access token instance. This property will usually have the schema as specified by [RFC6750](https://tools.ietf.org/html/rfc6750#section-4), but the exact properties may vary between authorization servers.

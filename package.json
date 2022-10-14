@@ -1,6 +1,7 @@
 {
   "name": "simple-oauth2",
-  "version": "4.1.0",
+  "version": "4.3.0",
+  "support": true,
   "description": "Node.js client for OAuth2",
   "author": "Andrea Reginato <andrea.reginato@gmail.com>",
   "contributors": [
@@ -21,17 +22,17 @@
   },
   "scripts": {
     "pretest": "npm run lint",
-    "test": "nyc ava",
+    "test": "c8 ava",
     "lint": "eslint .",
     "docs-gen": "doctoc README.md --github --no-title",
     "clean-install": "rm -rf node_modules && npm install"
   },
-  "nyc": {
+  "c8": {
     "check-coverage": true,
     "lines": 100,
     "statements": 100,
     "functions": 100,
-    "branches": 100,
+    "branches": 93,
     "reporter": [
       "lcov",
       "text-summary"
@@ -46,25 +47,24 @@
   ],
   "dependencies": {
     "@hapi/hoek": "^9.0.4",
-    "@hapi/joi": "^17.1.1",
     "@hapi/wreck": "^17.0.0",
-    "debug": "^4.1.1"
+    "debug": "^4.1.1",
+    "joi": "^17.3.0"
   },
   "devDependencies": {
     "@hapi/boom": "^9.1.0",
-    "ava": "^3.10.1",
-    "babel-eslint": "^10.1.0",
-    "chance": "^1.1.6",
+    "ava": "^3.15.0",
+    "c8": "^7.8.0",
+    "chance": "^1.1.7",
     "chance-access-token": "^2.1.0",
-    "date-fns": "^2.15.0",
+    "date-fns": "^2.14.0",
     "doctoc": "^1.4.0",
-    "eslint": "^7.5.0",
-    "eslint-config-airbnb-base": "^14.2.0",
-    "eslint-plugin-import": "^2.22.0",
-    "nock": "^13.0.2",
-    "nyc": "^15.1.0"
+    "eslint": "^8.2.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.25.3",
+    "nock": "^13.1.2"
   },
   "volta": {
-    "node": "12.18.0"
+    "node": "16.13.1"
   }
 }
