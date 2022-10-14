@@ -7,6 +7,7 @@
 
 ### Breaking changes
 - Accept only options available per grant type
+- Drop support for Node 12. Require at least Node 14
 
 ## 4.3.0
 
