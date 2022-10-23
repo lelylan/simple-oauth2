@@ -11,26 +11,23 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-
-- [Simple OAuth2](#simple-oauth2)
-  - [Table of Contents](#table-of-contents)
-  - [Requirements](#requirements)
-  - [Usage](#usage)
-    - [Supported Grant Types](#supported-grant-types)
-      - [Authorization Code Grant](#authorization-code-grant)
-      - [Resource Owner Password Credentials Grant](#resource-owner-password-credentials-grant)
-      - [Client Credentials Grant](#client-credentials-grant)
-    - [Access Token](#access-token)
-      - [Refresh an access token](#refresh-an-access-token)
-      - [Revoke an access or refresh token](#revoke-an-access-or-refresh-token)
-    - [Errors](#errors)
-  - [Debugging the module](#debugging-the-module)
-  - [Contributing](#contributing)
-  - [Authors](#authors)
-    - [Contributors](#contributors)
-  - [Changelog](#changelog)
-  - [License](#license)
-  - [Thanks to Open Source](#thanks-to-open-source)
+- [Requirements](#requirements)
+- [Usage](#usage)
+  - [Supported Grant Types](#supported-grant-types)
+    - [Authorization Code Grant](#authorization-code-grant)
+    - [Resource Owner Password Credentials Grant](#resource-owner-password-credentials-grant)
+    - [Client Credentials Grant](#client-credentials-grant)
+  - [Access Token](#access-token)
+    - [Refresh an access token](#refresh-an-access-token)
+    - [Revoke an access or refresh token](#revoke-an-access-or-refresh-token)
+  - [Errors](#errors)
+- [Debugging the module](#debugging-the-module)
+- [Contributing](#contributing)
+- [Authors](#authors)
+  - [Contributors](#contributors)
+- [Changelog](#changelog)
+- [License](#license)
+- [Thanks to Open Source](#thanks-to-open-source)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 

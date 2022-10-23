@@ -9,6 +9,8 @@
 - Update `@hapi/hoek` to v10.0.0
 - Update `@hapi/wreck` to v18.0.0
 - Update `ava` to v4.x
+- Update `@hapi/boom` to v10.0.0
+- Update `doctoc` to v2.x
 
 ### Breaking changes
 - Accept only options available per grant type
