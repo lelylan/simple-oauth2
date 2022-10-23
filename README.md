@@ -35,8 +35,8 @@
 
 | Version                                                                          | Node support        |
 |----------------------------------------------------------------------------------|---------------------|
-| [4.x](https://github.com/lelylan/simple-oauth2/tree/4.x)                         | Node 12.x or higher |
-| [5.x (Development)](https://github.com/lelylan/simple-oauth2/tree/master)        | Node 14.x or higher |
+| [5.x](https://github.com/lelylan/simple-oauth2/tree/5.x)                         | Node 14.x or higher |
+| [6.x (Development)](https://github.com/lelylan/simple-oauth2/tree/master)        | Node 16.x or higher |
 
 Older node versions are unsupported.
 

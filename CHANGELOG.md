@@ -3,20 +3,26 @@
 ## Next
 
 ### New features
-- Preserve query params on authorizePath on authorizeURL method
+- [#332](https://github.com/lelylan/simple-oauth2/pull/332) Preserve query params on authorizePath on authorizeURL method
 
 ### Maintainance
-- Update `@hapi/hoek` to v10.0.0
-- Update `@hapi/wreck` to v18.0.0
-- Update `ava` to v4.x
-- Update `@hapi/boom` to v10.0.0
-- Update `doctoc` to v2.x
-- Add Node 18 to test matrix
+- [#341](https://github.com/lelylan/simple-oauth2/pull/341) Rewrite integration tests
+- [#382](https://github.com/lelylan/simple-oauth2/pull/382) Update eslint parser dependencies
+- [#390](https://github.com/lelylan/simple-oauth2/pull/390) Add Node 16 to test matrix
+- [#404](https://github.com/lelylan/simple-oauth2/pull/404) Update `ava` to v4.x
+- [#405](https://github.com/lelylan/simple-oauth2/pull/405) Update `@hapi/hoek` to v10.0.0
+- [#406](https://github.com/lelylan/simple-oauth2/pull/406) Update `@hapi/wreck` to v18.0.0
+- [#407](https://github.com/lelylan/simple-oauth2/pull/407) Update `@hapi/boom` to v10.0.0
+- [#407](https://github.com/lelylan/simple-oauth2/pull/407) Update `doctoc` to v2.x
+- [#408](https://github.com/lelylan/simple-oauth2/pull/408) Add Node 18 to test matrix
+
+## Documentation
+- [#403](https://github.com/lelylan/simple-oauth2/pull/402) Add LinkedIn example
 
 ### Breaking changes
-- Accept only options available per grant type
-- Drop support for Node 12. Require at least Node 14
-- Disable redirects by default
+- [340](https://github.com/lelylan/simple-oauth2/pull/340) Accept only options available per grant type
+- [#403](https://github.com/lelylan/simple-oauth2/pull/403) Drop support for Node 12. Require at least Node 14
+- [#406](https://github.com/lelylan/simple-oauth2/pull/406) Disable redirects by default
 
 ## 4.3.0
 
