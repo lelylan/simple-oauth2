@@ -1,6 +1,6 @@
 # Changelog
 
-## Next
+## 5.0.0
 
 ### New features
 - [#332](https://github.com/lelylan/simple-oauth2/pull/332) Preserve query params on authorizePath on authorizeURL method
