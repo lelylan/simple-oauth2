@@ -11,6 +11,7 @@
 - Update `ava` to v4.x
 - Update `@hapi/boom` to v10.0.0
 - Update `doctoc` to v2.x
+- Add Node 18 to test matrix
 
 ### Breaking changes
 - Accept only options available per grant type
