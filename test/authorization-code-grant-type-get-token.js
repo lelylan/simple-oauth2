@@ -320,36 +320,6 @@ test.serial('@getToken => resolves to an access token with custom module configu
   t.true(accessToken instanceof AccessToken);
 });
 
-test.serial('@getToken => resolves to an access token while following redirections', async (t) => {
-  const expectedRequestParams = {
-    grant_type: 'authorization_code',
-    code: 'code',
-    redirect_uri: 'http://callback.com',
-  };
-
-  const scopeOptions = getHeaderCredentialsScopeOptions();
-  const server = createAuthorizationServer('https://authorization-server.org');
-  const redirectionsScope = server.tokenSuccessWithRedirections('https://origin-authorization-server.org', scopeOptions, expectedRequestParams);
-
-  const originServer = createAuthorizationServer('https://origin-authorization-server.org');
-  const originScope = originServer.tokenSuccess(scopeOptions, expectedRequestParams);
-
-  const tokenParams = {
-    code: 'code',
-    redirect_uri: 'http://callback.com',
-  };
-
-  const config = createModuleConfig();
-  const oauth2 = new AuthorizationCode(config);
-
-  const accessToken = await oauth2.getToken(tokenParams);
-
-  redirectionsScope.done();
-  originScope.done();
-
-  t.true(accessToken instanceof AccessToken);
-});
-
 test.serial('@getToken => resolves to an access token while requesting multiple scopes', async (t) => {
   const expectedRequestParams = {
     grant_type: 'authorization_code',

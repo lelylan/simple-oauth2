@@ -22,7 +22,7 @@ Simple OAuth2 grant classes accept an object with the following params.
 
 * `http` optional object used to set default options to the internal http library ([wreck](https://github.com/hapijs/wreck)). All options except **baseUrl** are allowed
   * `json`: JSON response parsing mode. Defaults to **strict**
-  * `redirects` Number or redirects to follow. Defaults to **20**
+  * `redirects` Number or redirects to follow. Defaults to **false** (no redirects)
   * `headers` Http headers
     * `accept` Acceptable http response content type. Defaults to **application/json**
     * `authorization` Always overriden by the library to properly send the required credentials on each scenario

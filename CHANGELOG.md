@@ -7,11 +7,13 @@
 
 ### Maintainance
 - Update `@hapi/hoek` to v10.0.0
+- Update `@hapi/wreck` to v18.0.0
 - Update `ava` to v4.x
 
 ### Breaking changes
 - Accept only options available per grant type
 - Drop support for Node 12. Require at least Node 14
+- Disable redirects by default
 
 ## 4.3.0
 
