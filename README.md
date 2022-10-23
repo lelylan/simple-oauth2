@@ -2,7 +2,6 @@
 
 [![NPM Package Version](https://img.shields.io/npm/v/simple-oauth2.svg?style=flat-square)](https://www.npmjs.com/package/simple-oauth2)
 [![Build Status](https://github.com/lelylan/simple-oauth2/workflows/Node.js%20CI/badge.svg)](https://github.com/lelylan/simple-oauth2/actions)
-[![Dependency Status](https://img.shields.io/david/lelylan/simple-oauth2.svg?style=flat-square)](https://david-dm.org/lelylan/simple-oauth2)
 
 [Simple OAuth2](#simple-oauth2) is a Node.js client library for the [OAuth 2.0](http://oauth.net/2/) authorization framework. [OAuth 2.0](http://oauth.net/2/) is the industry-standard protocol for authorization, enabling third-party applications to obtain limited access to an HTTP service, either on behalf of a resource owner or by allowing the third-party application to obtain access on its own behalf.
 
@@ -35,8 +34,8 @@
 
 | Version                                                                          | Node support        |
 |----------------------------------------------------------------------------------|---------------------|
-| [4.x](https://github.com/lelylan/simple-oauth2/tree/4.x)                         | Node 12.x or higher |
-| [5.x (Development)](https://github.com/lelylan/simple-oauth2/tree/master)        | Node 14.x or higher |
+| [5.x](https://github.com/lelylan/simple-oauth2/tree/5.x)                         | Node 14.x or higher |
+| [6.x (Development)](https://github.com/lelylan/simple-oauth2/tree/master)        | Node 16.x or higher |
 
 Older node versions are unsupported.
 
