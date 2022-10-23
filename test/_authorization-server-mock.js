@@ -1,6 +1,5 @@
 'use strict';
 
-const { URL } = require('url');
 const nock = require('nock');
 const Hoek = require('@hapi/hoek');
 const Boom = require('@hapi/boom');
@@ -18,19 +17,6 @@ function createAuthorizationServer(authorizationServerUrl) {
       .post(path, params)
       .reply(200, accessToken, {
         'Content-Type': 'application/json',
-      });
-  }
-
-  function tokenSuccessWithRedirections(redirectionHost, scopeOptions, params) {
-    return nock(authorizationServerUrl, scopeOptions)
-      .post('/oauth/token', params)
-      .times(19)
-      .reply(301, null, {
-        Location: new URL('/oauth/token', authorizationServerUrl),
-      })
-      .post('/oauth/token', params)
-      .reply(301, null, {
-        Location: new URL('/oauth/token', redirectionHost),
       });
   }
 
@@ -110,7 +96,6 @@ function createAuthorizationServer(authorizationServerUrl) {
     tokenRevokeAllSuccess,
     tokenRevokeSuccessWithCustomPath,
     tokenSuccessWithNonJSONContent,
-    tokenSuccessWithRedirections,
     tokenSuccessWithCustomPath,
     tokenSuccess,
   };

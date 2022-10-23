@@ -300,34 +300,6 @@ test.serial('@getToken = resolves to an access token with custom module configur
   t.true(accessToken instanceof AccessToken);
 });
 
-test.serial('@getToken => resolves to an access token while following redirections', async (t) => {
-  const expectedRequestParams = {
-    grant_type: 'client_credentials',
-    random_param: 'random value',
-  };
-
-  const scopeOptions = getHeaderCredentialsScopeOptions();
-  const server = createAuthorizationServer('https://authorization-server.org');
-  const originServer = createAuthorizationServer('https://origin-authorization-server.org');
-
-  const redirectionsScope = server.tokenSuccessWithRedirections('https://origin-authorization-server.org', scopeOptions, expectedRequestParams);
-  const originScope = originServer.tokenSuccess(scopeOptions, expectedRequestParams);
-
-  const tokenParams = {
-    random_param: 'random value',
-  };
-
-  const config = createModuleConfig();
-  const oauth2 = new ClientCredentials(config);
-
-  const accessToken = await oauth2.getToken(tokenParams);
-
-  redirectionsScope.done();
-  originScope.done();
-
-  t.true(accessToken instanceof AccessToken);
-});
-
 test.serial('@getToken => resolves to an access token while requesting multiple scopes', async (t) => {
   const expectedRequestParams = {
     grant_type: 'client_credentials',
