@@ -6,7 +6,8 @@
 - Preserve query params on authorizePath on authorizeURL method
 
 ### Maintainance
-- Update ava test runner to v4
+- Update `@hapi/hoek` to v10.0.0
+- Update `ava` to v4.x
 
 ### Breaking changes
 - Accept only options available per grant type
