@@ -5,19 +5,11 @@ const { ResourceOwnerPassword } = require('../index');
 const AccessToken = require('../lib/access-token');
 const { createModuleConfig } = require('./_module-config');
 const {
-  getAccessToken,
   createAuthorizationServer,
   getJSONEncodingScopeOptions,
   getFormEncodingScopeOptions,
   getHeaderCredentialsScopeOptions,
 } = require('./_authorization-server-mock');
-
-test('@createToken => creates a new access token instance from a JSON object', async (t) => {
-  const oauth2 = new ResourceOwnerPassword(createModuleConfig());
-  const accessToken = oauth2.createToken(getAccessToken());
-
-  t.true(accessToken instanceof AccessToken);
-});
 
 test.serial('@getToken => resolves to an access token (body credentials and JSON format)', async (t) => {
   const tokenRequestParams = {
@@ -190,6 +182,45 @@ test.serial('@getToken => resolves to an access token with custom module configu
   t.true(accessToken instanceof AccessToken);
 });
 
+test.serial('@getToken => resolves to an access token with custom module configuration (header credentials with unescaped characters + strict encoding)', async (t) => {
+  const tokenRequestParams = {
+    grant_type: 'password',
+    username: 'alice',
+    password: 'secret',
+  };
+
+  const scopeOptions = getHeaderCredentialsScopeOptions({
+    reqheaders: {
+      Authorization: 'Basic SSUyN20rdGhlX2NsaWVudC1pZCUyMSslMjYrJTI4c3ltYm9scyUyQSUyOTpJJTI3bSt0aGVfY2xpZW50LXNlY3JldCUyMSslMjYrJTI4c3ltYm9scyUyQSUyOQ==',
+    },
+  });
+
+  const server = createAuthorizationServer('https://authorization-server.org:443');
+  const scope = server.tokenSuccess(scopeOptions, tokenRequestParams);
+
+  const config = createModuleConfig({
+    client: {
+      id: 'I\'m the_client-id! & (symbols*)',
+      secret: 'I\'m the_client-secret! & (symbols*)',
+    },
+    options: {
+      authorizationMethod: 'header',
+      credentialsEncodingMode: 'strict',
+    },
+  });
+
+  const tokenParams = {
+    username: 'alice',
+    password: 'secret',
+  };
+
+  const oauth2 = new ResourceOwnerPassword(config);
+  const accessToken = await oauth2.getToken(tokenParams);
+
+  scope.done();
+  t.true(accessToken instanceof AccessToken);
+});
+
 test.serial('@getToken => resolves to an access token with custom module configuration (access token host and path)', async (t) => {
   const tokenRequestParams = {
     grant_type: 'password',
@@ -287,35 +318,6 @@ test.serial('@getToken => resolves to an access token with custom module configu
   const accessToken = await oauth2.getToken(tokenParams);
 
   scope.done();
-  t.true(accessToken instanceof AccessToken);
-});
-
-test.serial('@getToken => resolves to an access token while following redirections', async (t) => {
-  const tokenRequestParams = {
-    grant_type: 'password',
-    username: 'alice',
-    password: 'secret',
-  };
-
-  const scopeOptions = getHeaderCredentialsScopeOptions();
-  const server = createAuthorizationServer('https://authorization-server.org');
-  const originServer = createAuthorizationServer('https://origin-authorization-server.org');
-  const redirectionsScope = server.tokenSuccessWithRedirections('https://origin-authorization-server.org', scopeOptions, tokenRequestParams);
-  const originScope = originServer.tokenSuccess(scopeOptions, tokenRequestParams);
-
-  const tokenParams = {
-    username: 'alice',
-    password: 'secret',
-  };
-
-  const config = createModuleConfig();
-  const oauth2 = new ResourceOwnerPassword(config);
-
-  const accessToken = await oauth2.getToken(tokenParams);
-
-  redirectionsScope.done();
-  originScope.done();
-
   t.true(accessToken instanceof AccessToken);
 });
 

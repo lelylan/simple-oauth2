@@ -1,6 +1,6 @@
 {
   "name": "simple-oauth2",
-  "version": "4.3.0",
+  "version": "5.0.0",
   "support": true,
   "description": "Node.js client for OAuth2",
   "author": "Andrea Reginato <andrea.reginato@gmail.com>",
@@ -18,7 +18,7 @@
     "url": "https://github.com/lelylan/simple-oauth2"
   },
   "engine": {
-    "node": ">=12"
+    "node": ">=14"
   },
   "scripts": {
     "pretest": "npm run lint",
@@ -46,23 +46,23 @@
     "credentials"
   ],
   "dependencies": {
-    "@hapi/hoek": "^9.0.4",
-    "@hapi/wreck": "^17.0.0",
-    "debug": "^4.1.1",
-    "joi": "^17.3.0"
+    "@hapi/hoek": "^10.0.1",
+    "@hapi/wreck": "^18.0.0",
+    "debug": "^4.3.4",
+    "joi": "^17.6.4"
   },
   "devDependencies": {
-    "@hapi/boom": "^9.1.0",
-    "ava": "^3.15.0",
-    "c8": "^7.8.0",
-    "chance": "^1.1.7",
+    "@hapi/boom": "^10.0.0",
+    "ava": "^4.3.3",
+    "c8": "^7.12.0",
+    "chance": "^1.1.9",
     "chance-access-token": "^2.1.0",
-    "date-fns": "^2.14.0",
-    "doctoc": "^1.4.0",
-    "eslint": "^8.2.0",
+    "date-fns": "^2.29.3",
+    "doctoc": "^2.2.1",
+    "eslint": "^8.26.0",
     "eslint-config-airbnb-base": "^15.0.0",
-    "eslint-plugin-import": "^2.25.3",
-    "nock": "^13.1.2"
+    "eslint-plugin-import": "^2.26.0",
+    "nock": "^13.2.9"
   },
   "volta": {
     "node": "16.13.1"

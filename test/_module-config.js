@@ -1,7 +1,8 @@
 'use strict';
 
 const Hoek = require('@hapi/hoek');
-const Config = require('../lib/config');
+const Joi = require('joi');
+const { AuthorizationCodeSchema } = require('../lib/config');
 
 const baseConfig = {
   client: {
@@ -17,8 +18,8 @@ function createModuleConfig(config = {}) {
   return Hoek.applyToDefaults(baseConfig, config);
 }
 
-function createModuleConfigWithDefaults(config) {
-  return Config.apply(createModuleConfig(config));
+function createModuleConfigWithDefaults(config = {}) {
+  return Joi.attempt(createModuleConfig(config), AuthorizationCodeSchema); // any grant type schema works here
 }
 
 module.exports = {

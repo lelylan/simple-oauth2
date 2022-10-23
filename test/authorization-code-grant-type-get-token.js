@@ -1,30 +1,23 @@
 'use strict';
 
 const test = require('ava');
-const { ClientCredentials } = require('../index');
+const { AuthorizationCode } = require('../index');
 const AccessToken = require('../lib/access-token');
 const { createModuleConfig } = require('./_module-config');
 const {
-  getAccessToken,
   createAuthorizationServer,
   getJSONEncodingScopeOptions,
   getFormEncodingScopeOptions,
   getHeaderCredentialsScopeOptions,
 } = require('./_authorization-server-mock');
 
-test('@createToken => creates a new access token instance from a JSON object', async (t) => {
-  const oauth2 = new ClientCredentials(createModuleConfig());
-  const accessToken = oauth2.createToken(getAccessToken());
-
-  t.true(accessToken instanceof AccessToken);
-});
-
 test.serial('@getToken => resolves to an access token (body credentials and JSON format)', async (t) => {
   const expectedRequestParams = {
-    grant_type: 'client_credentials',
+    grant_type: 'authorization_code',
+    code: 'code',
+    redirect_uri: 'http://callback.com',
     client_id: 'the client id',
     client_secret: 'the client secret',
-    random_param: 'random value',
   };
 
   const scopeOptions = getJSONEncodingScopeOptions();
@@ -39,10 +32,11 @@ test.serial('@getToken => resolves to an access token (body credentials and JSON
   });
 
   const tokenParams = {
-    random_param: 'random value',
+    code: 'code',
+    redirect_uri: 'http://callback.com',
   };
 
-  const oauth2 = new ClientCredentials(config);
+  const oauth2 = new AuthorizationCode(config);
   const accessToken = await oauth2.getToken(tokenParams);
 
   scope.done();
@@ -51,8 +45,9 @@ test.serial('@getToken => resolves to an access token (body credentials and JSON
 
 test.serial('@getToken => resolves to an access token (body credentials and form format)', async (t) => {
   const expectedRequestParams = {
-    grant_type: 'client_credentials',
-    random_param: 'random value',
+    grant_type: 'authorization_code',
+    code: 'code',
+    redirect_uri: 'http://callback.com',
     client_id: 'the client id',
     client_secret: 'the client secret',
   };
@@ -69,10 +64,11 @@ test.serial('@getToken => resolves to an access token (body credentials and form
   });
 
   const tokenParams = {
-    random_param: 'random value',
+    code: 'code',
+    redirect_uri: 'http://callback.com',
   };
 
-  const oauth2 = new ClientCredentials(config);
+  const oauth2 = new AuthorizationCode(config);
   const accessToken = await oauth2.getToken(tokenParams);
 
   scope.done();
@@ -81,8 +77,9 @@ test.serial('@getToken => resolves to an access token (body credentials and form
 
 test.serial('@getToken => resolves to an access token (header credentials)', async (t) => {
   const expectedRequestParams = {
-    grant_type: 'client_credentials',
-    random_param: 'random value',
+    grant_type: 'authorization_code',
+    code: 'code',
+    redirect_uri: 'http://callback.com',
   };
 
   const scopeOptions = getHeaderCredentialsScopeOptions();
@@ -96,10 +93,11 @@ test.serial('@getToken => resolves to an access token (header credentials)', asy
   });
 
   const tokenParams = {
-    random_param: 'random value',
+    code: 'code',
+    redirect_uri: 'http://callback.com',
   };
 
-  const oauth2 = new ClientCredentials(config);
+  const oauth2 = new AuthorizationCode(config);
   const accessToken = await oauth2.getToken(tokenParams);
 
   scope.done();
@@ -108,8 +106,9 @@ test.serial('@getToken => resolves to an access token (header credentials)', asy
 
 test.serial('@getToken => resolves to an access token with custom module configuration (header credentials + loose encoding)', async (t) => {
   const expectedRequestParams = {
-    grant_type: 'client_credentials',
-    random_param: 'random value',
+    grant_type: 'authorization_code',
+    code: 'code',
+    redirect_uri: 'http://callback.com',
   };
 
   const scopeOptions = getHeaderCredentialsScopeOptions({
@@ -133,10 +132,11 @@ test.serial('@getToken => resolves to an access token with custom module configu
   });
 
   const tokenParams = {
-    random_param: 'random value',
+    code: 'code',
+    redirect_uri: 'http://callback.com',
   };
 
-  const oauth2 = new ClientCredentials(config);
+  const oauth2 = new AuthorizationCode(config);
   const accessToken = await oauth2.getToken(tokenParams);
 
   scope.done();
@@ -145,8 +145,9 @@ test.serial('@getToken => resolves to an access token with custom module configu
 
 test.serial('@getToken => resolves to an access token with custom module configuration (header credentials + strict encoding)', async (t) => {
   const expectedRequestParams = {
-    grant_type: 'client_credentials',
-    random_param: 'random value',
+    grant_type: 'authorization_code',
+    code: 'code',
+    redirect_uri: 'http://callback.com',
   };
 
   const scopeOptions = getHeaderCredentialsScopeOptions({
@@ -170,10 +171,50 @@ test.serial('@getToken => resolves to an access token with custom module configu
   });
 
   const tokenParams = {
-    random_param: 'random value',
+    code: 'code',
+    redirect_uri: 'http://callback.com',
   };
 
-  const oauth2 = new ClientCredentials(config);
+  const oauth2 = new AuthorizationCode(config);
+  const accessToken = await oauth2.getToken(tokenParams);
+
+  scope.done();
+  t.true(accessToken instanceof AccessToken);
+});
+
+test.serial('@getToken => resolves to an access token with custom module configuration (header credentials with unescaped characters + strict encoding)', async (t) => {
+  const expectedRequestParams = {
+    grant_type: 'authorization_code',
+    code: 'code',
+    redirect_uri: 'http://callback.com',
+  };
+
+  const scopeOptions = getHeaderCredentialsScopeOptions({
+    reqheaders: {
+      Authorization: 'Basic SSUyN20rdGhlX2NsaWVudC1pZCUyMSslMjYrJTI4c3ltYm9scyUyQSUyOTpJJTI3bSt0aGVfY2xpZW50LXNlY3JldCUyMSslMjYrJTI4c3ltYm9scyUyQSUyOQ==',
+    },
+  });
+
+  const server = createAuthorizationServer('https://authorization-server.org:443');
+  const scope = server.tokenSuccess(scopeOptions, expectedRequestParams);
+
+  const config = createModuleConfig({
+    client: {
+      id: 'I\'m the_client-id! & (symbols*)',
+      secret: 'I\'m the_client-secret! & (symbols*)',
+    },
+    options: {
+      authorizationMethod: 'header',
+      credentialsEncodingMode: 'strict',
+    },
+  });
+
+  const tokenParams = {
+    code: 'code',
+    redirect_uri: 'http://callback.com',
+  };
+
+  const oauth2 = new AuthorizationCode(config);
   const accessToken = await oauth2.getToken(tokenParams);
 
   scope.done();
@@ -182,8 +223,9 @@ test.serial('@getToken => resolves to an access token with custom module configu
 
 test.serial('@getToken => resolves to an access token with custom module configuration (access token host and path)', async (t) => {
   const expectedRequestParams = {
-    grant_type: 'client_credentials',
-    random_param: 'random value',
+    grant_type: 'authorization_code',
+    code: 'code',
+    redirect_uri: 'http://callback.com',
   };
 
   const scopeOptions = getHeaderCredentialsScopeOptions();
@@ -198,10 +240,11 @@ test.serial('@getToken => resolves to an access token with custom module configu
   });
 
   const tokenParams = {
-    random_param: 'random value',
+    code: 'code',
+    redirect_uri: 'http://callback.com',
   };
 
-  const oauth2 = new ClientCredentials(config);
+  const oauth2 = new AuthorizationCode(config);
   const accessToken = await oauth2.getToken(tokenParams);
 
   scope.done();
@@ -210,8 +253,9 @@ test.serial('@getToken => resolves to an access token with custom module configu
 
 test.serial('@getToken => resolves to an access token with custom module configuration (http options)', async (t) => {
   const expectedRequestParams = {
-    grant_type: 'client_credentials',
-    random_param: 'random value',
+    grant_type: 'authorization_code',
+    code: 'code',
+    redirect_uri: 'http://callback.com',
   };
 
   const scopeOptions = getHeaderCredentialsScopeOptions({
@@ -234,19 +278,22 @@ test.serial('@getToken => resolves to an access token with custom module configu
   });
 
   const tokenParams = {
-    random_param: 'random value',
+    code: 'code',
+    redirect_uri: 'http://callback.com',
   };
 
-  const oauth2 = new ClientCredentials(config);
+  const oauth2 = new AuthorizationCode(config);
   const accessToken = await oauth2.getToken(tokenParams);
 
   scope.done();
   t.true(accessToken instanceof AccessToken);
 });
 
-test.serial('@getToken = resolves to an access token with custom module configuration (scope separator)', async (t) => {
+test.serial('@getToken => resolves to an access token with custom module configuration (scope separator)', async (t) => {
   const expectedRequestParams = {
-    grant_type: 'client_credentials',
+    grant_type: 'authorization_code',
+    code: 'code',
+    redirect_uri: 'http://callback.com',
     scope: 'scope-a,scope-b',
   };
 
@@ -254,54 +301,30 @@ test.serial('@getToken = resolves to an access token with custom module configur
   const server = createAuthorizationServer('https://authorization-server.org:443');
   const scope = server.tokenSuccess(scopeOptions, expectedRequestParams);
 
-  const tokenParams = {
-    scope: ['scope-a', 'scope-b'],
-  };
-
   const config = createModuleConfig({
     options: {
       scopeSeparator: ',',
     },
   });
 
-  const oauth2 = new ClientCredentials(config);
+  const tokenParams = {
+    code: 'code',
+    redirect_uri: 'http://callback.com',
+    scope: ['scope-a', 'scope-b'],
+  };
+
+  const oauth2 = new AuthorizationCode(config);
   const accessToken = await oauth2.getToken(tokenParams);
 
   scope.done();
   t.true(accessToken instanceof AccessToken);
 });
 
-test.serial('@getToken => resolves to an access token while following redirections', async (t) => {
-  const expectedRequestParams = {
-    grant_type: 'client_credentials',
-    random_param: 'random value',
-  };
-
-  const scopeOptions = getHeaderCredentialsScopeOptions();
-  const server = createAuthorizationServer('https://authorization-server.org');
-  const originServer = createAuthorizationServer('https://origin-authorization-server.org');
-
-  const redirectionsScope = server.tokenSuccessWithRedirections('https://origin-authorization-server.org', scopeOptions, expectedRequestParams);
-  const originScope = originServer.tokenSuccess(scopeOptions, expectedRequestParams);
-
-  const tokenParams = {
-    random_param: 'random value',
-  };
-
-  const config = createModuleConfig();
-  const oauth2 = new ClientCredentials(config);
-
-  const accessToken = await oauth2.getToken(tokenParams);
-
-  redirectionsScope.done();
-  originScope.done();
-
-  t.true(accessToken instanceof AccessToken);
-});
-
 test.serial('@getToken => resolves to an access token while requesting multiple scopes', async (t) => {
   const expectedRequestParams = {
-    grant_type: 'client_credentials',
+    grant_type: 'authorization_code',
+    code: 'code',
+    redirect_uri: 'http://callback.com',
     scope: 'scope-a scope-b',
   };
 
@@ -310,11 +333,13 @@ test.serial('@getToken => resolves to an access token while requesting multiple 
   const scope = server.tokenSuccess(scopeOptions, expectedRequestParams);
 
   const tokenParams = {
+    code: 'code',
+    redirect_uri: 'http://callback.com',
     scope: ['scope-a', 'scope-b'],
   };
 
   const config = createModuleConfig();
-  const oauth2 = new ClientCredentials(config);
+  const oauth2 = new AuthorizationCode(config);
 
   const accessToken = await oauth2.getToken(tokenParams);
 
@@ -324,6 +349,8 @@ test.serial('@getToken => resolves to an access token while requesting multiple 
 
 test.serial('@getToken => resolves to an access token with a custom grant type', async (t) => {
   const expectedRequestParams = {
+    code: 'code',
+    redirect_uri: 'http://callback.com',
     grant_type: 'my_grant',
   };
 
@@ -332,11 +359,13 @@ test.serial('@getToken => resolves to an access token with a custom grant type',
   const scope = server.tokenSuccess(scopeOptions, expectedRequestParams);
 
   const tokenParams = {
+    code: 'code',
+    redirect_uri: 'http://callback.com',
     grant_type: 'my_grant',
   };
 
   const config = createModuleConfig();
-  const oauth2 = new ClientCredentials(config);
+  const oauth2 = new AuthorizationCode(config);
 
   const accessToken = await oauth2.getToken(tokenParams);
 
@@ -346,7 +375,7 @@ test.serial('@getToken => resolves to an access token with a custom grant type',
 
 test.serial('@getToken => resolves to an access token with no params', async (t) => {
   const expectedRequestParams = {
-    grant_type: 'client_credentials',
+    grant_type: 'authorization_code',
   };
 
   const scopeOptions = getHeaderCredentialsScopeOptions();
@@ -354,7 +383,7 @@ test.serial('@getToken => resolves to an access token with no params', async (t)
   const scope = server.tokenSuccess(scopeOptions, expectedRequestParams);
 
   const config = createModuleConfig();
-  const oauth2 = new ClientCredentials(config);
+  const oauth2 = new AuthorizationCode(config);
 
   const accessToken = await oauth2.getToken();
 
@@ -364,7 +393,7 @@ test.serial('@getToken => resolves to an access token with no params', async (t)
 
 test.serial('@getToken => resolves to an access token with custom (inline) http options', async (t) => {
   const expectedRequestParams = {
-    grant_type: 'client_credentials',
+    grant_type: 'authorization_code',
   };
 
   const scopeOptions = getHeaderCredentialsScopeOptions({
@@ -377,7 +406,7 @@ test.serial('@getToken => resolves to an access token with custom (inline) http 
   const scope = server.tokenSuccess(scopeOptions, expectedRequestParams);
 
   const config = createModuleConfig();
-  const oauth2 = new ClientCredentials(config);
+  const oauth2 = new AuthorizationCode(config);
 
   const httpOptions = {
     headers: {
@@ -393,7 +422,7 @@ test.serial('@getToken => resolves to an access token with custom (inline) http 
 
 test.serial('@getToken => resolves to an access token with custom (inline) http options without overriding (required) http options', async (t) => {
   const expectedRequestParams = {
-    grant_type: 'client_credentials',
+    grant_type: 'authorization_code',
   };
 
   const scopeOptions = getHeaderCredentialsScopeOptions();
@@ -401,7 +430,7 @@ test.serial('@getToken => resolves to an access token with custom (inline) http 
   const scope = server.tokenSuccess(scopeOptions, expectedRequestParams);
 
   const config = createModuleConfig();
-  const oauth2 = new ClientCredentials(config);
+  const oauth2 = new AuthorizationCode(config);
 
   const httpOptions = {
     headers: {
@@ -417,10 +446,11 @@ test.serial('@getToken => resolves to an access token with custom (inline) http 
 
 test.serial('@getToken => rejects the operation when a non json response is received', async (t) => {
   const expectedRequestParams = {
-    grant_type: 'client_credentials',
+    grant_type: 'authorization_code',
+    code: 'code',
+    redirect_uri: 'http://callback.com',
     client_id: 'the client id',
     client_secret: 'the client secret',
-    random_param: 'random value',
   };
 
   const scopeOptions = getJSONEncodingScopeOptions();
@@ -435,10 +465,11 @@ test.serial('@getToken => rejects the operation when a non json response is rece
   });
 
   const tokenParams = {
-    random_param: 'random value',
+    code: 'code',
+    redirect_uri: 'http://callback.com',
   };
 
-  const oauth2 = new ClientCredentials(config);
+  const oauth2 = new AuthorizationCode(config);
   const error = await t.throwsAsync(() => oauth2.getToken(tokenParams));
 
   scope.done();

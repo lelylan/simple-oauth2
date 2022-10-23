@@ -9,6 +9,12 @@
       "code": 120,
       "ignoreComments": true
     }],
+    "import/no-unresolved": [
+      "error",
+      {
+        "ignore": ["ava"]
+      }
+    ],
     "strict": ["error", "safe"],
     "max-classes-per-file": ["off"],
     "lines-between-class-members": ["off"]

@@ -17,24 +17,24 @@ Simple OAuth2 grant classes accept an object with the following params.
   * `tokenPath` - URL path to obtain access tokens (See [url resolution notes](#url-resolution)). Defaults to **/oauth/token**
   * `refreshPath` - URL path to refresh access tokens (See [url resolution notes](#url-resolution)). Defaults to `auth.tokenPath`
   * `revokePath` - URL path to revoke access tokens (See [url resolution notes](#url-resolution)). Defaults to **/oauth/revoke**
-  * `authorizeHost` - Base URL used to request an *authorization code*. Defaults to `auth.tokenHost` value
-  * `authorizePath` - URL path to request an *authorization code* (See [url resolution notes](#url-resolution)). Defaults to **/oauth/authorize**
+  * `authorizeHost` - Base URL used to request an *authorization code*. Only valid for *AuthorizationCode*. Defaults to `auth.tokenHost` value
+  * `authorizePath` - URL path to request an *authorization code* (See [url resolution notes](#url-resolution)). Only valid for *AuthorizationCode*). Defaults to **/oauth/authorize**
 
 * `http` optional object used to set default options to the internal http library ([wreck](https://github.com/hapijs/wreck)). All options except **baseUrl** are allowed
   * `json`: JSON response parsing mode. Defaults to **strict**
-  * `redirects` Number or redirects to follow. Defaults to **20**
+  * `redirects` Number or redirects to follow. Defaults to **false** (no redirects)
   * `headers` Http headers
     * `accept` Acceptable http response content type. Defaults to **application/json**
     * `authorization` Always overriden by the library to properly send the required credentials on each scenario
 
 * `options` additional options to setup how the module perform requests
   * `scopeSeparator` Scope separator character. Some providers may require a different separator. Defaults to **empty space**
-  * `credentialsEncodingMode` Setup how credentials are encoded when `options.authorizationMode` is **header**. Use **loose** if your provider doesn't conform the [OAuth2 specification](https://tools.ietf.org/html/rfc6749#section-2.3.1). Defaults to **strict**
+  * `credentialsEncodingMode` Setup how credentials are encoded when `options.authorizationMethod` is **header**. Use **loose** if your provider doesn't conform to the [OAuth 2.0 specification](https://tools.ietf.org/html/rfc6749#section-2.3.1). Defaults to **strict**
   * `bodyFormat` - Request's body data format. Valid options are `form` or `json`. Defaults to **form**
   * `authorizationMethod` - Method used to send the *client.id*/*client.secret* authorization params at the token request. Valid options are `header` or `body`. If set to **body**, the **bodyFormat** option will be used to format the credentials. Defaults to **header**
 
 ### URL resolution
-URL paths are relatively resolved to their corresponding host property using the [Node WHATWG URL](https://nodejs.org/dist/latest-v12.x/docs/api/url.html#url_constructor_new_url_input_base) resolution algorithm.
+URL paths are relatively resolved to their corresponding host property using the [Node WHATWG URL](https://nodejs.org/docs/latest-v14.x/api/url.html#url_new_url_input_base) resolution algorithm.
 
 ## Grant Types
 ### new AuthorizationCode(options)
