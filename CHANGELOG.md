@@ -5,6 +5,9 @@
 ### New features
 - Preserve query params on authorizePath on authorizeURL method
 
+### Maintainance
+- Update ava test runner to v4
+
 ### Breaking changes
 - Accept only options available per grant type
 - Drop support for Node 12. Require at least Node 14
