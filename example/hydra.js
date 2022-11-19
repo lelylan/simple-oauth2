@@ -1,7 +1,7 @@
 "use strict";
 
 const createApplication = require("./");
-const { AuthorizationCode } = require("./../");
+const { AuthorizationCode } = require("simple-oauth2");
 
 createApplication(({ app, callbackUrl }) => {
   console.log("callback", callbackUrl);
@@ -11,7 +11,7 @@ createApplication(({ app, callbackUrl }) => {
       secret: "secret",
     },
     auth: {
-      tokenHost: "http://localhost:5444",
+      tokenHost: "https://quran-hydra.fly.dev",
       tokenPath: "/oauth2/token",
       authorizePath: "/oauth2/auth",
     },
@@ -20,7 +20,7 @@ createApplication(({ app, callbackUrl }) => {
   // Authorization uri definition
   const authorizationUri = client.authorizeURL({
     redirect_uri: callbackUrl,
-    scope: "openid",
+    scope: "openid offline",
     state: "veimvfgqexjicockrwsgcb333o3a",
   });
 
@@ -40,13 +40,12 @@ createApplication(({ app, callbackUrl }) => {
     };
 
     try {
-      console.log("aaa");
-      const accessToken = await client.getToken(options);
-      console.log("bbb");
+      const data = await client.getToken(options);
+      console.log(data);
 
-      console.log("The resulting token: ", accessToken.token);
+      console.log("The resulting token: ", data.token);
 
-      return res.status(200).json(accessToken.token);
+      return res.status(200).json(data.token);
     } catch (error) {
       console.error("Access Token Error", error);
       return res.status(500).json("Authentication failed");
@@ -54,6 +53,6 @@ createApplication(({ app, callbackUrl }) => {
   });
 
   app.get("/", (req, res) => {
-    res.send('Hello<br><a href="/auth">Log in with Github</a>');
+    res.send('Hello<br><a href="/auth">Continue with Quran.com</a>');
   });
 });
