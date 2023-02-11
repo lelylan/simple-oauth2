@@ -1,7 +1,9 @@
 'use strict';
 
 const Joi = require('joi');
-const { Client } = require('./lib/client');
+const {
+  Client, authorizationMethodEnum, bodyFormatEnum, credentialsEncodingModeEnum,
+} = require('./lib/client');
 const AuthorizationCodeGrantType = require('./lib/authorization-code-grant-type');
 const ResourceOwnerPasswordGrantType = require('./lib/resource-owner-password-grant-type');
 const ClientCredentialsGrantType = require('./lib/client-credentials-grant-type');
@@ -38,4 +40,7 @@ module.exports = {
   ResourceOwnerPassword,
   ClientCredentials,
   AuthorizationCode,
+  AuthorizationMethod: authorizationMethodEnum,
+  BodyFormat: bodyFormatEnum,
+  CredentialsEncodingMode: credentialsEncodingModeEnum,
 };
