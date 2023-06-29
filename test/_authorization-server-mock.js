@@ -88,6 +88,14 @@ function createAuthorizationServer(authorizationServerUrl) {
       });
   }
 
+  function tokenSuccessWithoutRefreshToken(scopeOptions, params) {
+    return nock(authorizationServerUrl, scopeOptions)
+      .post('/oauth/token', params)
+      .reply(200, { ...accessToken, refresh_token: undefined }, {
+        'Content-Type': 'application/json',
+      });
+  }
+
   return {
     tokenError,
     tokenAuthorizationError,
@@ -98,6 +106,7 @@ function createAuthorizationServer(authorizationServerUrl) {
     tokenSuccessWithNonJSONContent,
     tokenSuccessWithCustomPath,
     tokenSuccess,
+    tokenSuccessWithoutRefreshToken,
   };
 }
 

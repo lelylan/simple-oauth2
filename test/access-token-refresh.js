@@ -271,3 +271,27 @@ test.serial('@refresh => creates a new access token with custom (inline) http op
   scope.done();
   t.true(has(refreshAccessToken.token, 'access_token'));
 });
+
+test.serial('@refresh => creates a new access token with keeping the old refresh token if refresh did not provide a new refresh token', async (t) => {
+  const config = createModuleConfig();
+
+  const accessTokenResponse = chance.accessToken({
+    expireMode: 'expires_in',
+  });
+
+  const client = new Client(config);
+
+  const refreshParams = {
+    grant_type: 'refresh_token',
+    refresh_token: accessTokenResponse.refresh_token,
+  };
+
+  const server = createAuthorizationServer('https://authorization-server.org:443');
+  const scope = server.tokenSuccessWithoutRefreshToken(scopeOptions, refreshParams);
+
+  const accessToken = new AccessToken(config, client, accessTokenResponse);
+  const refreshAccessToken = await accessToken.refresh();
+
+  scope.done();
+  t.true(has(refreshAccessToken.token, 'refresh_token'));
+});
