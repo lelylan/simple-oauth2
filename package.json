@@ -10,8 +10,10 @@
   "license": "Apache-2.0",
   "homepage": "https://github.com/lelylan/simple-oauth2",
   "main": "index.js",
+  "types": "types/index.d.ts",
   "files": [
-    "lib"
+    "lib",
+    "types/index.d.ts"
   ],
   "repository": {
     "type": "git",
@@ -24,6 +26,7 @@
     "pretest": "npm run lint",
     "test": "c8 ava",
     "lint": "eslint .",
+    "test-typings": "tsd",
     "docs-gen": "doctoc README.md --github --no-title",
     "clean-install": "rm -rf node_modules && npm install"
   },
@@ -49,7 +52,8 @@
     "@hapi/hoek": "^11.0.4",
     "@hapi/wreck": "^18.0.0",
     "debug": "^4.3.4",
-    "joi": "^17.6.4"
+    "joi": "^17.6.4",
+    "tsd": "^0.28.1"
   },
   "devDependencies": {
     "@hapi/boom": "^10.0.0",
