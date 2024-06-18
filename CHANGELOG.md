@@ -1,5 +1,16 @@
 # Changelog
 
+## 5.0.1
+
+### Fixes
+- [#440](https://github.com/lelylan/simple-oauth2/pull/440) Update `@hapi/hoek` to v11.x to avoid URL clonning issues
+
+### Documentation
+- [#430](https://github.com/lelylan/simple-oauth2/pull/430) Update `authorizeURL` docs with a custom param example
+- [#421](https://github.com/lelylan/simple-oauth2/pull/421) Fix typo on API.md
+- [#422](https://github.com/lelylan/simple-oauth2/pull/422) Improve jsdocs
+- [#409](https://github.com/lelylan/simple-oauth2/pull/409) Remove build badge
+
 ## 5.0.0
 
 ### New features

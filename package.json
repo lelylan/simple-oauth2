@@ -1,6 +1,6 @@
 {
   "name": "simple-oauth2",
-  "version": "5.0.0",
+  "version": "5.0.1",
   "support": true,
   "description": "Node.js client for OAuth2",
   "author": "Andrea Reginato <andrea.reginato@gmail.com>",
@@ -46,7 +46,7 @@
     "credentials"
   ],
   "dependencies": {
-    "@hapi/hoek": "^10.0.1",
+    "@hapi/hoek": "^11.0.4",
     "@hapi/wreck": "^18.0.0",
     "debug": "^4.3.4",
     "joi": "^17.6.4"

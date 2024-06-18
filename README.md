@@ -80,7 +80,9 @@ async function run() {
   const authorizationUri = client.authorizeURL({
     redirect_uri: 'http://localhost:3000/callback',
     scope: '<scope>',
-    state: '<state>'
+    state: '<state>',
+    
+    customParam: 'foo', // non-standard oauth params may be passed as well
   });
 
   // Redirect example using Express (see http://expressjs.com/api.html#res.redirect)

@@ -18,7 +18,7 @@ Simple OAuth2 grant classes accept an object with the following params.
   * `refreshPath` - URL path to refresh access tokens (See [url resolution notes](#url-resolution)). Defaults to `auth.tokenPath`
   * `revokePath` - URL path to revoke access tokens (See [url resolution notes](#url-resolution)). Defaults to **/oauth/revoke**
   * `authorizeHost` - Base URL used to request an *authorization code*. Only valid for *AuthorizationCode*. Defaults to `auth.tokenHost` value
-  * `authorizePath` - URL path to request an *authorization code* (See [url resolution notes](#url-resolution)). Only valid for *AuthorizationCode*). Defaults to **/oauth/authorize**
+  * `authorizePath` - URL path to request an *authorization code* (See [url resolution notes](#url-resolution)). Only valid for *AuthorizationCode*. Defaults to **/oauth/authorize**
 
 * `http` optional object used to set default options to the internal http library ([wreck](https://github.com/hapijs/wreck)). All options except **baseUrl** are allowed
   * `json`: JSON response parsing mode. Defaults to **strict**
