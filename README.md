@@ -35,7 +35,7 @@
 | Version                                                                          | Node support        |
 |----------------------------------------------------------------------------------|---------------------|
 | [5.x](https://github.com/lelylan/simple-oauth2/tree/5.x)                         | Node 14.x or higher |
-| [6.x (Development)](https://github.com/lelylan/simple-oauth2/tree/master)        | Node 16.x or higher |
+| [6.x (Development)](https://github.com/lelylan/simple-oauth2/tree/master)        | Node 18.x or higher |
 
 Older node versions are unsupported.
 
@@ -81,7 +81,7 @@ async function run() {
     redirect_uri: 'http://localhost:3000/callback',
     scope: '<scope>',
     state: '<state>',
-    
+
     customParam: 'foo', // non-standard oauth params may be passed as well
   });
 
