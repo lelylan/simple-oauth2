@@ -1,8 +1,10 @@
 'use strict';
 
-const nock = require('nock');
 const Hoek = require('@hapi/hoek');
 const Boom = require('@hapi/boom');
+const { HttpResponse } = require('msw');
+
+const msw = require('./msw-matcher/_index');
 
 const accessToken = {
   access_token: '5683E74C-7514-4426-B64F-CF0C24223F69',
@@ -13,87 +15,134 @@ const accessToken = {
 
 function createAuthorizationServer(authorizationServerUrl) {
   function tokenSuccessWithCustomPath(path, scopeOptions, params) {
-    return nock(authorizationServerUrl, scopeOptions)
-      .post(path, params)
-      .reply(200, accessToken, {
-        'Content-Type': 'application/json',
-      });
+    return msw
+      .scope(authorizationServerUrl)
+      .post(path)
+      .matchBody(params)
+      .matchHeaders(scopeOptions.reqheaders)
+      .handler(() => HttpResponse.json(accessToken, {
+        status: 200,
+      }));
   }
 
   function tokenSuccess(scopeOptions, params) {
-    return nock(authorizationServerUrl, scopeOptions)
-      .post('/oauth/token', params)
-      .reply(200, accessToken, {
-        'Content-Type': 'application/json',
-      });
+    return msw
+      .scope(authorizationServerUrl)
+      .post('/oauth/token')
+      .matchBody(params)
+      .matchHeaders(scopeOptions.reqheaders)
+      .handler(() => HttpResponse.json(accessToken, {
+        status: 200,
+      }));
   }
 
   function tokenError(scopeOptions, params) {
-    return nock(authorizationServerUrl, scopeOptions)
-      .post('/oauth/token', params)
-      .reply(500, Boom.badImplementation(), {
-        'Content-Type': 'application/json',
-      });
+    return msw
+      .scope(authorizationServerUrl)
+      .post('/oauth/token')
+      .matchBody(params)
+      .matchHeaders(scopeOptions.reqheaders)
+      .handler(() => HttpResponse.json(Boom.badImplementation(), {
+        status: 500,
+      }));
   }
 
   function tokenAuthorizationError(scopeOptions, params) {
-    return nock(authorizationServerUrl, scopeOptions)
-      .post('/oauth/token', params)
-      .reply(401, Boom.unauthorized(), {
-        'Content-Type': 'application/json',
-      });
+    return msw
+      .scope(authorizationServerUrl)
+      .post('/oauth/token')
+      .matchBody(params)
+      .matchHeaders(scopeOptions.reqheaders)
+      .handler(() => HttpResponse.json(Boom.unauthorized(), {
+        status: 401,
+      }));
   }
 
   function tokenRevokeSuccess(scopeOptions, params) {
-    return nock(authorizationServerUrl, scopeOptions)
-      .post('/oauth/revoke', params)
-      .reply(240, null, {
-        'Content-Type': 'application/json',
-      });
+    return msw
+      .scope(authorizationServerUrl)
+      .post('/oauth/revoke')
+      .matchBody(params)
+      .matchHeaders(scopeOptions.reqheaders)
+      .handler(() => new HttpResponse(null, {
+        status: 204,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }));
   }
 
   function tokenRevokeSuccessWithCustomPath(path, scopeOptions, params) {
-    return nock(authorizationServerUrl, scopeOptions)
-      .post(path, params)
-      .reply(204, null, {
-        'Content-Type': 'application/json',
-      });
+    return msw
+      .scope(authorizationServerUrl)
+      .post(path)
+      .matchBody(params)
+      .matchHeaders(scopeOptions.reqheaders)
+      .handler(() => new HttpResponse(null, {
+        status: 204,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }));
   }
 
   function tokenRevokeError(scopeOptions, params) {
-    return nock(authorizationServerUrl, scopeOptions)
-      .post('/oauth/revoke', params)
-      .reply(500, Boom.badImplementation(), {
-        'Content-Type': 'application/json',
-      });
+    return msw
+      .scope(authorizationServerUrl)
+      .post('/oauth/revoke')
+      .matchBody(params)
+      .matchHeaders(scopeOptions.reqheaders)
+      .handler(() => HttpResponse.json(Boom.badImplementation(), {
+        status: 500,
+      }));
   }
 
   function tokenRevokeAllSuccess(scopeOptions, accessTokenParams, refreshTokenParams) {
-    return nock(authorizationServerUrl, scopeOptions)
-      .post('/oauth/revoke', accessTokenParams)
-      .reply(204, null, {
-        'Content-Type': 'application/json',
-      })
-      .post('/oauth/revoke', refreshTokenParams)
-      .reply(204, null, {
-        'Content-Type': 'application/json',
-      });
+    return msw
+      .scope(authorizationServerUrl)
+      .post('/oauth/revoke')
+      .matchBody(accessTokenParams)
+      .matchHeaders(scopeOptions.reqheaders)
+      .handler(() => new HttpResponse(null, {
+        status: 204,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }))
+      .post('/oauth/revoke')
+      .matchBody(refreshTokenParams)
+      .matchHeaders(scopeOptions.reqheaders)
+      .handler(() => new HttpResponse(null, {
+        status: 204,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }));
   }
 
   function tokenSuccessWithNonJSONContent(scopeOptions, params) {
-    return nock(authorizationServerUrl, scopeOptions)
-      .post('/oauth/token', params)
-      .reply(200, '<html>Sorry for not responding with a json response</html>', {
-        'Content-Type': 'application/html',
-      });
+    return msw
+      .scope(authorizationServerUrl)
+      .post('/oauth/token')
+      .matchBody(params)
+      .matchHeaders(scopeOptions.reqheaders)
+      .handler(() => new HttpResponse('<html>Sorry for not responding with a json response</html>', {
+        status: 200,
+        headers: {
+          'Content-Type': 'text/html',
+        },
+      }));
   }
 
   function tokenSuccessWithoutRefreshToken(scopeOptions, params) {
-    return nock(authorizationServerUrl, scopeOptions)
-      .post('/oauth/token', params)
-      .reply(200, { ...accessToken, refresh_token: undefined }, {
-        'Content-Type': 'application/json',
-      });
+    return msw
+      .scope(authorizationServerUrl)
+      .post('/oauth/token')
+      .matchBody(params)
+      .matchHeaders(scopeOptions.reqheaders)
+      .handler(() => HttpResponse.json({ ...accessToken, refresh_token: undefined }, {
+        status: 200,
+      }));
   }
 
   return {

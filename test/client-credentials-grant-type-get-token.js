@@ -1,6 +1,7 @@
 'use strict';
 
 const test = require('ava');
+const { setupServer } = require('msw/node');
 const { ClientCredentials } = require('../index');
 const AccessToken = require('../lib/access-token');
 const { createModuleConfig } = require('./_module-config');
@@ -11,7 +12,12 @@ const {
   getHeaderCredentialsScopeOptions,
 } = require('./_authorization-server-mock');
 
-test.serial('@getToken => resolves to an access token (body credentials and JSON format)', async (t) => {
+const mockServer = setupServer();
+
+test.before(() => mockServer.listen());
+test.after(() => mockServer.close());
+
+test('@getToken => resolves to an access token (body credentials and JSON format)', mockServer.boundary(async (t) => {
   const expectedRequestParams = {
     grant_type: 'client_credentials',
     client_id: 'the client id',
@@ -22,6 +28,8 @@ test.serial('@getToken => resolves to an access token (body credentials and JSON
   const scopeOptions = getJSONEncodingScopeOptions();
   const server = createAuthorizationServer('https://authorization-server.org:443');
   const scope = server.tokenSuccess(scopeOptions, expectedRequestParams);
+
+  mockServer.use(...scope.handlers);
 
   const config = createModuleConfig({
     options: {
@@ -39,9 +47,9 @@ test.serial('@getToken => resolves to an access token (body credentials and JSON
 
   scope.done();
   t.true(accessToken instanceof AccessToken);
-});
+}));
 
-test.serial('@getToken => resolves to an access token (body credentials and form format)', async (t) => {
+test('@getToken => resolves to an access token (body credentials and form format)', mockServer.boundary(async (t) => {
   const expectedRequestParams = {
     grant_type: 'client_credentials',
     random_param: 'random value',
@@ -52,6 +60,8 @@ test.serial('@getToken => resolves to an access token (body credentials and form
   const scopeOptions = getFormEncodingScopeOptions();
   const server = createAuthorizationServer('https://authorization-server.org:443');
   const scope = server.tokenSuccess(scopeOptions, expectedRequestParams);
+
+  mockServer.use(...scope.handlers);
 
   const config = createModuleConfig({
     options: {
@@ -69,9 +79,9 @@ test.serial('@getToken => resolves to an access token (body credentials and form
 
   scope.done();
   t.true(accessToken instanceof AccessToken);
-});
+}));
 
-test.serial('@getToken => resolves to an access token (header credentials)', async (t) => {
+test('@getToken => resolves to an access token (header credentials)', mockServer.boundary(async (t) => {
   const expectedRequestParams = {
     grant_type: 'client_credentials',
     random_param: 'random value',
@@ -80,6 +90,8 @@ test.serial('@getToken => resolves to an access token (header credentials)', asy
   const scopeOptions = getHeaderCredentialsScopeOptions();
   const server = createAuthorizationServer('https://authorization-server.org:443');
   const scope = server.tokenSuccess(scopeOptions, expectedRequestParams);
+
+  mockServer.use(...scope.handlers);
 
   const config = createModuleConfig({
     options: {
@@ -96,9 +108,9 @@ test.serial('@getToken => resolves to an access token (header credentials)', asy
 
   scope.done();
   t.true(accessToken instanceof AccessToken);
-});
+}));
 
-test.serial('@getToken => resolves to an access token with custom module configuration (header credentials + loose encoding)', async (t) => {
+test('@getToken => resolves to an access token with custom module configuration (header credentials + loose encoding)', mockServer.boundary(async (t) => {
   const expectedRequestParams = {
     grant_type: 'client_credentials',
     random_param: 'random value',
@@ -112,6 +124,8 @@ test.serial('@getToken => resolves to an access token with custom module configu
 
   const server = createAuthorizationServer('https://authorization-server.org:443');
   const scope = server.tokenSuccess(scopeOptions, expectedRequestParams);
+
+  mockServer.use(...scope.handlers);
 
   const config = createModuleConfig({
     client: {
@@ -133,9 +147,9 @@ test.serial('@getToken => resolves to an access token with custom module configu
 
   scope.done();
   t.true(accessToken instanceof AccessToken);
-});
+}));
 
-test.serial('@getToken => resolves to an access token with custom module configuration (header credentials + strict encoding)', async (t) => {
+test('@getToken => resolves to an access token with custom module configuration (header credentials + strict encoding)', mockServer.boundary(async (t) => {
   const expectedRequestParams = {
     grant_type: 'client_credentials',
     random_param: 'random value',
@@ -149,6 +163,8 @@ test.serial('@getToken => resolves to an access token with custom module configu
 
   const server = createAuthorizationServer('https://authorization-server.org:443');
   const scope = server.tokenSuccess(scopeOptions, expectedRequestParams);
+
+  mockServer.use(...scope.handlers);
 
   const config = createModuleConfig({
     client: {
@@ -170,9 +186,9 @@ test.serial('@getToken => resolves to an access token with custom module configu
 
   scope.done();
   t.true(accessToken instanceof AccessToken);
-});
+}));
 
-test.serial('@getToken => resolves to an access token with custom module configuration (header credentials with unescaped characters + strict encoding)', async (t) => {
+test('@getToken => resolves to an access token with custom module configuration (header credentials with unescaped characters + strict encoding)', mockServer.boundary(async (t) => {
   const expectedRequestParams = {
     grant_type: 'client_credentials',
     random_param: 'random value',
@@ -186,6 +202,8 @@ test.serial('@getToken => resolves to an access token with custom module configu
 
   const server = createAuthorizationServer('https://authorization-server.org:443');
   const scope = server.tokenSuccess(scopeOptions, expectedRequestParams);
+
+  mockServer.use(...scope.handlers);
 
   const config = createModuleConfig({
     client: {
@@ -207,9 +225,9 @@ test.serial('@getToken => resolves to an access token with custom module configu
 
   scope.done();
   t.true(accessToken instanceof AccessToken);
-});
+}));
 
-test.serial('@getToken => resolves to an access token with custom module configuration (access token host and path)', async (t) => {
+test('@getToken => resolves to an access token with custom module configuration (access token host and path)', mockServer.boundary(async (t) => {
   const expectedRequestParams = {
     grant_type: 'client_credentials',
     random_param: 'random value',
@@ -218,6 +236,8 @@ test.serial('@getToken => resolves to an access token with custom module configu
   const scopeOptions = getHeaderCredentialsScopeOptions();
   const server = createAuthorizationServer('https://authorization-server.org:443');
   const scope = server.tokenSuccessWithCustomPath('/oauth/token', scopeOptions, expectedRequestParams);
+
+  mockServer.use(...scope.handlers);
 
   const config = createModuleConfig({
     auth: {
@@ -235,9 +255,9 @@ test.serial('@getToken => resolves to an access token with custom module configu
 
   scope.done();
   t.true(accessToken instanceof AccessToken);
-});
+}));
 
-test.serial('@getToken => resolves to an access token with custom module configuration (http options)', async (t) => {
+test('@getToken => resolves to an access token with custom module configuration (http options)', mockServer.boundary(async (t) => {
   const expectedRequestParams = {
     grant_type: 'client_credentials',
     random_param: 'random value',
@@ -252,6 +272,8 @@ test.serial('@getToken => resolves to an access token with custom module configu
 
   const server = createAuthorizationServer('https://authorization-server.org:443');
   const scope = server.tokenSuccess(scopeOptions, expectedRequestParams);
+
+  mockServer.use(...scope.handlers);
 
   const config = createModuleConfig({
     http: {
@@ -271,9 +293,9 @@ test.serial('@getToken => resolves to an access token with custom module configu
 
   scope.done();
   t.true(accessToken instanceof AccessToken);
-});
+}));
 
-test.serial('@getToken = resolves to an access token with custom module configuration (scope separator)', async (t) => {
+test('@getToken = resolves to an access token with custom module configuration (scope separator)', mockServer.boundary(async (t) => {
   const expectedRequestParams = {
     grant_type: 'client_credentials',
     scope: 'scope-a,scope-b',
@@ -282,6 +304,8 @@ test.serial('@getToken = resolves to an access token with custom module configur
   const scopeOptions = getHeaderCredentialsScopeOptions();
   const server = createAuthorizationServer('https://authorization-server.org:443');
   const scope = server.tokenSuccess(scopeOptions, expectedRequestParams);
+
+  mockServer.use(...scope.handlers);
 
   const tokenParams = {
     scope: ['scope-a', 'scope-b'],
@@ -298,9 +322,9 @@ test.serial('@getToken = resolves to an access token with custom module configur
 
   scope.done();
   t.true(accessToken instanceof AccessToken);
-});
+}));
 
-test.serial('@getToken => resolves to an access token while requesting multiple scopes', async (t) => {
+test('@getToken => resolves to an access token while requesting multiple scopes', mockServer.boundary(async (t) => {
   const expectedRequestParams = {
     grant_type: 'client_credentials',
     scope: 'scope-a scope-b',
@@ -309,6 +333,8 @@ test.serial('@getToken => resolves to an access token while requesting multiple 
   const scopeOptions = getHeaderCredentialsScopeOptions();
   const server = createAuthorizationServer('https://authorization-server.org:443');
   const scope = server.tokenSuccess(scopeOptions, expectedRequestParams);
+
+  mockServer.use(...scope.handlers);
 
   const tokenParams = {
     scope: ['scope-a', 'scope-b'],
@@ -321,9 +347,9 @@ test.serial('@getToken => resolves to an access token while requesting multiple 
 
   scope.done();
   t.true(accessToken instanceof AccessToken);
-});
+}));
 
-test.serial('@getToken => resolves to an access token with a custom grant type', async (t) => {
+test('@getToken => resolves to an access token with a custom grant type', mockServer.boundary(async (t) => {
   const expectedRequestParams = {
     grant_type: 'my_grant',
   };
@@ -331,6 +357,8 @@ test.serial('@getToken => resolves to an access token with a custom grant type',
   const scopeOptions = getHeaderCredentialsScopeOptions();
   const server = createAuthorizationServer('https://authorization-server.org:443');
   const scope = server.tokenSuccess(scopeOptions, expectedRequestParams);
+
+  mockServer.use(...scope.handlers);
 
   const tokenParams = {
     grant_type: 'my_grant',
@@ -343,9 +371,9 @@ test.serial('@getToken => resolves to an access token with a custom grant type',
 
   scope.done();
   t.true(accessToken instanceof AccessToken);
-});
+}));
 
-test.serial('@getToken => resolves to an access token with no params', async (t) => {
+test('@getToken => resolves to an access token with no params', mockServer.boundary(async (t) => {
   const expectedRequestParams = {
     grant_type: 'client_credentials',
   };
@@ -354,6 +382,8 @@ test.serial('@getToken => resolves to an access token with no params', async (t)
   const server = createAuthorizationServer('https://authorization-server.org:443');
   const scope = server.tokenSuccess(scopeOptions, expectedRequestParams);
 
+  mockServer.use(...scope.handlers);
+
   const config = createModuleConfig();
   const oauth2 = new ClientCredentials(config);
 
@@ -361,9 +391,9 @@ test.serial('@getToken => resolves to an access token with no params', async (t)
 
   scope.done();
   t.true(accessToken instanceof AccessToken);
-});
+}));
 
-test.serial('@getToken => resolves to an access token with custom (inline) http options', async (t) => {
+test('@getToken => resolves to an access token with custom (inline) http options', mockServer.boundary(async (t) => {
   const expectedRequestParams = {
     grant_type: 'client_credentials',
   };
@@ -376,6 +406,8 @@ test.serial('@getToken => resolves to an access token with custom (inline) http 
 
   const server = createAuthorizationServer('https://authorization-server.org:443');
   const scope = server.tokenSuccess(scopeOptions, expectedRequestParams);
+
+  mockServer.use(...scope.handlers);
 
   const config = createModuleConfig();
   const oauth2 = new ClientCredentials(config);
@@ -390,9 +422,9 @@ test.serial('@getToken => resolves to an access token with custom (inline) http 
 
   scope.done();
   t.true(accessToken instanceof AccessToken);
-});
+}));
 
-test.serial('@getToken => resolves to an access token with custom (inline) http options without overriding (required) http options', async (t) => {
+test('@getToken => resolves to an access token with custom (inline) http options without overriding (required) http options', mockServer.boundary(async (t) => {
   const expectedRequestParams = {
     grant_type: 'client_credentials',
   };
@@ -400,6 +432,8 @@ test.serial('@getToken => resolves to an access token with custom (inline) http 
   const scopeOptions = getHeaderCredentialsScopeOptions();
   const server = createAuthorizationServer('https://authorization-server.org:443');
   const scope = server.tokenSuccess(scopeOptions, expectedRequestParams);
+
+  mockServer.use(...scope.handlers);
 
   const config = createModuleConfig();
   const oauth2 = new ClientCredentials(config);
@@ -414,9 +448,9 @@ test.serial('@getToken => resolves to an access token with custom (inline) http 
 
   scope.done();
   t.true(accessToken instanceof AccessToken);
-});
+}));
 
-test.serial('@getToken => rejects the operation when a non json response is received', async (t) => {
+test('@getToken => rejects the operation when a non json response is received', mockServer.boundary(async (t) => {
   const expectedRequestParams = {
     grant_type: 'client_credentials',
     client_id: 'the client id',
@@ -427,6 +461,8 @@ test.serial('@getToken => rejects the operation when a non json response is rece
   const scopeOptions = getJSONEncodingScopeOptions();
   const server = createAuthorizationServer('https://authorization-server.org:443');
   const scope = server.tokenSuccessWithNonJSONContent(scopeOptions, expectedRequestParams);
+
+  mockServer.use(...scope.handlers);
 
   const config = createModuleConfig({
     options: {
@@ -446,4 +482,4 @@ test.serial('@getToken => rejects the operation when a non json response is rece
 
   t.true(error.isBoom);
   t.is(error.output.statusCode, 406);
-});
+}));

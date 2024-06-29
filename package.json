@@ -58,11 +58,12 @@
     "chance": "^1.1.9",
     "chance-access-token": "^2.1.0",
     "date-fns": "^3.6.0",
+    "diff": "^5.2.0",
     "doctoc": "^2.2.1",
     "eslint": "^8.26.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.26.0",
-    "nock": "^13.2.9"
+    "msw": "^2.3.1"
   },
   "volta": {
     "node": "18.20.3"

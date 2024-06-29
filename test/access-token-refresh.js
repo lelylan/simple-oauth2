@@ -1,6 +1,7 @@
 'use strict';
 
 const test = require('ava');
+const { setupServer } = require('msw/node');
 
 const Chance = require('./_chance');
 const AccessToken = require('../lib/access-token');
@@ -10,6 +11,7 @@ const { createModuleConfigWithDefaults: createModuleConfig } = require('./_modul
 const { createAuthorizationServer, getHeaderCredentialsScopeOptions } = require('./_authorization-server-mock');
 
 const chance = new Chance();
+const mockServer = setupServer();
 
 const scopeOptions = {
   reqheaders: {
@@ -18,7 +20,10 @@ const scopeOptions = {
   },
 };
 
-test.serial('@refresh => creates a new access token with default params', async (t) => {
+test.before(() => mockServer.listen());
+test.after(() => mockServer.close());
+
+test('@refresh => creates a new access token with default params', mockServer.boundary(async (t) => {
   const config = createModuleConfig();
   const client = new Client(config);
 
@@ -34,14 +39,16 @@ test.serial('@refresh => creates a new access token with default params', async 
   const server = createAuthorizationServer('https://authorization-server.org:443');
   const scope = server.tokenSuccess(scopeOptions, refreshParams);
 
+  mockServer.use(...scope.handlers);
+
   const accessToken = new AccessToken(config, client, accessTokenResponse);
   const refreshAccessToken = await accessToken.refresh();
 
   scope.done();
   t.true(has(refreshAccessToken.token, 'access_token'));
-});
+}));
 
-test.serial('@refresh => creates a new access token with a custom grant type', async (t) => {
+test('@refresh => creates a new access token with a custom grant type', mockServer.boundary(async (t) => {
   const config = createModuleConfig();
   const client = new Client(config);
 
@@ -57,6 +64,8 @@ test.serial('@refresh => creates a new access token with a custom grant type', a
   const server = createAuthorizationServer('https://authorization-server.org:443');
   const scope = server.tokenSuccess(scopeOptions, refreshParams);
 
+  mockServer.use(...scope.handlers);
+
   const accessToken = new AccessToken(config, client, accessTokenResponse);
   const refreshAccessToken = await accessToken.refresh({
     grant_type: 'my_grant',
@@ -64,9 +73,9 @@ test.serial('@refresh => creates a new access token with a custom grant type', a
 
   scope.done();
   t.true(has(refreshAccessToken.token, 'access_token'));
-});
+}));
 
-test.serial('@refresh => creates a new access token with multiple scopes', async (t) => {
+test('@refresh => creates a new access token with multiple scopes', mockServer.boundary(async (t) => {
   const config = createModuleConfig();
   const client = new Client(config);
 
@@ -83,6 +92,8 @@ test.serial('@refresh => creates a new access token with multiple scopes', async
   const server = createAuthorizationServer('https://authorization-server.org:443');
   const scope = server.tokenSuccess(scopeOptions, refreshParams);
 
+  mockServer.use(...scope.handlers);
+
   const accessToken = new AccessToken(config, client, accessTokenResponse);
   const refreshAccessToken = await accessToken.refresh({
     scope: ['scope-a', 'scope-b'],
@@ -90,9 +101,9 @@ test.serial('@refresh => creates a new access token with multiple scopes', async
 
   scope.done();
   t.true(has(refreshAccessToken.token, 'access_token'));
-});
+}));
 
-test.serial('@refresh => creates a new access token with custom params', async (t) => {
+test('@refresh => creates a new access token with custom params', mockServer.boundary(async (t) => {
   const config = createModuleConfig();
   const client = new Client(config);
 
@@ -109,6 +120,8 @@ test.serial('@refresh => creates a new access token with custom params', async (
   const server = createAuthorizationServer('https://authorization-server.org:443');
   const scope = server.tokenSuccess(scopeOptions, refreshParams);
 
+  mockServer.use(...scope.handlers);
+
   const accessToken = new AccessToken(config, client, accessTokenResponse);
   const refreshAccessToken = await accessToken.refresh({
     scope: 'TESTING_EXAMPLE_SCOPES',
@@ -116,9 +129,9 @@ test.serial('@refresh => creates a new access token with custom params', async (
 
   scope.done();
   t.true(has(refreshAccessToken.token, 'access_token'));
-});
+}));
 
-test.serial('@refresh => creates a new access token with custom module configuration (scope separator)', async (t) => {
+test('@refresh => creates a new access token with custom module configuration (scope separator)', mockServer.boundary(async (t) => {
   const config = createModuleConfig({
     options: {
       scopeSeparator: ',',
@@ -140,6 +153,8 @@ test.serial('@refresh => creates a new access token with custom module configura
   const server = createAuthorizationServer('https://authorization-server.org:443');
   const scope = server.tokenSuccess(scopeOptions, refreshParams);
 
+  mockServer.use(...scope.handlers);
+
   const accessToken = new AccessToken(config, client, accessTokenResponse);
   const refreshAccessToken = await accessToken.refresh({
     scope: ['scope-a', 'scope-b'],
@@ -147,9 +162,9 @@ test.serial('@refresh => creates a new access token with custom module configura
 
   scope.done();
   t.true(has(refreshAccessToken.token, 'access_token'));
-});
+}));
 
-test.serial('@refresh => creates a new access token with a custom token path', async (t) => {
+test('@refresh => creates a new access token with a custom token path', mockServer.boundary(async (t) => {
   const config = createModuleConfig({
     auth: {
       tokenPath: '/the-custom/path',
@@ -171,14 +186,16 @@ test.serial('@refresh => creates a new access token with a custom token path', a
   const server = createAuthorizationServer('https://authorization-server.org:443');
   const scope = server.tokenSuccessWithCustomPath('/the-custom/path', scopeOptions, refreshParams);
 
+  mockServer.use(...scope.handlers);
+
   const accessToken = new AccessToken(config, client, accessTokenResponse);
   const refreshAccessToken = await accessToken.refresh({ scope: 'TESTING_EXAMPLE_SCOPES' });
 
   scope.done();
   t.true(has(refreshAccessToken.token, 'access_token'));
-});
+}));
 
-test.serial('@refresh => creates a new access token with a custom refresh path', async (t) => {
+test('@refresh => creates a new access token with a custom refresh path', mockServer.boundary(async (t) => {
   const config = createModuleConfig({
     auth: {
       refreshPath: '/the-custom/refresh-path',
@@ -199,14 +216,16 @@ test.serial('@refresh => creates a new access token with a custom refresh path',
   const server = createAuthorizationServer('https://authorization-server.org:443');
   const scope = server.tokenSuccessWithCustomPath('/the-custom/refresh-path', scopeOptions, refreshParams);
 
+  mockServer.use(...scope.handlers);
+
   const accessToken = new AccessToken(config, client, accessTokenResponse);
   const refreshAccessToken = await accessToken.refresh();
 
   scope.done();
   t.true(has(refreshAccessToken.token, 'access_token'));
-});
+}));
 
-test.serial('@refresh => creates a new access token with custom (inline) http options', async (t) => {
+test('@refresh => creates a new access token with custom (inline) http options', mockServer.boundary(async (t) => {
   const config = createModuleConfig();
 
   const accessTokenResponse = chance.accessToken({
@@ -229,6 +248,8 @@ test.serial('@refresh => creates a new access token with custom (inline) http op
   const server = createAuthorizationServer('https://authorization-server.org:443');
   const scope = server.tokenSuccess(customScopeOptions, refreshParams);
 
+  mockServer.use(...scope.handlers);
+
   const httpOptions = {
     headers: {
       'X-REQUEST-ID': 123,
@@ -240,9 +261,9 @@ test.serial('@refresh => creates a new access token with custom (inline) http op
 
   scope.done();
   t.true(has(refreshAccessToken.token, 'access_token'));
-});
+}));
 
-test.serial('@refresh => creates a new access token with custom (inline) http options without overriding (required) http options', async (t) => {
+test('@refresh => creates a new access token with custom (inline) http options without overriding (required) http options', mockServer.boundary(async (t) => {
   const config = createModuleConfig();
 
   const accessTokenResponse = chance.accessToken({
@@ -259,6 +280,8 @@ test.serial('@refresh => creates a new access token with custom (inline) http op
   const server = createAuthorizationServer('https://authorization-server.org:443');
   const scope = server.tokenSuccess(scopeOptions, refreshParams);
 
+  mockServer.use(...scope.handlers);
+
   const httpOptions = {
     headers: {
       Authorization: 'Basic credentials',
@@ -270,9 +293,9 @@ test.serial('@refresh => creates a new access token with custom (inline) http op
 
   scope.done();
   t.true(has(refreshAccessToken.token, 'access_token'));
-});
+}));
 
-test.serial('@refresh => creates a new access token with keeping the old refresh token if refresh did not provide a new refresh token', async (t) => {
+test.serial('@refresh => creates a new access token with keeping the old refresh token if refresh did not provide a new refresh token', mockServer.boundary(async (t) => {
   const config = createModuleConfig();
 
   const accessTokenResponse = chance.accessToken({
@@ -289,9 +312,11 @@ test.serial('@refresh => creates a new access token with keeping the old refresh
   const server = createAuthorizationServer('https://authorization-server.org:443');
   const scope = server.tokenSuccessWithoutRefreshToken(scopeOptions, refreshParams);
 
+  mockServer.use(...scope.handlers);
+
   const accessToken = new AccessToken(config, client, accessTokenResponse);
   const refreshAccessToken = await accessToken.refresh();
 
   scope.done();
   t.true(has(refreshAccessToken.token, 'refresh_token'));
-});
+}));
