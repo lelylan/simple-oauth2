@@ -1,5 +1,10 @@
 # Changelog
 
+## 5.1.0
+
+### Fixes
+- [#434](https://github.com/lelylan/simple-oauth2/pull/434) Preserve existing refresh token when refreshed token doesn't contain a new refresh token
+
 ## 5.0.1
 
 ### Fixes
