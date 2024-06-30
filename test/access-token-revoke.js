@@ -1,6 +1,7 @@
 'use strict';
 
 const test = require('ava');
+const { setupServer } = require('msw/node');
 
 const Chance = require('./_chance');
 const AccessToken = require('../lib/access-token');
@@ -9,6 +10,7 @@ const { createModuleConfigWithDefaults: createModuleConfig } = require('./_modul
 const { createAuthorizationServer, getHeaderCredentialsScopeOptions } = require('./_authorization-server-mock');
 
 const chance = new Chance();
+const mockServer = setupServer();
 
 const scopeOptions = {
   reqheaders: {
@@ -17,7 +19,10 @@ const scopeOptions = {
   },
 };
 
-test.serial('@revoke => performs the access token revoke', async (t) => {
+test.before(() => mockServer.listen());
+test.after(() => mockServer.close());
+
+test('@revoke => performs the access token revoke', mockServer.boundary(async (t) => {
   const config = createModuleConfig();
   const client = new Client(config);
 
@@ -33,14 +38,16 @@ test.serial('@revoke => performs the access token revoke', async (t) => {
   const server = createAuthorizationServer('https://authorization-server.org:443');
   const scope = server.tokenRevokeSuccess(scopeOptions, revokeParams);
 
+  mockServer.use(...scope.handlers);
+
   const accessToken = new AccessToken(config, client, accessTokenResponse);
 
   await t.notThrowsAsync(() => accessToken.revoke('access_token'));
 
   scope.done();
-});
+}));
 
-test.serial('@revoke => performs the refresh token revoke', async (t) => {
+test('@revoke => performs the refresh token revoke', mockServer.boundary(async (t) => {
   const config = createModuleConfig();
   const client = new Client(config);
 
@@ -56,14 +63,16 @@ test.serial('@revoke => performs the refresh token revoke', async (t) => {
   const server = createAuthorizationServer('https://authorization-server.org:443');
   const scope = server.tokenRevokeSuccess(scopeOptions, revokeParams);
 
+  mockServer.use(...scope.handlers);
+
   const accessToken = new AccessToken(config, client, accessTokenResponse);
 
   await t.notThrowsAsync(() => accessToken.revoke('refresh_token'));
 
   scope.done();
-});
+}));
 
-test.serial('@revoke => performs a token revoke with a custom revoke path', async (t) => {
+test('@revoke => performs a token revoke with a custom revoke path', mockServer.boundary(async (t) => {
   const config = createModuleConfig({
     auth: {
       revokePath: '/the-custom/revoke-path',
@@ -84,14 +93,16 @@ test.serial('@revoke => performs a token revoke with a custom revoke path', asyn
   const server = createAuthorizationServer('https://authorization-server.org:443');
   const scope = server.tokenRevokeSuccessWithCustomPath('/the-custom/revoke-path', scopeOptions, revokeParams);
 
+  mockServer.use(...scope.handlers);
+
   const accessToken = new AccessToken(config, client, accessTokenResponse);
 
   await t.notThrowsAsync(() => accessToken.revoke('refresh_token'));
 
   scope.done();
-});
+}));
 
-test.serial('@revoke => performs a token revoke with custom (inline) http options', async (t) => {
+test('@revoke => performs a token revoke with custom (inline) http options', mockServer.boundary(async (t) => {
   const config = createModuleConfig();
   const client = new Client(config);
 
@@ -113,6 +124,8 @@ test.serial('@revoke => performs a token revoke with custom (inline) http option
   const server = createAuthorizationServer('https://authorization-server.org:443');
   const scope = server.tokenRevokeSuccess(customScopeOptions, revokeParams);
 
+  mockServer.use(...scope.handlers);
+
   const httpOptions = {
     headers: {
       'X-REQUEST-ID': 123,
@@ -124,9 +137,9 @@ test.serial('@revoke => performs a token revoke with custom (inline) http option
   await t.notThrowsAsync(() => accessToken.revoke('refresh_token', httpOptions));
 
   scope.done();
-});
+}));
 
-test.serial('@revoke => performs a token revoke with custom (inline) http options without overriding (required) http options', async (t) => {
+test('@revoke => performs a token revoke with custom (inline) http options without overriding (required) http options', mockServer.boundary(async (t) => {
   const config = createModuleConfig();
   const client = new Client(config);
 
@@ -142,6 +155,8 @@ test.serial('@revoke => performs a token revoke with custom (inline) http option
   const server = createAuthorizationServer('https://authorization-server.org:443');
   const scope = server.tokenRevokeSuccess(scopeOptions, revokeParams);
 
+  mockServer.use(...scope.handlers);
+
   const httpOptions = {
     headers: {
       Authorization: 'Basic credentials',
@@ -153,9 +168,9 @@ test.serial('@revoke => performs a token revoke with custom (inline) http option
   await t.notThrowsAsync(() => accessToken.revoke('refresh_token', httpOptions));
 
   scope.done();
-});
+}));
 
-test.serial('@revoke => throws an error with an invalid tokenType option', async (t) => {
+test('@revoke => throws an error with an invalid tokenType option', mockServer.boundary(async (t) => {
   const config = createModuleConfig();
   const client = new Client(config);
 
@@ -165,9 +180,9 @@ test.serial('@revoke => throws an error with an invalid tokenType option', async
   await t.throwsAsync(() => accessToken.revoke('invalid_value'), {
     message: /Invalid token type. Only access_token or refresh_token are valid values/,
   });
-});
+}));
 
-test.serial('@revokeAll => revokes both the access and refresh tokens', async (t) => {
+test('@revokeAll => revokes both the access and refresh tokens', mockServer.boundary(async (t) => {
   const config = createModuleConfig();
   const client = new Client(config);
 
@@ -188,14 +203,16 @@ test.serial('@revokeAll => revokes both the access and refresh tokens', async (t
   const server = createAuthorizationServer('https://authorization-server.org:443');
   const scope = server.tokenRevokeAllSuccess(scopeOptions, accessTokenRevokeParams, refreshTokenRevokeParams);
 
+  mockServer.use(...scope.handlers);
+
   const accessToken = new AccessToken(config, client, accessTokenResponse);
 
   await t.notThrowsAsync(() => accessToken.revokeAll());
 
   scope.done();
-});
+}));
 
-test.serial('@revokenAll => revokes both the access and refresh tokens with custom (inline) http options', async (t) => {
+test('@revokenAll => revokes both the access and refresh tokens with custom (inline) http options', mockServer.boundary(async (t) => {
   const config = createModuleConfig();
   const client = new Client(config);
 
@@ -222,6 +239,8 @@ test.serial('@revokenAll => revokes both the access and refresh tokens with cust
   const server = createAuthorizationServer('https://authorization-server.org:443');
   const scope = server.tokenRevokeAllSuccess(customScopeOptions, accessTokenRevokeParams, refreshTokenRevokeParams);
 
+  mockServer.use(...scope.handlers);
+
   const httpOptions = {
     headers: {
       'X-REQUEST-ID': 123,
@@ -233,9 +252,9 @@ test.serial('@revokenAll => revokes both the access and refresh tokens with cust
   await t.notThrowsAsync(() => accessToken.revokeAll(httpOptions));
 
   scope.done();
-});
+}));
 
-test.serial('@revokeAll => revokes tboth the access and refresh tokens with custom (inline) http options without overriding (required) http options', async (t) => {
+test('@revokeAll => revokes tboth the access and refresh tokens with custom (inline) http options without overriding (required) http options', mockServer.boundary(async (t) => {
   const config = createModuleConfig();
   const client = new Client(config);
 
@@ -256,6 +275,8 @@ test.serial('@revokeAll => revokes tboth the access and refresh tokens with cust
   const server = createAuthorizationServer('https://authorization-server.org:443');
   const scope = server.tokenRevokeAllSuccess(scopeOptions, accessTokenRevokeParams, refreshTokenRevokeParams);
 
+  mockServer.use(...scope.handlers);
+
   const httpOptions = {
     headers: {
       Authorization: 'Basic credentials',
@@ -267,9 +288,9 @@ test.serial('@revokeAll => revokes tboth the access and refresh tokens with cust
   await t.notThrowsAsync(() => accessToken.revokeAll(httpOptions));
 
   scope.done();
-});
+}));
 
-test.serial('@revokeAll => revokes the refresh token only if the access token is successfully revoked', async (t) => {
+test('@revokeAll => revokes the refresh token only if the access token is successfully revoked', mockServer.boundary(async (t) => {
   const config = createModuleConfig();
   const client = new Client(config);
 
@@ -285,6 +306,8 @@ test.serial('@revokeAll => revokes the refresh token only if the access token is
   const server = createAuthorizationServer('https://authorization-server.org:443');
   const scope = server.tokenRevokeError(scopeOptions, accessTokenRevokeParams);
 
+  mockServer.use(...scope.handlers);
+
   const accessToken = new AccessToken(config, client, accessTokenResponse);
 
   const error = await t.throwsAsync(() => accessToken.revokeAll(), { instanceOf: Error });
@@ -293,4 +316,4 @@ test.serial('@revokeAll => revokes the refresh token only if the access token is
   t.is(error.output.statusCode, 500);
 
   scope.done();
-});
+}));
