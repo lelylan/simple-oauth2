@@ -158,11 +158,11 @@ See the [API reference](./API.md#new-clientcredentialsoptions) for a complete re
 
 ### Access Token
 
-On completion of any [supported grant type](#supported-grant-types) an access token will be obtained. A list of supported operations can be found below.
+On completion of any [supported grant type](#supported-grant-types), an access token will be obtained. A list of supported operations can be found below.
 
 #### Refresh an access token
 
-On long lived applications, it is often necessary to refresh access tokens. In such scenarios the access token is usually persisted in an external database by first serializing it.
+On long-lived applications, it is often necessary to refresh access tokens. In such scenarios, the access token is usually persisted in an external database by first serializing it.
 
 
 ```javascript
@@ -321,7 +321,7 @@ Simple OAuth 2.0 is licensed under the [Apache License, Version 2.0](http://www.
 
 ## Thanks to Open Source
 
-Simple OAuth 2.0 come to life thanks to the work I've made in Lelylan, an open source microservices architecture for the Internet of Things. If this project helped you in any way, think about giving us a <a href="https://github.com/lelylan/lelylan">star on Github</a>.
+Simple OAuth 2.0 come to life thanks to the work I've made in Lelylan, an open source microservices architecture for the Internet of Things. If this project helped you in any way, think about giving us a <a href="https://github.com/lelylan/lelylan">star on GitHub</a>.
 
 <a href="https://github.com/lelylan/lelylan">
 <img src="https://raw.githubusercontent.com/lelylan/lelylan/master/public/logo-lelylan.png" data-canonical-src="https://raw.githubusercontent.com/lelylan/lelylan/master/public/logo-lelylan.png" width="300"/></a>
